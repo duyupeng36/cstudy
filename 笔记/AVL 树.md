@@ -241,7 +241,21 @@ avl_tree_t *avl_init(void) {
     tree->size = 0;
     return tree;
 }
+
+static int height(avl_node_t *node)
+{
+	if (!node)
+	{
+		return  -1;
+	}
+	return node->height;
+}
 ```
+
+> [!tip]
+> 
+> 这里需要一个辅助函数 `height` 用于获取当前节点高度。当节点为 `nullptr` 时，返回 `-1`
+> 
 
 ### 旋转
 
@@ -272,8 +286,8 @@ static avl_node_t *signalRotateWithLeft(avl_node_t *k2) {
 
     // 更新树的高度
 
-    k2->height = max(k2->left->height, k2->right->height) + 1;
-    k1->height = max(k1->left->height, k1->right->height) + 1;
+    k2->height = max(height(k2->left), height(k2->right)) + 1;
+    k1->height = max(height(k1->left), height(k1->right)) + 1;
     return k1;
 }
 ```
@@ -302,8 +316,8 @@ static avl_node_t *signalRotateWithRight(avl_node_t *k1) {
     k2->left = k1;
 
     // 更新高度
-    k2->height = max(k2->left->height, k2->right->height) + 1;
-    k1->height = max(k1->left->height, k1->right->height) + 1;
+    k2->height = max(height(k2->left), height(k2->right)) + 1;
+    k1->height = max(height(k1->left), height(k1->right)) + 1;
     return k2;
 }
 ```
@@ -342,7 +356,6 @@ static avl_node_t * doubleRotateWithLeft(avl_node_t *k3) {
 }
 ```
 
-
 ##### 右-左情形(右旋-左旋)
 
 在失衡结点的右子结点的左子树上插入
@@ -367,10 +380,97 @@ static avl_node_t * doubleRotateWithLeft(avl_node_t *k3) {
  */
 static avl_node_t * doubleRotateWithRight(avl_node_t *k1) {
 	k1->right = signalRotateWithLeft(k1->right);
-	k1 = signalRotateWithLeft(k1);
+	k1 = signalRotateWithRight(k1);
 	return k1;
 }
 
 ```
 
+### Insert
 
+AVL 树的插入比较和 BST 类似，但是 AVL 树插入后需要检查插入点的是否处于平衡状态
+
+```c
+/**
+ * insert 辅助 Insert 函数完成插入操作
+ * @param e : 待插入的元素
+ * @param root : 指向 AVL 树的指针
+ * @return : 返回新的根节点指针
+ */
+static avl_node_t * insert(elem_t e, avl_node_t *root)
+{
+	if (root == nullptr)
+	{
+		// 插入点
+		if((root = malloc(sizeof(avl_node_t))) == nullptr )
+		{
+			fprintf(stderr, "Error allocating memory for avl node\n");
+			return nullptr;
+		}
+		root->data = e;
+		root->left = nullptr;
+		root->right = nullptr;
+		root->height = 0;
+	}
+	else if(e < root->data)
+	{
+		// e < root：插入在 root 的左子树上
+		root->left = insert(e, root->left);
+		// 判断是否需要重新平衡: 判断 root 的左子树与右子树高度差
+		// 由于插入发生在左子树，所以左子树的高度一定大于右子树
+		if(height(root->left) - height(root->right) == 2)
+		{
+			if(e < root->left->data)
+			{
+				// e 比 root 的左子结点小，插入在 root 的左子结点的左子树上(左-左情形)
+				root = signalRotateWithLeft(root);
+			}
+			else
+			{
+				// e 比 root 的左子节点大，插入在 root 的左子结点的右子树上(左-右情形)
+				root = doubleRotateWithLeft(root);
+			}
+		}
+	}
+	else if (e > root->data)
+	{
+		// e > root: 插入在 root 的右子树上
+		root->right = insert(e, root->right);
+		// 判断插入是否导致 root 失去平衡
+		if (height(root->right) - height(root->left) == 2)
+		{
+			if(e > root->right->data)
+			{
+				// e 比 root 的右子结点大，插入在 root 的右子结点的右子树上(右-右情形)
+				root = signalRotateWithRight(root);
+			}
+			else
+			{
+				// e 比 root 的右子节点小，插入在 root 的右子节点的左子树(右-左情形)
+				root = doubleRotateWithRight(root);
+			}
+		}
+	}
+	// 更新 root 的高度
+	root->height = max(height(root->left), height(root->right)) + 1;
+	return root;
+}
+
+bool Insert(elem_t e, avl_tree_t *tree){
+	if (!tree)
+	{
+		fprintf(stderr, "avl tree is null\n");
+		return false;
+	}
+	if((tree->root = insert(e, tree->root)) == nullptr)
+	{
+		return false;
+	}
+	tree->size++;
+	return true;
+}
+```
+
+### Delete
+
+如果删除的不多，建议使用懒惰删除。

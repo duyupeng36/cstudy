@@ -65,7 +65,7 @@
               "type": "markdown",
               "state": {
                 "file": "笔记/AVL 树.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               }
             },
@@ -121,7 +121,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 211.5
+    "width": 211.5,
+    "collapsed": true
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -190,8 +191,8 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "obsidian-excalidraw-plugin:新建绘图文件": false,
       "file-cleaner-redux:Clean files": false,
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
       "oz-clear-unused-images:Clear Unused Images": false,
       "obsidian-read-it-later:ReadItLater: Save clipboard": false,
       "switcher:打开快速切换": false,
