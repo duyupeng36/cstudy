@@ -1,0 +1,256 @@
+{
+  "main": {
+    "id": "6731dcedf5ec4ba2",
+    "type": "split",
+    "children": [
+      {
+        "id": "c2c66e3415d95c65",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8eccb5a01b3b3a7d",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "assets/canvas/任务.canvas",
+                "viewState": {
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 0
+                }
+              },
+              "pinned": true
+            }
+          },
+          {
+            "id": "e9c70ca3995437ea",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "pinned": true
+            }
+          },
+          {
+            "id": "76246533d01e3b01",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/AVL 树.md",
+                "mode": "source",
+                "source": false
+              }
+            },
+            "group": "94e7674ae86ba37c"
+          }
+        ],
+        "currentTab": 2
+      },
+      {
+        "id": "833ce2312e916bba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cc75c83139c4a35b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/AVL 树.md",
+                "mode": "source",
+                "source": false
+              }
+            },
+            "group": "94e7674ae86ba37c"
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f5acfb0347e10158",
+    "type": "split",
+    "children": [
+      {
+        "id": "2981465ebbd81882",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "44208ec421f6f33b",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "297eddfd59965420",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "18aaf6c4fe7f7177",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 211.5
+  },
+  "right": {
+    "id": "838b57fc57b96045",
+    "type": "split",
+    "children": [
+      {
+        "id": "54658bcffe7f13d7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c066301afa982653",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "笔记/AVL 树.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "047af36d2d76e5a8",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "笔记/AVL 树.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "7b60362ad9d7a689",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "b9144cb8649cbbdb",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "笔记/AVL 树.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "file-cleaner-redux:Clean files": false,
+      "oz-clear-unused-images:Clear Unused Images": false,
+      "obsidian-read-it-later:ReadItLater: Save clipboard": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "76246533d01e3b01",
+  "lastOpenFiles": [
+    "README.md",
+    "笔记/AVL 树.md",
+    "笔记/二叉查找树.md",
+    "assets/attachments/Pasted image 20241001224053.png",
+    "assets/attachments/Pasted image 20241001224033.png",
+    "assets/attachments/Pasted image 20241001224004.png",
+    "assets/attachments/Pasted image 20241001223927.png",
+    "assets/attachments/Pasted image 20241001223848.png",
+    "assets/attachments/Pasted image 20241001223740.png",
+    "assets/attachments/Pasted image 20241001223702.png",
+    "assets/attachments/Pasted image 20241001223642.png",
+    "assets/attachments/Pasted image 20241001223558.png",
+    "assets/attachments/Pasted image 20241001223530.png",
+    "笔记/树与二叉树.md",
+    "笔记/散列表.md",
+    "笔记/栈和队列.md",
+    "笔记/查找算法.md",
+    "笔记/排序算法.md",
+    "笔记/线性表.md",
+    "笔记/算法复杂度.md",
+    "作业/作业13：线性表.md",
+    "作业/作业12：指针高级.md",
+    "笔记/指针高级.md",
+    "笔记/函数.md",
+    "作业/作业7：函数.md",
+    "笔记/$red.md",
+    "笔记/声明.md",
+    "assets/canvas/任务.canvas",
+    "笔记/标准 IO.md",
+    "笔记/基本概念.md",
+    "笔记/数组.md",
+    "笔记/字符串.md",
+    "笔记/结构体.md",
+    "笔记/程序的结构.md",
+    "笔记/联合和枚举.md",
+    "笔记/指针.md",
+    "ReadItLater Inbox",
+    "作业",
+    "笔记",
+    "assets/canvas",
+    "日记",
+    "assets/markmind",
+    "Tags",
+    "//Untitled.canvas",
+    "Untitled.canvas",
+    "02_codes/c/cmake-build-debug/CMakeFiles/clion-Debug-log.txt",
+    "02_codes/c/cmake-build-debug/CMakeFiles/clion-environment.txt",
+    "02_codes/c/cmake-build-debug/CMakeFiles"
+  ]
+}

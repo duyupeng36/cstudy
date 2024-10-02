@@ -1,0 +1,14 @@
+{
+  "promptDelete": false,
+  "userIgnoreFilters": [
+    "00_assets/"
+  ],
+  "attachmentFolderPath": "assets/attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "笔记",
+  "showUnsupportedFiles": false,
+  "alwaysUpdateLinks": true,
+  "showLineNumber": true,
+  "defaultViewMode": "preview",
+  "readableLineLength": true
+}
