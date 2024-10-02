@@ -44,7 +44,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/AVL 树.md",
+                "file": "笔记/红黑树.md",
                 "mode": "source",
                 "source": false
               }
@@ -52,7 +52,7 @@
             "group": "94e7674ae86ba37c"
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       },
       {
         "id": "833ce2312e916bba",
@@ -64,8 +64,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/AVL 树.md",
-                "mode": "preview",
+                "file": "笔记/红黑树.md",
+                "mode": "source",
                 "source": false
               }
             },
@@ -138,7 +138,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "笔记/AVL 树.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -155,7 +155,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/AVL 树.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -178,7 +178,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/AVL 树.md"
+                "file": "README.md"
               }
             }
           }
@@ -203,21 +203,23 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "76246533d01e3b01",
+  "active": "e9c70ca3995437ea",
   "lastOpenFiles": [
+    "笔记/红黑树.md",
     "README.md",
+    "笔记/B 树.md",
+    "assets/attachments/Pasted image 20241002183634.png",
+    "assets/attachments/Pasted image 20241002183624.png",
+    "assets/attachments/Pasted image 20241002183610.png",
+    "assets/attachments/Pasted image 20241002183549.png",
+    "assets/attachments/Pasted image 20241002183532.png",
+    "assets/attachments/Pasted image 20241002183509.png",
+    "assets/attachments/Pasted image 20241002183446.png",
+    "assets/attachments/Pasted image 20241002183431.png",
+    "assets/attachments/Pasted image 20241002183351.png",
+    "assets/attachments/Pasted image 20241002183333.png",
     "笔记/AVL 树.md",
     "笔记/二叉查找树.md",
-    "assets/attachments/Pasted image 20241001224053.png",
-    "assets/attachments/Pasted image 20241001224033.png",
-    "assets/attachments/Pasted image 20241001224004.png",
-    "assets/attachments/Pasted image 20241001223927.png",
-    "assets/attachments/Pasted image 20241001223848.png",
-    "assets/attachments/Pasted image 20241001223740.png",
-    "assets/attachments/Pasted image 20241001223702.png",
-    "assets/attachments/Pasted image 20241001223642.png",
-    "assets/attachments/Pasted image 20241001223558.png",
-    "assets/attachments/Pasted image 20241001223530.png",
     "笔记/树与二叉树.md",
     "笔记/散列表.md",
     "笔记/栈和队列.md",
@@ -240,7 +242,6 @@
     "笔记/结构体.md",
     "笔记/程序的结构.md",
     "笔记/联合和枚举.md",
-    "笔记/指针.md",
     "ReadItLater Inbox",
     "作业",
     "笔记",
