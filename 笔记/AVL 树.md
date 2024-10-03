@@ -199,6 +199,10 @@
 在每个节点中使用 `height` 保存它高度，其余的和二叉排序树保存一致
 
 ```c title:avl.h
+//
+// Created by duyup on 2024/10/1.
+//
+
 #ifndef AVL_H
 #define AVL_H
 
@@ -211,7 +215,7 @@ typedef struct avl_node {
     elem_t data;
     struct avl_node *left;
     struct avl_node *right;
-    int height;  // 存储当前树的高度
+    int height;
 } avl_node_t;
 
 typedef struct avl_tree {
@@ -224,6 +228,32 @@ typedef struct avl_tree {
 * @return : 返回一棵空树
 */
 avl_tree_t *avl_init(void);
+
+/**
+* Install 将元素 e 插入到 tree 中
+* @param e: 带插入元素
+* @param tree: 指向 AVL 树的指针
+* @return : 成功插入返回 true，失败返回 false
+*/
+bool Insert(elem_t e, avl_tree_t *tree);
+
+/**
+* PreOrder 前序遍历
+* @param tree: 指向 AVL 树的指针
+*/
+void PreOrder(avl_tree_t *tree);
+
+/**
+* InOrder 中序遍历
+* @param tree: 指向 AVL 树的指针
+*/
+void InOrder(avl_tree_t *tree);
+
+/**
+* PreOrder 后序遍历
+* @param tree: 指向 AVL 树的指针
+*/
+void PostOrder(avl_tree_t *tree);
 
 #endif //AVL_H
 ```
@@ -266,8 +296,8 @@ static int height(avl_node_t *node)
 失衡结点的左子结点的左子树上插入
 
 ```c title:avl.c
-static avl_node_t *signalRotateWithLeft(avl_node_t *k2) {
-    /*
+/**
+ * signalRotateWithLeft 左-左情形旋转(右旋)
         K2					K1
         /\					/\
        /  \				   /  \
@@ -277,10 +307,12 @@ static avl_node_t *signalRotateWithLeft(avl_node_t *k2) {
     X    Y					 Y	  Z
     |
     |
-    */
-
+ * @param k2: 失衡结点
+ * @return : 新的根结点
+ */
+static avl_node_t *signalRotateWithLeft(avl_node_t *k2) {
     // 调整树
-    avl_node_t *k1 = k2->left;
+    avl_node_t * k1 = k2->left;
     k2->left = k1->right;
     k1->right = k2;
 
@@ -297,8 +329,8 @@ static avl_node_t *signalRotateWithLeft(avl_node_t *k2) {
 失衡结点的右子结点的右子树上插入
 
 ```c title:avl.c
-static avl_node_t *signalRotateWithRight(avl_node_t *k1) {
-    /*
+/**
+ * signalRotateWithRight 右-右情形(左旋)
         K1						K2
         /\						/\
        /  \					   /  \
@@ -308,8 +340,10 @@ static avl_node_t *signalRotateWithRight(avl_node_t *k1) {
         Y    Z              X   Y
              |
              |
-    */
-
+ * @param k1 : 失衡节点
+ * @return : 返回新的根节点
+ */
+static avl_node_t *signalRotateWithRight(avl_node_t *k1) {
     // 调整树
     avl_node_t *k2 = k1->right;
     k1->right = k2->left;
@@ -323,7 +357,6 @@ static avl_node_t *signalRotateWithRight(avl_node_t *k1) {
 ```
 
 #### 双旋转
-
 
 ##### 左-右情形(左旋-右旋)
 
@@ -383,7 +416,6 @@ static avl_node_t * doubleRotateWithRight(avl_node_t *k1) {
 	k1 = signalRotateWithRight(k1);
 	return k1;
 }
-
 ```
 
 ### Insert

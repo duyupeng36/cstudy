@@ -6,6 +6,7 @@
       {
         "id": "c2c66e3415d95c65",
         "type": "tabs",
+        "dimension": 57.374301675977655,
         "children": [
           {
             "id": "8eccb5a01b3b3a7d",
@@ -44,7 +45,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/红黑树.md",
+                "file": "笔记/优先队列.md",
                 "mode": "source",
                 "source": false
               }
@@ -52,11 +53,12 @@
             "group": "94e7674ae86ba37c"
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       },
       {
         "id": "833ce2312e916bba",
         "type": "tabs",
+        "dimension": 42.62569832402235,
         "children": [
           {
             "id": "cc75c83139c4a35b",
@@ -64,7 +66,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/红黑树.md",
+                "file": "笔记/优先队列.md",
                 "mode": "source",
                 "source": false
               }
@@ -121,8 +123,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 211.5,
-    "collapsed": true
+    "width": 211.5
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -138,7 +139,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "笔记/优先队列.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -155,7 +156,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "笔记/优先队列.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -178,7 +179,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "笔记/优先队列.md"
               }
             }
           }
@@ -200,29 +201,32 @@
       "canvas:新建白板": false,
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
-      "command-palette:打开命令面板": false
+      "command-palette:打开命令面板": false,
+      "obsidian-translator:Translate": false
     }
   },
-  "active": "e9c70ca3995437ea",
+  "active": "76246533d01e3b01",
   "lastOpenFiles": [
-    "笔记/红黑树.md",
-    "README.md",
-    "笔记/B 树.md",
-    "assets/attachments/Pasted image 20241002183634.png",
-    "assets/attachments/Pasted image 20241002183624.png",
-    "assets/attachments/Pasted image 20241002183610.png",
-    "assets/attachments/Pasted image 20241002183549.png",
-    "assets/attachments/Pasted image 20241002183532.png",
-    "assets/attachments/Pasted image 20241002183509.png",
-    "assets/attachments/Pasted image 20241002183446.png",
-    "assets/attachments/Pasted image 20241002183431.png",
-    "assets/attachments/Pasted image 20241002183351.png",
-    "assets/attachments/Pasted image 20241002183333.png",
-    "笔记/AVL 树.md",
-    "笔记/二叉查找树.md",
+    "assets/attachments/Pasted image 20241003110920.png",
+    "assets/attachments/Pasted image 20241003092944.png",
+    "assets/attachments/Pasted image 20241003092924.png",
+    "assets/attachments/Pasted image 20241003092906.png",
+    "assets/attachments/Pasted image 20241003092842.png",
+    "assets/attachments/Pasted image 20241002231644.png",
+    "assets/attachments/Pasted image 20241002231627.png",
+    "assets/attachments/Pasted image 20241002231608.png",
+    "assets/attachments/Pasted image 20241002204531.png",
+    "assets/attachments/Pasted image 20241002204423.png",
     "笔记/树与二叉树.md",
+    "笔记/优先队列.md",
+    "assets/attachments/Pasted image 20241002204320.png",
+    "README.md",
+    "笔记/AVL 树.md",
     "笔记/散列表.md",
     "笔记/栈和队列.md",
+    "笔记/红黑树.md",
+    "笔记/B 树.md",
+    "笔记/二叉查找树.md",
     "笔记/查找算法.md",
     "笔记/排序算法.md",
     "笔记/线性表.md",
@@ -240,8 +244,6 @@
     "笔记/数组.md",
     "笔记/字符串.md",
     "笔记/结构体.md",
-    "笔记/程序的结构.md",
-    "笔记/联合和枚举.md",
     "ReadItLater Inbox",
     "作业",
     "笔记",
