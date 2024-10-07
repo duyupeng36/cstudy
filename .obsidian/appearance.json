@@ -1,6 +1,7 @@
 {
   "cssTheme": "Border",
   "accentColor": "",
-  "baseFontSize": 16,
-  "theme": "system"
+  "baseFontSize": 14,
+  "theme": "system",
+  "baseFontSizeAction": true
 }

@@ -6,7 +6,6 @@
       {
         "id": "c2c66e3415d95c65",
         "type": "tabs",
-        "dimension": 57.374301675977655,
         "children": [
           {
             "id": "8eccb5a01b3b3a7d",
@@ -40,40 +39,19 @@
             }
           },
           {
-            "id": "76246533d01e3b01",
+            "id": "6427fa9b3fa16d59",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/优先队列.md",
+                "file": "笔记/GCC.md",
                 "mode": "source",
                 "source": false
               }
-            },
-            "group": "94e7674ae86ba37c"
+            }
           }
         ],
-        "currentTab": 2
-      },
-      {
-        "id": "833ce2312e916bba",
-        "type": "tabs",
-        "dimension": 42.62569832402235,
-        "children": [
-          {
-            "id": "cc75c83139c4a35b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "笔记/优先队列.md",
-                "mode": "source",
-                "source": false
-              }
-            },
-            "group": "94e7674ae86ba37c"
-          }
-        ]
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -123,7 +101,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 211.5
+    "width": 200
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -139,7 +117,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "笔记/优先队列.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -156,7 +134,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/优先队列.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -179,7 +157,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/优先队列.md"
+                "file": "README.md"
               }
             }
           }
@@ -205,45 +183,46 @@
       "obsidian-translator:Translate": false
     }
   },
-  "active": "76246533d01e3b01",
+  "active": "e9c70ca3995437ea",
   "lastOpenFiles": [
-    "assets/attachments/Pasted image 20241003110920.png",
-    "assets/attachments/Pasted image 20241003092944.png",
-    "assets/attachments/Pasted image 20241003092924.png",
-    "assets/attachments/Pasted image 20241003092906.png",
-    "assets/attachments/Pasted image 20241003092842.png",
-    "assets/attachments/Pasted image 20241002231644.png",
-    "assets/attachments/Pasted image 20241002231627.png",
-    "assets/attachments/Pasted image 20241002231608.png",
-    "assets/attachments/Pasted image 20241002204531.png",
-    "assets/attachments/Pasted image 20241002204423.png",
-    "笔记/树与二叉树.md",
-    "笔记/优先队列.md",
-    "assets/attachments/Pasted image 20241002204320.png",
+    "笔记/GCC.md",
+    "assets/attachments/Pasted image 20241007102703.png",
+    "笔记/程序的结构.md",
     "README.md",
-    "笔记/AVL 树.md",
-    "笔记/散列表.md",
-    "笔记/栈和队列.md",
-    "笔记/红黑树.md",
-    "笔记/B 树.md",
-    "笔记/二叉查找树.md",
-    "笔记/查找算法.md",
-    "笔记/排序算法.md",
-    "笔记/线性表.md",
-    "笔记/算法复杂度.md",
-    "作业/作业13：线性表.md",
-    "作业/作业12：指针高级.md",
-    "笔记/指针高级.md",
-    "笔记/函数.md",
-    "作业/作业7：函数.md",
-    "笔记/$red.md",
-    "笔记/声明.md",
     "assets/canvas/任务.canvas",
-    "笔记/标准 IO.md",
-    "笔记/基本概念.md",
-    "笔记/数组.md",
-    "笔记/字符串.md",
-    "笔记/结构体.md",
+    "作业/作业16：整数转浮点数.md",
+    "作业/作业15：排序算法.md",
+    "作业/作业14：线性表.md",
+    "作业/作业13：标准IO.md",
+    "作业/作业12：指针高级.md",
+    "作业/作业11：结构体.md",
+    "作业/作业10：字符串.md",
+    "作业/作业9：指针与数组.md",
+    "作业/作业8：指针.md",
+    "作业/作业7：函数.md",
+    "作业/作业6：数组.md",
+    "作业/作业5：表达式和语句.md",
+    "作业/作业4：基本类型.md",
+    "作业/作业3：格式化输入输出.md",
+    "作业/作业2：变量与常量.md",
+    "作业/作业1：第一个 C 程序.md",
+    "笔记/浮点代码.md",
+    "assets/attachments/Pasted image 20241006233535.png",
+    "assets/attachments/Pasted image 20241006233250.png",
+    "assets/attachments/Pasted image 20241006233040.png",
+    "assets/attachments/Pasted image 20241006232820.png",
+    "assets/attachments/Pasted image 20241006232208.png",
+    "assets/attachments/Pasted image 20241006232033.png",
+    "笔记/过程.md",
+    "assets/attachments/Pasted image 20241006225043.png",
+    "assets/attachments/Pasted image 20241006225019.png",
+    "assets/attachments/Pasted image 20241006224443.png",
+    "笔记/控制.md",
+    "笔记/$green.md",
+    "笔记/算术和逻辑操作.md",
+    "笔记/访问信息.md",
+    "assets/attachments/The_Holy_Bible.txt",
+    "assets/The_Holy_Bible.txt",
     "ReadItLater Inbox",
     "作业",
     "笔记",
@@ -253,8 +232,6 @@
     "Tags",
     "//Untitled.canvas",
     "Untitled.canvas",
-    "02_codes/c/cmake-build-debug/CMakeFiles/clion-Debug-log.txt",
-    "02_codes/c/cmake-build-debug/CMakeFiles/clion-environment.txt",
-    "02_codes/c/cmake-build-debug/CMakeFiles"
+    "02_codes/c/cmake-build-debug/CMakeFiles/clion-Debug-log.txt"
   ]
 }
