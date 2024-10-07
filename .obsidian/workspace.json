@@ -51,7 +51,7 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -117,7 +117,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "笔记/GCC.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -134,7 +134,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "笔记/GCC.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -157,7 +157,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "笔记/GCC.md"
               }
             }
           }
@@ -183,12 +183,12 @@
       "obsidian-translator:Translate": false
     }
   },
-  "active": "e9c70ca3995437ea",
+  "active": "6427fa9b3fa16d59",
   "lastOpenFiles": [
+    "README.md",
     "笔记/GCC.md",
     "assets/attachments/Pasted image 20241007102703.png",
     "笔记/程序的结构.md",
-    "README.md",
     "assets/canvas/任务.canvas",
     "作业/作业16：整数转浮点数.md",
     "作业/作业15：排序算法.md",
