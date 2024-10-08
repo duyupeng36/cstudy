@@ -39,7 +39,7 @@
             }
           },
           {
-            "id": "6427fa9b3fa16d59",
+            "id": "dbed3135150f0b1c",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -101,7 +101,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -183,11 +184,22 @@
       "obsidian-translator:Translate": false
     }
   },
-  "active": "6427fa9b3fa16d59",
+  "active": "dbed3135150f0b1c",
   "lastOpenFiles": [
     "README.md",
+    "笔记/库基础.md",
+    "assets/attachments/Pasted image 20241008115758.png",
+    "assets/attachments/Pasted image 20241008111554.png",
+    "assets/attachments/Pasted image 20241008110247.png",
+    "assets/attachments/Pasted image 20241008110158.png",
+    "assets/attachments/Pasted image 20241008001052.png",
+    "assets/attachments/Pasted image 20241007230950.png",
+    "assets/attachments/Pasted image 20241007225845.png",
     "笔记/GCC.md",
-    "assets/attachments/Pasted image 20241007102703.png",
+    "笔记/指针高级.md",
+    "assets/attachments/Pasted image 20241007213305.png",
+    "assets/attachments/Pasted image 20241007185009.png",
+    "assets/attachments/Pasted image 20241007182511.png",
     "笔记/程序的结构.md",
     "assets/canvas/任务.canvas",
     "作业/作业16：整数转浮点数.md",
@@ -207,20 +219,9 @@
     "作业/作业2：变量与常量.md",
     "作业/作业1：第一个 C 程序.md",
     "笔记/浮点代码.md",
-    "assets/attachments/Pasted image 20241006233535.png",
-    "assets/attachments/Pasted image 20241006233250.png",
-    "assets/attachments/Pasted image 20241006233040.png",
-    "assets/attachments/Pasted image 20241006232820.png",
-    "assets/attachments/Pasted image 20241006232208.png",
-    "assets/attachments/Pasted image 20241006232033.png",
     "笔记/过程.md",
-    "assets/attachments/Pasted image 20241006225043.png",
-    "assets/attachments/Pasted image 20241006225019.png",
-    "assets/attachments/Pasted image 20241006224443.png",
     "笔记/控制.md",
     "笔记/$green.md",
-    "笔记/算术和逻辑操作.md",
-    "笔记/访问信息.md",
     "assets/attachments/The_Holy_Bible.txt",
     "assets/The_Holy_Bible.txt",
     "ReadItLater Inbox",
