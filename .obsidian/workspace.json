@@ -22,12 +22,12 @@
             }
           },
           {
-            "id": "caa22842ab8634a7",
+            "id": "da9e0111c64f76c7",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/文件属性.md",
+                "file": "笔记/线性表.md",
                 "mode": "source",
                 "source": false
               }
@@ -101,7 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "笔记/文件属性.md",
+                "file": "笔记/线性表.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/文件属性.md",
+                "file": "笔记/线性表.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -141,7 +141,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/文件属性.md"
+                "file": "笔记/线性表.md"
               }
             }
           }
@@ -167,14 +167,14 @@
       "obsidian-translator:Translate": false
     }
   },
-  "active": "caa22842ab8634a7",
+  "active": "da9e0111c64f76c7",
   "lastOpenFiles": [
+    "README.md",
+    "笔记/文件属性.md",
     "笔记/线性表.md",
     "笔记/函数.md",
-    "README.md",
     "笔记/数组.md",
     "笔记/文件 IO：通用 IO 模型.md",
-    "笔记/文件属性.md",
     "笔记/计算机组成原理.md",
     "笔记/文件系统的实现.md",
     "assets/attachments/Pasted image 20241011180619.png",
