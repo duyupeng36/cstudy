@@ -22,18 +22,6 @@
             }
           },
           {
-            "id": "ca5ebe8b941e2583",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "笔记/GDB.md",
-                "mode": "preview",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "1e5cbcc84b7ebd22",
             "type": "leaf",
             "state": {
@@ -46,19 +34,19 @@
             }
           },
           {
-            "id": "3b6e558065d569b5",
+            "id": "8b73e1eeac54acdb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/字符串.md",
+                "file": "笔记/文件 IO：通用 IO 模型.md",
                 "mode": "preview",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -125,7 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "笔记/字符串.md",
+                "file": "作业/作业18：文件 IO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -142,7 +130,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/字符串.md",
+                "file": "作业/作业18：文件 IO.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -165,7 +153,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/字符串.md"
+                "file": "作业/作业18：文件 IO.md"
               }
             }
           }
@@ -174,7 +162,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -191,14 +180,14 @@
       "obsidian-translator:Translate": false
     }
   },
-  "active": "3b6e558065d569b5",
+  "active": "1e5cbcc84b7ebd22",
   "lastOpenFiles": [
-    "作业/作业18：文件 IO.md",
-    "笔记/字符串.md",
-    "README.md",
     "笔记/文件 IO：通用 IO 模型.md",
-    "笔记/文件属性.md",
+    "README.md",
+    "作业/作业18：文件 IO.md",
     "笔记/GDB.md",
+    "笔记/字符串.md",
+    "笔记/文件属性.md",
     "笔记/优先队列.md",
     "笔记/线性表.md",
     "笔记/栈和队列.md",
