@@ -93,41 +93,39 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 
 > [!tip] flags：位掩码，指定打开文件后的 **访问模式**
 > 
-> 下表列出了所有的 flags 参数取值的宏。这些宏定义在 `<fcntl.h>` 头中
->
->| 标志            | 用途                             |
-> | :------------ | :----------------------------- |
-> | `O_RDONLY`    | 以只读方式打开                        |
-> | `O_WRONLY`    | 以只写方式打开                        |
-> | `O_RDWR`      | 以读写方式打开                        |
-> |               |                                |
-> | `O_CLOEXEC`   | 设置 `close-on-exec` 标志          |
-> | `O_CREAT`     | 若文件不存在则创建                      |
-> | `O_EXCL`      | 结合 `O_CREAT` 参数使用，专门用于创建文件     |
-> | `O_DIRECT`    | 无缓冲的输入/输出                      |
-> | `O_DIRECTORY` | 如果 `pathname` 不是目录，则失败         |
-> | `O_LARGEFILE` | 在 $32$ 位系统中使用此标志打开大文件          |
-> | `O_NOATIME`   | 调用 `read()` 时，不修改文件最近访问时间      |
-> | `O_NOCTTY`    | 不要让 `pathname`（所指向的终端设备）成为控制终端 |
-> | `O_NOFOLLOW`  | 对符号链接不予解引用                     |
-> | `O_TRUNC`     | 截断已有文件，使其长度为零                  |
-> |               |                                |
-> | `O_APPEND`    | 总在文件尾部追加数据                     |
-> | `O_ASYNC`     | 当 I/O 操作可行时，产生信号 `signal` 通知进程   |
-> |  `O_DSYNC`     | 提供同步的 I/O 数据完整性                |
-> | `O_NONBLOCK`  | 以非阻塞方式打开                       |
-> | `O_SYNC`      | 以同步方式写入文件                      |
+> 下表列出了所有的 flags 参数取值的宏。这些宏定义在 `<fcntl.h>` 头中，具体取值如下表
 > 
 > 这些常量被分为 $3$ 组
 > + 文件访问模式标志：包含 `O_RDONLY` `O_WRONLY` `O_RDWR` 共$3$ 个常量，调用 `open()` 时，只能指定其中之一。调用 `fcntl()` 通过 `F_GETFL` 可以检索文件的访问模式
-> + 文件创建标志：上表中的第二部分，其控制范围不拘于 `open()` 调用行为的方方面面，还涉及后续 IO 操作。这些标志不能检索，也无法修改
+> + 文件创建标志：第二部分，其控制范围不拘于 `open()` 调用行为的方方面面，还涉及后续 IO 操作。这些标志不能检索，也无法修改
 > + 已打开文件的状态标志：使用 `fcntl()` 通过 `F_GETFL` 和 `F_SETFL` 操作可以检索和修改此类标志
-> 
+
+| 标志            | 用途                             |
+| :------------ | :----------------------------- |
+| `O_RDONLY`    | 以只读方式打开                        |
+| `O_WRONLY`    | 以只写方式打开                        |
+| `O_RDWR`      | 以读写方式打开                        |
+|               |                                |
+| `O_CLOEXEC`   | 设置 `close-on-exec` 标志          |
+| `O_CREAT`     | 若文件不存在则创建                      |
+| `O_EXCL`      | 结合 `O_CREAT` 参数使用，专门用于创建文件     |
+| `O_DIRECT`    | 无缓冲的输入/输出                      |
+| `O_DIRECTORY` | 如果 `pathname` 不是目录，则失败         |
+| `O_LARGEFILE` | 在 $32$ 位系统中使用此标志打开大文件          |
+| `O_NOATIME`   | 调用 `read()` 时，不修改文件最近访问时间      |
+| `O_NOCTTY`    | 不要让 `pathname`（所指向的终端设备）成为控制终端 |
+| `O_NOFOLLOW`  | 对符号链接不予解引用                     |
+| `O_TRUNC`     | 截断已有文件，使其长度为零                  |
+|               |                                |
+| `O_APPEND`    | 总在文件尾部追加数据                     |
+| `O_ASYNC`     | 当 I/O 操作可行时，产生信号 `signal` 通知进程 |
+| `O_DSYNC`     | 提供同步的 I/O 数据完整性                |
+| `O_NONBLOCK`  | 以非阻塞方式打开                       |
+| `O_SYNC`      | 以同步方式写入文件                      |
 
 > [!tip] mode：位掩码，指定文件的 **访问权限**
 > 
-> 只有当调用 `open` 创建文件时才需要指定该参数。权限的设置参考 [[Linux 命令和 vim 操作#类型和权限]] 
-> 
+> 只有当调用 `open` 创建文件时才需要指定该参数。通常采用 $3$ 位八进制数指定文件的访问全新。参考 [[Linux 命令和 vim 操作#类型和权限]] 
 > 
 
 > [!tip] 返回值
@@ -141,15 +139,15 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 
 若打开文件时发生错误，`open()` 将返回 $−1$，错误号 `errno` 标识错误原因。`open()` 可能发生的错误有如下几个
 
-| 错误号       | 描述                                                                                                           |
-| :-------- | :----------------------------------------------------------------------------------------------------------- |
-| `EACCES`  | 文件权限不允许调用进程以 `flags` 参数指定的方式打开文件。                                                                            |
-| `EISDIR`  | 所指定的文件属于目录，而调用者企图打开该文件进行写操作                                                                                  |
-| `EMFILE`  | 进程已打开的文件描述符数量达到了进程资源限制所设定的上限                                                                                 |
-| `ENFILE`  | 文件打开数量已经达到系统允许的上限。                                                                                           |
-| `ENOENT`  | 要么文件不存在且未指定 `O_CREAT` 标志<br>要么指定了 `O_CREAT` 标志，但是 `pathname` 指定目录之一不存在<br>要么 `pathname` 参数为符号连接，而该链接指向的文件不存在 |
-| `EROFS`   | 所指定的文件隶属于只读文件系统，而调用者企图以写方式打开文件                                                                               |
-| `ETXTBSY` | 所指定的文件为可执行文件（程序），且正在运行                                                                                       |
+| 错误号       | 描述        | 原因                 |
+| :-------- | :-------- | ------------------ |
+| `EACCES`  | 没有权限访问    | 文件不允许`flags` 指定的标志 |
+| `EISDIR`  | 是一个目录     | 打开目录文件用于写          |
+| `EMFILE`  | 进程内打开文件过多 | 进程打开文件达到进程资源限制条件   |
+| `ENFILE`  | 系统内打开文件过多 | 系统内打开文件已达到系统限制条件   |
+| `ENOENT`  | 不是目录或文件   | 文件或目录(链接目标)不存在     |
+| `EROFS`   | 只读文件系统    | 以写的方式打开只读文件系统中的文件  |
+| `ETXTBSY` | 文本文件繁忙    | 系统不允许修改正在运行的程序     |
 
 ### 创建文件
 
@@ -281,23 +279,18 @@ off_t lseek(int fd, off_t offset, int whence);
 
 > [!tip] 参数 `whence`：新的偏移的参照基点
 > 
-> 参照哪个基点解释参数 `offset`。在 `<fcntl.h>` 中定义了参照基点的常量
+> 参照哪个基点解释参数 `offset`。在 `<fcntl.h>` 中定义了参照基点的常量，如下表所示，给出了参照基点对 `offset` 的影响
 > 
-> |基点|值|描述|
-> |:-|:-|:-|
-> |`SEEK_SET`| 0 |文件开头位置作为基点|
-> |`SEEK_CUR`| 1 |文件当前偏移位置作为基点|
-> |`SEEK_END`| 2 |文件末尾作为基点|
-> 
-> 下图解释了参数 `whence` 的含义
-> 
-> ![[Pasted image 20241011180619.png]]
-> 
-> 参数 `whence` 的值可以决定 `offset` 的取值
-> + `whence` 参数的取值为 `SEEK_CUR` 和 `SEEK_END`，`offset` 参数可以为正数，也可以为负数
-> + `whence` 参数的取值 `SEEK_SET` 时，`offset` 参数只能为正数
-> 
-> 
+
+| 基点         | 值   | 描述           | `offset` 取值 |
+| :--------- | :-- | :----------- | ----------- |
+| `SEEK_SET` | 0   | 文件开头位置作为基点   | `> 0`       |
+| `SEEK_CUR` | 1   | 文件当前偏移位置作为基点 | `> 0, < 0`  |
+| `SEEK_END` | 2   | 文件末尾作为基点     | `> 0, < 0`  |
+
+下图解释了参数 `whence` 的含义
+
+![[Pasted image 20241011180619.png]]
 
 > [!tip] 返回值
 > 
@@ -323,112 +316,35 @@ off_t lseek(int fd, off_t offset, int whence);
 
 文件空洞的主要优势在于，与为实际需要的空字节分配磁盘块相比，稀疏填充的文件会占用较少的磁盘空间
 
+## ioctl
 
-## 例程
+除了通用 IO 之外，`ioctl()` 系统调用又为执行文件和设备提供了一种多用途机制
 
-在编写程序之前，需要做一些准备工作。就是对错误的处理，我们不期望每次都编写错误处理的代码，而是调用某个函数完成错误处理
+```c
+#include <sys/ioctl.h>
 
-```c title:errors.h
-#ifndef ERRORS_H
-#define ERRORS_H
-
-#include "base.h"
-
-#define usageError(argc, target, format, ...)     \
-    do                                            \
-    {                                             \
-        if ((argc) != (target))                   \
-        {                                         \
-            fprintf(stderr, format, __VA_ARGS__); \
-            exit(EXIT_FAILURE);                   \
-        }                                         \
-    } while (0)
-
-#define catchError(value, target, format, ...)    \
-    do                                            \
-    {                                             \
-        if ((value) == (target))                  \
-        {                                         \
-            fprintf(stderr, format, __VA_ARGS__); \
-            exit(EXIT_FAILURE);                   \
-        }                                         \
-    } while (0)
-
-#endif // ERRORS_H
+int ioctl(int fd, int request, .../*argp*/);
 ```
 
-某些需要固定包含的头文件间，可以提前写在一个头文件中，每次都包含我们的头文件即可
+> [!tip] 参数 `fd` ： 某个设备或文件已打开的文件描述符
 
-```c title:base.h
-#ifndef BASE_H
-#define BASE_H
+> [!tip]  参数 `request`：在 `fd` 上执行的控制操作
+> 
+> 
+> 
 
-// 常用头文件
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+> [!tip] 参数 `argp`：采用 C 语言可变参数
+> 
+> `ioctl()` 根据 `request` 的参数值来确定 `argp` 所期望的类型
+> 
 
-// 文件系统相关头文件
-#include <fcntl.h>
-#include <sys/stat.h>
+---
 
-// unix 标准头文件
-#include <unistd.h>
-
-#endif //BASE_H
-```
-
-### copy
-
-Unix/Linux 系统命令 `cp` 用于将文件复制一份。实现一个简单版本的 `cp` 命令，只需要将一个文件复制到另一个文件
-
-```c title:copy.c
-
-#include "base.h"
-#include "errors.h"
-
-#ifndef BUFFER_SIZE  // 支持 gcc -D
-#define BUFFER_SIZE 1024
-#endif
-
-
-int main(int argc, char *argv[]) {
-
-    usageError(argc, 3, "Usage: %s <old-file> <new-file>\n", argv[0]);
-
-    int flags = O_RDONLY;
-    int src_fd = open(argv[1], O_RDONLY);
-    catchError(src_fd, -1, "Open: %s\n", strerror(errno));
-
-    flags = O_WRONLY | O_CREAT | O_TRUNC;                       // 创建文件用于写入，如果文件存在则截断
-    const mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;  // rw-r--r--
-    int dst_fd = open( argv[2], flags, mode);
-    catchError(dst_fd, -1, "Open: %s\n", strerror(errno));
-
-    // 循环读取
-    char buffer[BUFFER_SIZE];
-    ssize_t num_read;
-    while ((num_read = read(src_fd, buffer, BUFFER_SIZE)) > 0) {
-        if(write(dst_fd, buffer, num_read) != num_read) {
-            fprintf(stderr, "Write: %s\n", strerror(errno));
-            return -1;
-        }
-    }
-
-    catchError(num_read, -1, "Read: %s\n", strerror(errno));
-
-    // 关闭文件
-    catchError(close(src_fd), -1, "Close: %s\n", strerror(errno));
-    catchError(close(dst_fd), -1, "Close: %s\n", strerror(errno));
-    return 0;
-}
-```
-
-### lseek
-
-```shell
-
-```
-
-
+> [!summary] 
+> 
+> 为了对普通文件执行 I/O 操作，首先必须调用 `open()` 以获得一个文件描述符。随之使用 `read()` 和 `write()` 执行文件的 I/O 操作，然后应使用 `close()` 释放文件描述符及相关资源。这些系统调用可对所有类型的文件执行 I/O 操作
+> 
+> **所有类型的文件和设备驱动都实现了相同的 I/O 接口**，这保证了 I/O 操作的通用性
+> 
+> 对于已打开的每个文件，内核都维护有一个 **文件偏移量**，这决定了 **下一次读或写操作的起始位置**。读和写操作会隐式修改文件偏移量。使用 `lseek()` 函数可以显式地将文件偏移量置为文件中或文件结尾后的任一位置
+> 
