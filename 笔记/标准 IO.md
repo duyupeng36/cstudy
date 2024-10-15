@@ -393,37 +393,48 @@ int main()
 
 ## 随机访问
 
-大多数情况下，顺序访问文件来说是很好的。但是，偶尔也需要随机访问文件中的内容。每个流都有相关联的 **文件位置**
+大多数情况下，顺序访问文件来说是很好的。但是，偶尔也需要随机访问文件中的内容。每个流都有相关联的 **文件读写位置**
 
 > [!tip] 文件默认位置
 > 
-> 文件打开时，会将文件位置重置到起始处。如果以 `"a"` 模式打开，则文件位置被设置在文件末尾
+> 文件打开时，会将文件读写位置重置到起始处。如果以 `"a"` 模式打开，则文件读写位置被设置在文件末尾
 
-随着读写操作的进行，文件位置会自动推进，并且允许按照顺序贯穿整个文件
+随着读写操作的进行，文件读写位置会自动推进，并且允许按照顺序贯穿整个文件
 
 `<stdio.h>` 中提供了 $5$ 个函数来支持文件的随机访问。它们的原型如下
 
 ```c
-void rewind(FILE *stream); // 文件位置设置为起始位置
+void rewind(FILE *stream); // 文件偏移量设置为起始位置
 
-long int ftell(FILE *stream);  // 返回文件位置
-int fseek(FILE *stream, long int offset, int whence); // 设置文件位置
+long int ftell(FILE *stream);  // 返回文件偏移量
+int fseek(FILE *stream, long int offset, int whence); // 设置文件偏移量
 
 int fgetpos(FILE * restrict stream, fpos_t * restrict pos); 
 int fsetpos(FILE *stream, const fpos_t *pos); 
 ```
 
-`rewind` 函数将 `stream` 流的文件位置设置为起始位置
+> [!tip] rewind：将文件偏移量设置为 $0$
+> 
+> `rewind` 函数将 `stream` 流的文件读写位置设置为起始位置
+> 
 
-`ftell` 和 `fseek` 函数是一组，用于操作文件位置可以存储在 `long int` 类型的文件
+> [!tip] ftell 和 fseek：用于操作文件偏移位置可以存储在 `long int` 类型的文件
+> 
+> `ftell` 函数返回 `stream` 流的当前文件读写位置，稍后可能会使用到这个返回值。`ftell` 函数遇见错误会返回 `-1L` 并设置 `errno`
+> 
+> `fseek` 函数用于移动 `stream` 流的文件读写位置。它相对 `whence` 移动 `offset` 字节
 
-`ftell` 函数返回 `stream` 流的当前文件位置，稍后可能会使用到这个返回值。`ftell` 函数遇见错误会返回 `-1L` 并设置 `errno`
+对于文本文件，`offset` 必须是 $0$。`whence` 的取值是 `<stdio.h>` 中定义的 $3$ 个宏
 
-`fseek` 函数用于移动 `stream` 流的文件位置。它相对 `whence` 移动 `offset` 字节。对于文本文件，`offset` 必须是 $0$。`whence` 的取值是 `<stdio.h>` 中定义的 $3$ 个宏
-- `SEEK_SET`: 流的起始位置，对应整数 $0$
-- `SEEK_CUR`: 流的当前位置，对应整数 $1$
-- `SEEK_END`: 流的末尾，对应整数 $2$
+| `whence`   | 整数值 | 描述   |
+| :--------- | --- | ---- |
+| `SEEK_SET` | $0$ | 起始位置 |
+| `SEEK_CUR` | $1$ | 当前位置 |
+| `SEEK_END` | $2$ | 结束位置 |
 
-`fgetpos` 和 `fsetpos` 函数是一组，用于操作非常大的文件。使用 `fpos_t` 类型的值表示文件位置，该类型不一定是整数，可能是结构
-- `fgetpos` 函数类似于 `ftell` 函数，它将 `stream` 流的当前文件位置存储在 `pos` 指向的内存区域中
-- `fsetpos` 函数类似于 `fseek` 函数，它设置 `stream` 流的文件位置为 `*pos`
+> [!tip] fgetpos 和 fsetpos：与 `ftell` 和 `fseek` 类似，用于操作大文件
+> 使用 `fpos_t` 类型的值表示文件读写位置，该类型不一定是整数，可能是结构
+
+
+- `fgetpos` 函数类似于 `ftell` 函数，它将 `stream` 流的当前文件读写位置存储在 `pos` 指向的内存区域中
+- `fsetpos` 函数类似于 `fseek` 函数，它设置 `stream` 流的文件读写位置为 `*pos`

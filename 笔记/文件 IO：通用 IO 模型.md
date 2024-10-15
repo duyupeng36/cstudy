@@ -95,10 +95,9 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 > 
 > 下表列出了所有的 flags 参数取值的宏。这些宏定义在 `<fcntl.h>` 头中，具体取值如下表
 > 
-> 这些常量被分为 $3$ 组
-> + 文件访问模式标志：包含 `O_RDONLY` `O_WRONLY` `O_RDWR` 共$3$ 个常量，调用 `open()` 时，只能指定其中之一。调用 `fcntl()` 通过 `F_GETFL` 可以检索文件的访问模式
-> + 文件创建标志：第二部分，其控制范围不拘于 `open()` 调用行为的方方面面，还涉及后续 IO 操作。这些标志不能检索，也无法修改
-> + 已打开文件的状态标志：使用 `fcntl()` 通过 `F_GETFL` 和 `F_SETFL` 操作可以检索和修改此类标志
+> + 前 $3$ 个是文件访问标志：只能选择其中一个
+> + 
+> 
 
 | 标志            | 用途                             |
 | :------------ | :----------------------------- |
@@ -108,9 +107,9 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 |               |                                |
 | `O_CLOEXEC`   | 设置 `close-on-exec` 标志          |
 | `O_CREAT`     | 若文件不存在则创建                      |
-| `O_EXCL`      | 结合 `O_CREAT` 参数使用，专门用于创建文件     |
 | `O_DIRECT`    | 无缓冲的输入/输出                      |
 | `O_DIRECTORY` | 如果 `pathname` 不是目录，则失败         |
+| `O_EXCL`      | 结合 `O_CREAT` 参数使用，专门用于创建文件     |
 | `O_LARGEFILE` | 在 $32$ 位系统中使用此标志打开大文件          |
 | `O_NOATIME`   | 调用 `read()` 时，不修改文件最近访问时间      |
 | `O_NOCTTY`    | 不要让 `pathname`（所指向的终端设备）成为控制终端 |
@@ -118,10 +117,10 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 | `O_TRUNC`     | 截断已有文件，使其长度为零                  |
 |               |                                |
 | `O_APPEND`    | 总在文件尾部追加数据                     |
+| `O_SYNC`      | 以同步方式写入文件                      |
 | `O_ASYNC`     | 当 I/O 操作可行时，产生信号 `signal` 通知进程 |
 | `O_DSYNC`     | 提供同步的 I/O 数据完整性                |
 | `O_NONBLOCK`  | 以非阻塞方式打开                       |
-| `O_SYNC`      | 以同步方式写入文件                      |
 
 > [!tip] mode：位掩码，指定文件的 **访问权限**
 > 

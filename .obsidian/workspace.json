@@ -22,31 +22,43 @@
             }
           },
           {
-            "id": "1e5cbcc84b7ebd22",
+            "id": "28e46d8b5931c505",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "作业/作业18：文件 IO.md",
+                "file": "笔记/文件属性.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "8b73e1eeac54acdb",
+            "id": "75f728009aee28cc",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/文件 IO：通用 IO 模型.md",
-                "mode": "preview",
+                "file": "笔记/深入文件 IO.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "033ff362d2003b13",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/标准 IO.md",
+                "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -96,8 +108,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -113,7 +124,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "作业/作业18：文件 IO.md",
+                "file": "笔记/标准 IO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -130,7 +141,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "作业/作业18：文件 IO.md",
+                "file": "笔记/标准 IO.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -153,7 +164,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "作业/作业18：文件 IO.md"
+                "file": "笔记/标准 IO.md"
               }
             }
           }
@@ -162,8 +173,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -180,45 +190,44 @@
       "obsidian-translator:Translate": false
     }
   },
-  "active": "1e5cbcc84b7ebd22",
+  "active": "033ff362d2003b13",
   "lastOpenFiles": [
-    "笔记/文件 IO：通用 IO 模型.md",
     "README.md",
-    "作业/作业18：文件 IO.md",
-    "笔记/GDB.md",
-    "笔记/字符串.md",
     "笔记/文件属性.md",
-    "笔记/优先队列.md",
-    "笔记/线性表.md",
-    "笔记/栈和队列.md",
-    "笔记/函数.md",
-    "笔记/数组.md",
-    "笔记/计算机组成原理.md",
-    "笔记/文件系统的实现.md",
-    "assets/attachments/Pasted image 20241011180619.png",
-    "作业/作业1：第一个 C 程序.md",
-    "assets/canvas/任务.canvas",
-    "笔记/计算机模型.md",
-    "笔记/AVL 树.md",
-    "笔记/Linux 命令和 vim 操作.md",
-    "笔记/程序的结构.md",
-    "笔记/Makefile.md",
+    "笔记/深入文件 IO.md",
     "笔记/标准 IO.md",
-    "笔记/声明.md",
-    "assets/attachments/Pasted image 20241011091221.png",
-    "assets/attachments/Pasted image 20241010221658.png",
-    "assets/attachments/Pasted image 20241010213229.png",
-    "assets/attachments/Pasted image 20241010213003.png",
-    "assets/attachments/Pasted image 20241010212400.png",
-    "assets/attachments/Pasted image 20241010212306.png",
-    "assets/attachments/Pasted image 20241010204809.png",
-    "assets/attachments/Pasted image 20241010194312.png",
-    "assets/attachments/Pasted image 20241010192816.png",
+    "作业/作业18：文件 IO 通用 IO 模型.md",
+    "笔记/文件 IO：通用 IO 模型.md",
+    "assets/attachments/Pasted image 20241015143221.png",
+    "assets/attachments/Pasted image 20241015115808.png",
+    "assets/attachments/Pasted image 20241014211252.png",
+    "assets/attachments/Pasted image 20241014211225.png",
     "笔记/文件系统.md",
-    "笔记/系统编程概念.md",
-    "笔记/基本概念.md",
+    "笔记/错误处理.md",
     "笔记/共享库高级特性.md",
-    "作业/作业17：Makefile.md",
+    "笔记/库基础.md",
+    "笔记/字符串.md",
+    "笔记/线性表.md",
+    "作业/作业14：线性表.md",
+    "作业/作业15：排序算法.md",
+    "作业/作业13：标准IO.md",
+    "作业/作业12：指针高级.md",
+    "作业/作业11：结构体.md",
+    "assets/attachments/Pasted image 20240929213847.png",
+    "作业/作业10：字符串.md",
+    "作业/作业9：指针与数组.md",
+    "作业/作业8：指针.md",
+    "作业/作业7：函数.md",
+    "作业/作业6：数组.md",
+    "作业/作业5：表达式和语句.md",
+    "笔记/基本概念.md",
+    "作业/作业2：变量与常量.md",
+    "assets/attachments/Pasted image 20241013130418.png",
+    "assets/attachments/Pasted image 20241013121312.png",
+    "assets/attachments/Pasted image 20241013121241.png",
+    "assets/attachments/Pasted image 20241004004429.png",
+    "assets/attachments/Pasted image 20241011180619.png",
+    "assets/canvas/任务.canvas",
     "assets/attachments/The_Holy_Bible.txt",
     "assets/The_Holy_Bible.txt",
     "ReadItLater Inbox",
