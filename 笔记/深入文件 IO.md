@@ -359,7 +359,7 @@ Unix/Linux 系统内核  维护的 $3$ 个数据结构：进程级打开文件�
  
 进程 A 的 `fd 2` 和 进程 B 的 `fd 2` 指向同一个系统打开文件表项 $73$， 这种情形可能在调用 `fork()` 后出现：**进程 A 与进程 B 之间是父子关系**
  
-进程 A 的 `fd 0` 和进程 B 的 `fd 3` 分别指向不同的打开文件句柄，但这些句柄均指向 **i-node** 表中的相同条目，换言之，**指向同一文件**。发生这种情况是因为每个 **进程各自对同一文件发起了 `open()` 调用**
+进程 A 的 `fd 0` 和进程 B 的 `fd 3` 分别指向不同的打开文件句柄，但这些句柄均指向 **i-node** 表中的相同条目，换言之，**指向同一文件**。发生这种情况是因为每个 **进程各自对同一文件发起了 `open()` 调用**。同一进程两次调用 `open()` 打开同一个文件也会出现类似情形
 
 > [!summary] 
 > 
@@ -464,7 +464,7 @@ int dup3(int oldfd, int newfd, int flags);
 
 有些程序需要创建一些 **临时文件**，仅供其在运行期间使用，**程序终止后即行删除**。例如，编译器程序会在编译过程中创建临时文件
 
-C 语言函数库提供了一系列的库函数用于创建临时文件。在 [[标准 IO]] 中我们介绍了 `tmpfile()` 库函数，该函数位于 `<stdio.h>` 头文件中。现在，我们介绍另一个库函数 `mkstemp()` 
+C 语言函数库提供了一系列的库函数用于创建临时文件。在 [[标准 IO 流]] 中我们介绍了 `tmpfile()` 库函数，该函数位于 `<stdio.h>` 头文件中。现在，我们介绍另一个库函数 `mkstemp()` 
 
 `mkstemp()` 函数基于调用者提供的模板 生成一个唯一文件名并打开该文件，返回一个可用于 IO 调用的文件描述符
 
@@ -502,8 +502,188 @@ if(fd == -1) {
 unlink(template);  // 删除临时文件
 ```
 
-## 
+## 在文件特定偏移量处的 IO
+
+系统调用 `pread()` 和 `pwrite()` 执行 `read()` 和 `write()` 类似的工作。然而，`pread()` 和 `pwrite()` 不会改变文件偏移量，而是在 `offset` 参数指定的位置执行 IO 操作
+
+```c
+#include <unistd.h>
+
+ssize_t pread(int fd, void *buf, size_t count, off_t offset);
+/* 返回读取的字节数；EOF返回 0；失败返回 -1, */
+
+ssize_t pwrite(int fd, const void * buf, size_t count, off_t offset);
+/* 返回写入的字节数，失败返回 -1 */
+```
+
+`pread()` 等价于下面代码的原子操作
+
+```c
+off_t orig;
+
+orig = lseek(fd, 0, SEEK_CUR);  // 获取当前文件偏移位置
+lseek(fd, offset, SEEK_SET);    // 设置文件偏移量为 offset
+s = read(fd, buf, len);         // 读取
+lseek(fd, orig, SEEK_SET);      // 还原文件偏移位置
+```
+
+> [!tip]
+> 
+> 对 `pread()` 和 `pwrite()` 而言，`fd` 所指代的 **文件必须是可定位的**
+> 
+> 这些系统调用在多线程程序中非常有用。进程下辖的所有线程将共享进程资源，文件描述符表也在共享访问内。这也意味着每个已打开文件的文件偏移量为所有线程所共享
+> 
+> 调用 `pread()` 和 `pwrite()` 时，多个线程可同时对同一个文件描述符执行 IO 操作，并且不会因其他线程修改文件偏移量而受到影响
+> 
+
+## 分散输入和集中输出
+
+系统调用 `readv()` 和 `writev()` 实现了分散输入和集中输出功能
+
+```c
+#include <sys/uio.h>
+
+ssize_t readv(int fd, const struct iovec *iov, int iovcnt);
+/* 成功返回读入的字节数；EOF 返回 0； 错误返回 -1 */
+ssize_t writev(int fd, const struct iovec *iov, int iovcnt);
+/* 成功返回写入的字节数；错误返回 -1 */
+```
+
+这两系统调用不是针对单个缓冲区进行读写操作，而是一次即可传输多个缓冲区的数字。参数 `iov` 定义了一组用来传输数据的缓冲区。参数 `iovcnt` 指定了 `iov` 的个数。`iov` 中的元素类型是 `struct iovec`，其结构定义如下
+
+```c
+struct iovec
+{
+	void *iov_base; // 缓冲区开始地址
+	size_t iov_len; // 缓冲区的字节数
+};
+```
+
+> [!tip]
+> 
+> SUSv3 标准允许的 `iov` 长度在 `<limits.h>` 中定义为 `IOV_MAX`。程序也可以在系统运行时调用 `sysconf(_SC_IOV_MAX)` 来获取这一限额
+> 
+
+下图显示了 `iov` `iovcnt` 以及 `iov` 指向缓冲区之间的关系
+
+![[Pasted image 20241015205237.png]]
 
 
+## 截断文件
 
+系统调用 `truncate()` 和 `ftruncate()` 系统调用将文件大小设置为 `length` 参数指定的值
+
+```c
+#include <unistd.h>
+
+int truncate(const char *pathname, off_t length);
+int ftruncate(int fd, off_t length);
+/* 成功返回 0；失败返回 -1 */
+```
+
+> [!tip] 
+> 
+> + 当前文件长度 **大于** 参数 `length`，调用将 **丢弃文件多余的部分**
+> 
+> + 当前文件长度 **小于** 参数 `length`，调用将 **在文件末尾添加空字节** 或者 **文件空洞**
+> 
+
+## 大文件 IO
+
+通常将存放文件偏移量的数据类型 `off_t` 实现为一个 `long int` 类型 ，因为需要使用 `-1` 表示错误情形。在 $32$ 位体系架构中，就将文件大小限制在 $2^{31}-1$，即 $2 \text{GB}$
+
+然而，磁盘驱动器的容量早已超出这一限制，因此 $32$ 位 UNIX 实现有处理超过 $2 \text{GB}$ 大小文件的需求，这也在情理之中。由于问题较为普遍，UNIX 厂商联盟在大型文件峰会（Large File Summit）上就此进行了协商，并针对必需的大文件访问功能，形成了对 SUSv2 规范的扩展
+
+> [!seealso] 
+> 
+> 完整的 LFS 规范定稿于 1996 年，可通过 http://opengroup.org/platform/lfs.html 访问
+> 
+
+
+> [!attention] 
+> 
+> 在 $64$ 位体系架构的 `long int` 类型尺寸为 $64$，原生 Linux 文件系统的实现将文件大小的理论默认值限制为 $2^{63} - 1$。现代磁盘容量还远远没超过这一限制
+> 
+
+应用程序可使用如下两种方式之一以获得 LFS 功能：**过渡型 LFS API** 或者 **将宏 `_FILE_OFFSET_BITS` 定义为 $64$**
+
+
+### 过渡型 LFS API
+
+要使用过渡型的 LFS API，必须在编译程序时定义 `_LARGEFILE64_SOURCE` 功能测试宏。然后使用 $64$ 位文件处理函数，这些函数与 $32$ 位版本命名相同，不过结尾使用 $64$ 区别
+
+```c title:large_file.c
+#define _LARGEFILE64_SOURCE
+
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[]) {
+    long fd;
+    off64_t off;
+
+    if(argc !=3 || strcmp(argv[1], "--help") == 0) {
+        fprintf(stderr, "Usage: %s <pathnam> <offset>\n", argv[0]);
+        return 1;
+    }
+
+    fd = open64(argv[1], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    if(fd == -1) {
+        fprintf(stderr, "open64: %s\n", strerror(errno));
+        return 1;
+    }
+
+    off = strtol(argv[2], NULL, 10);
+    if(lseek64(fd, off, SEEK_SET) == -1) {
+        fprintf(stderr, "lseek: %s\n", strerror(errno));
+        return 1;
+    }
+
+    if(write(fd, "test", 4) == -1) {
+        fprintf(stderr, "write: %s\n", strerror(errno));
+        return 1;
+    }
+    
+    return 0;
+}
+```
+
+### `_FILE_OFFSET_BITS` 宏
+
+要获取 LFS 功能，推荐的作法是：在编译程序时，将宏 `_FILE_OFFSET_BITS` 的值定义为 $64$。做法之一是利用 C 语言编译器的命令行选项
+
+```shell
+gcc -D _FILE_OFFSET_BITS=64 ...
+```
+
+另外一种方法，是在 C 语言的源文件中，在包含所有头文件之前添加如下宏定义
+
+```c
+#define _FILE_OFFSET_BITS 64
+```
+
+所有相关的 $32$ 位函数和数据结构都将转换为 $64$ 位版本
+
+## 非阻塞 IO
+
+在打开文件时指定 `O_NONBLOCK` 标志，有两个目的
+
+> [!tip] `O_NONBLOCK`：要求 IO 操作立即完成
+> 
+> 若 `open()` 未能立即打开文件，则返回错误，而非阻塞。例外情形，调用 `open()` 操作 FIFO^[[[管道和FIFO]]] 可能会陷入阻塞
+> 
+> 调用 `open()` 成功后，后续的 IO 操作也是非阻塞的。若 IO 操作未能立即完成，则可能只传输部分数据，或者系统调用失败，并返回 `EAGAIN` 或者 `EWOULDBLOCK` 错误
+> 
+
+**管道**、**FIFO**、**套接字**、设备(终端或伪终端) 都支持非阻塞模式。由于无法通过 `open()`  来获取 _管道_ 和 _套接字_，所以要启用非阻塞标志，必须使用 `fcntl()` 的 `F_SETFL` 命令 
+
+> [!attention]
+>  
+> 由于 **内核缓冲区保证了普通文件 IO 不会陷入阻塞**，故而打开普通文件时一般会忽略 `O_NONBLOCK` 标志。然而，当使用 **强制文件锁** 时，`O_NONBLOCK` 标志对普通文件也是起作用的
+> 
 
