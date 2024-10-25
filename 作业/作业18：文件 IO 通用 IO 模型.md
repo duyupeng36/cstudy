@@ -88,15 +88,215 @@ int main(int argc, char *argv[]) {
 ```
 
 
+### cp 命令
+
+编写一个类似于 `cp` 命令的程序，当使用该程序复制一个包含空洞（连续的空字节）的普通文件时，要求目标文件的空洞与源文件保持一致
+
+```c title:include/base.h
+#ifndef BASE_H
+#define BASE_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <stdarg.h>
+
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+
+typedef unsigned char byte;
+
+[[noreturn]] void errExit(const char *format, ...);
+[[noreturn]] void usageErr(const char *format, ...);
+[[noreturn]] void fatal(const char *message);
+
+#endif //BASE_H
+```
+
+```c title:lib/base.c
+#include "base.h"
+
+
+void errExit(const char *format, ...) {
+    va_list ap;
+    va_start(ap, format);
+    fprintf(stderr, "error: ");
+    vfprintf(stderr, format, ap);
+    fprintf(stderr, "%s", strerror(errno));
+    va_end(ap);
+    exit(EXIT_FAILURE);
+}
+
+void usageErr(const char *format, ...) {
+    va_list ap;
+    va_start(ap, format);
+    fprintf(stderr, "usage: ");
+    vfprintf(stderr, format, ap);
+    va_end(ap);
+    exit(EXIT_FAILURE);
+}
+
+
+void fatal(const char *message) {
+    fprintf(stderr, "%s\n", message);
+    exit(EXIT_FAILURE);
+}
+```
+
+```c title:fileio/copy.c
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "base.h"
+
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 1024
+#endif
+
+int main(const int argc, const char *argv[]) {
+
+    if(argc != 3 || strcmp(argv[1], "--help") == 0) {
+        usageErr("%s <src> <dst>\n", argv[0]);
+    }
+    const int src = open(argv[1], O_RDONLY);
+    if(src == -1) {
+        errExit("open file %s error: ", argv[1]);
+    }
+
+    const int dst = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if(dst == -1) {
+        errExit("open file %s error: ", argv[2]);
+    }
+
+    ssize_t read_bytes;
+    byte buffer[BUFFER_SIZE];
+    while ((read_bytes = read(src, buffer, BUFFER_SIZE)) > 0) {
+        if(write(dst, buffer, read_bytes) != read_bytes) {
+            fatal("could not write whole buffer");
+        }
+    }
+
+    if(read_bytes == -1) {
+        errExit("read from file %s error: ", argv[1]);
+    }
+
+    if(close(src) == -1) {
+        errExit("close file %s error: ", argv[1]);
+    }
+
+    if(close(dst) == -1) {
+        errExit("close file %s error: ", argv[2]);
+    }
+
+    exit(EXIT_SUCCESS);
+}
+```
+
+### seek 文件空洞
+
+程序 `seek_io` 的第一个命令行参数为将要打开的文件名称，余下的参数则指定了在文件上执行的输入/输出操作。每个表示操作的参数都以一个字母开头，紧跟以相关值（中间无空格分隔）
+
+| 操作          | 描述                              |
+| :---------- | ------------------------------- |
+| `s{offset}` | 以 `SEEK_SET` 为基准，偏移 `offset` 字节 |
+| `r{length}` | 在当前文件偏移处，读取 `length` 字节，以文本显示   |
+| `R{length}` | 在当前文件偏移处，读取 `length` 字节，以十六进制显示 |
+| `w{str}`    | 在当前文件偏移处，写入 `str` 指定的字符串        |
+
+```c title:fileio/seek_io.c
+#include <ctype.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "base.h"
+
+
+int main(int argc, const char *argv[]) {
+    // ./seek_io filepath s{offset}|r{length}|R{length}|w{str}
+
+    size_t len;
+    off_t offset;
+
+    char *buffer;
+    ssize_t read_size, write_size;
+
+    if(argc < 3 || strcmp(argv[1], "--help") == 0) {
+        usageErr("%s file {s<offset> | r<length> | R<length> | w<str>}", argv[0]);
+    }
+
+    const int fd = open(argv[1], O_RDWR | O_CREAT, 0644);
+    if(fd == -1) {
+        errExit("open file %s error: ", argv[1]);
+    }
+
+    for(int ap = 2; ap < argc; ap++) {
+        switch (argv[ap][0]) {
+            case 'r':
+            case 'R':
+                len = strtol(&argv[ap][1], nullptr, 10);
+                buffer = malloc(len);
+                if(buffer == nullptr) {
+                    errExit("malloc error: ");
+                }
+                read_size = read(fd, buffer, len);
+                if(read_size == -1) {
+                    errExit("read error: ");
+                }
+                if(read_size == 0) {
+                    printf("%s: end-of-file\n", argv[ap]);
+                } else {
+                    printf("%s: ", argv[ap]);
+                    for(int j = 0; j < read_size; j++) {
+                        if(argv[ap][0] == 'r') {
+                            printf("%c", isprint(((unsigned char)buffer[j])? buffer[j]: '?'));
+                        } else {
+                            printf("%02x ", (unsigned char)buffer[j]);
+                        }
+                    }
+                    printf("\n");
+                }
+                free(buffer);
+                break;
+
+            case 'w':
+                write_size = write(fd, &argv[ap][1], strlen(&argv[ap][1]));
+                if(write_size == -1) {
+                    errExit("write error: ");
+                }
+                printf("%s: wrote %ld bytes\n", argv[ap], (long)write_size);
+                break;
+            case 's':
+                offset = strtol(&argv[ap][1], nullptr, 10);
+                if(lseek(fd, offset, SEEK_SET) == -1) {
+                    errExit("lseek error: ");
+                }
+                printf("%s: seek succeeded\n", argv[ap]);
+                break;
+            default:
+                cmdLineErr("Argument must start with [rRws]: %s\n", argv[ap]);
+        }
+    }
+    close(fd);
+    return 0;
+}
+```
+
+下面的 shell 会话展示上述例程的使用方法，还显示了从文件空洞中读取字节的情况
+
+![[Pasted image 20241024230614.png]]
+
 ### tee 命令
 
 `tee` 命令是从标准输入中读取数据，直至文件结尾，随后将数据写入标准输出和命令行参数所指定的文件。**请使用 I/O 系统调用实现 `tee` 命令**。默认情况下，若已存在与命令行参数指定文件同名的文件，`tee` 命令会将其覆盖。如文件已存在，请实现 `-a` 命令行选项（`tee -a file`）在文件结尾处追加数据。
  
-```c
+```c title:fileio/tee.c
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+
+#include "base.h"
 
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 1024
@@ -111,150 +311,52 @@ int main(int argc, char *argv[]) {
         switch(opt) {
             case 'a':
                 flags |= O_APPEND;
-                break;
+            break;
             case '?':
-                fprintf(stderr, "未知选项字符 `\\x%x`。\n", optopt);
-                return EXIT_FAILURE;
+                cmdLineErr("unknown option `\\x%x` \n", optopt);
             default:
                 abort();
         }
     }
 
     // 打开所有文件名
-    int fd[argc-optind + 1]; // 变长数组：不能被初始化
+    int fd[argc - optind + 1]; // 变长数组：不能被初始化
 
     fd[0] = STDOUT_FILENO;
     // 设置权限
     flags |= O_WRONLY | O_CREAT;
 
     // rw-r--r--
-    const mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+    constexpr mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 
     for(int i = optind ; i < argc; i++) {
         if((fd[i-optind + 1] = open(argv[i], flags, mode)) == -1) {
-            perror("open");
+           errExit("open file %s error: ", argv[i]);
         }
     }
 
-    char buffer[BUFFER_SIZE];
+    byte buffer[BUFFER_SIZE];
 
-    ssize_t bytes = 0;
+    ssize_t bytes;
 
     while((bytes = read(STDIN_FILENO, buffer, BUFFER_SIZE)) > 0) {
         for(int i = 0; i < sizeof(fd) / sizeof(fd[0]); i++) {
             if(write(fd[i], buffer, bytes) != bytes) {
-                perror("write");
+                errExit("write error: ");
             }
         }
     }
-
-    if(bytes == -1) {
-        perror("read");
+    if(bytes == 0) {
+        fprintf(stderr, "read error: EOF\n");
+    } else {
+        errExit("read error: ");
     }
+
     for(int i = 0; i < sizeof(fd) / sizeof(fd[0]); i++) {
         if(close(fd[i]) == -1) {
-            perror("close");
+            errExit("close error: ");
         }
     }
     return EXIT_SUCCESS;
-}
-```
-
-
-### cp 命令
-
-编写一个类似于 `cp` 命令的程序，当使用该程序复制一个包含空洞（连续的空字节）的普通文件时，要求目标文件的空洞与源文件保持一致
-
-```c title:base.h
-//
-// Created by duyup on 2024/10/11.
-//
-
-#ifndef BASE_H
-#define BASE_H
-
-// 常用头文件
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-
-// 文件系统相关头文件
-#include <fcntl.h>
-#include <sys/stat.h>
-
-// unix 标准头文件
-#include <unistd.h>
-
-#endif //BASE_H
-```
-
-```c title:errors.h
-#ifndef ERRORS_H
-#define ERRORS_H
-
-#include "base.h"
-
-#define usageError(argc, target, format, ...)     \
-    do                                            \
-    {                                             \
-        if ((argc) != (target))                   \
-        {                                         \
-            fprintf(stderr, format, __VA_ARGS__); \
-            exit(EXIT_FAILURE);                   \
-        }                                         \
-    } while (0)
-
-#define catchError(value, target, format, ...)    \
-    do                                            \
-    {                                             \
-        if ((value) == (target))                  \
-        {                                         \
-            fprintf(stderr, format, __VA_ARGS__); \
-            exit(EXIT_FAILURE);                   \
-        }                                         \
-    } while (0)
-
-#endif // ERRORS_H
-```
-
-```c title:copy.c
-#include "base.h"
-#include "errors.h"
-
-#ifndef BUFFER_SIZE  // 支持 gcc -D
-#define BUFFER_SIZE 1024
-#endif
-
-
-int main(int argc, char *argv[]) {
-
-    usageError(argc, 3, "Usage: %s <old-file> <new-file>\n", argv[0]);
-
-    int flags = O_RDONLY;
-    int src_fd = open(argv[1], O_RDONLY);
-    catchError(src_fd, -1, "Open: %s\n", strerror(errno));
-
-    flags = O_WRONLY | O_CREAT | O_TRUNC;                       // 创建文件用于写入，如果文件存在则截断
-    const mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;  // rw-r--r--
-    int dst_fd = open( argv[2], flags, mode);
-    catchError(dst_fd, -1, "Open: %s\n", strerror(errno));
-
-    // 循环读取
-    char buffer[BUFFER_SIZE];
-    ssize_t num_read;
-    while ((num_read = read(src_fd, buffer, BUFFER_SIZE)) > 0) {
-        if(write(dst_fd, buffer, num_read) != num_read) {
-            fprintf(stderr, "Write: %s\n", strerror(errno));
-            return -1;
-        }
-    }
-
-    catchError(num_read, -1, "Read: %s\n", strerror(errno));
-
-    // 关闭文件
-    catchError(close(src_fd), -1, "Close: %s\n", strerror(errno));
-    catchError(close(dst_fd), -1, "Close: %s\n", strerror(errno));
-    return 0;
 }
 ```

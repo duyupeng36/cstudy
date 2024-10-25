@@ -32,8 +32,7 @@
 
 如果我们使用 `O_EXCL`，我们可能会写出下面的 **错误代码**
 
-```c
-
+```c title:fileio/bad_exclusive_open.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -98,13 +97,13 @@ printf("[PID %ld] Done sleeping\n", (long)getpid());
 
 ```c
 $ ./bad_exclusive_open tfile sleep & ./bad_exclusive_open tfile
-[1] 1092384
-[PID 1092385] File "tfile" doesn't exist yet
-[PID 1092385] file "tfile" exclusively
-[PID 1092384] File "tfile" doesn't exist yet
-[PID 1092384] Done sleeping
-[PID 1092384] file "tfile" exclusively
-
+[1] 1576561
+[PID 1576562] File "tfile" doesn't exist yet
+[PID 1576561] File "tfile" doesn't exist yet
+[PID 1576561] Done sleeping
+[PID 1576562] Done sleeping
+[PID 1576561] file "tfile" exclusively
+[PID 1576562] file "tfile" exclusively
 [1]+  Done                    ./bad_exclusive_open tfile sleep
 ```
 
@@ -189,17 +188,14 @@ int fcntl(int fd, int cmd, ...);
 
 下面的代码用于 检查文件是否以 _同步方式_(`O_SYNC` 状态) 打开
 
-```c
-#include <stdio.h>
-
+```c title:fileio/fcntl_get.c
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/stat.h>
+#include "base.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s file\n", argv[0]);
-        return 1;
+        usageErr("%s file\n", argv[0]);
     }
 
     int fd;
@@ -612,7 +608,7 @@ int ftruncate(int fd, off_t length);
 
 要使用过渡型的 LFS API，必须在编译程序时定义 `_LARGEFILE64_SOURCE` 功能测试宏。然后使用 $64$ 位文件处理函数，这些函数与 $32$ 位版本命名相同，不过结尾使用 $64$ 区别
 
-```c title:large_file.c
+```c title:fileio/large_file.c
 #define _LARGEFILE64_SOURCE
 
 #include <sys/stat.h>
@@ -622,33 +618,29 @@ int ftruncate(int fd, off_t length);
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "base.h"
 
 int main(int argc, char *argv[]) {
     long fd;
     off64_t off;
 
     if(argc !=3 || strcmp(argv[1], "--help") == 0) {
-        fprintf(stderr, "Usage: %s <pathnam> <offset>\n", argv[0]);
-        return 1;
+        usageErr(" %s <pathname> <offset>\n", argv[0]);
     }
 
     fd = open64(argv[1], O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     if(fd == -1) {
-        fprintf(stderr, "open64: %s\n", strerror(errno));
-        return 1;
+        errExit("open64: ");
     }
 
     off = strtol(argv[2], NULL, 10);
     if(lseek64(fd, off, SEEK_SET) == -1) {
-        fprintf(stderr, "lseek: %s\n", strerror(errno));
-        return 1;
+        errExit("lseek64: ");
     }
 
     if(write(fd, "test", 4) == -1) {
-        fprintf(stderr, "write: %s\n", strerror(errno));
-        return 1;
+        errExit("write: ");
     }
-    
     return 0;
 }
 ```
