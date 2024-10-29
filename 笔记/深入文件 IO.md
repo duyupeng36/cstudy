@@ -368,13 +368,27 @@ Unix/Linux 系统内核  维护的 $3$ 个数据结构：进程级打开文件�
 
 ## 复制文件描述符
 
-Bash shell 的 IO 重定向语法 `2>&1`，意在通知 `shell` 把标准错误(`fd 2`)重定向到标准输出(`fd 1`)。因此，下列命令将把（因为 `shell` 按从左至右的顺序处理 IO 重定向语句）标准输出和标准错误写入 `result.log` 文件：
+Bash shell 的 IO 重定向语法 `2 > &1`，意在通知 `shell` 把标准错误(`fd 2`)重定向到标准输出(`fd 1`)。因此，下列命令将把标准输出和标准错误写入 `result.log` 文件：
 
 ```shell
 ./fcntl tfile.txt > result.log 2>&1
 ```
 
-`shell` 通过将 **`fd 1` 复制到 `fd2` 实现了标准错误的重定向操作**，**因此 `fd 2` 与 `fd 1` 指向同一个打开文件句柄**。实现文件描述符的接口有 $4$ 个
+shell 按从左至右的顺序处理 IO 重定向语句。首先
+
+> [!tip] `> result.log`：将标准输出重定向到文件 `result.log`
+> 
+> 只需将代表文件的 `result.log` 的文件描述符复制到 `fd 1` 表项中
+> 
+
+> [!tip] `2 > &1`：将标准错误重定向到标准输出
+> 
+> 代表标准输出的文件描述符是 `fd 1`，要使写入 `fd 2` 文件描述符的内容写入到 `fd 1` 中，只需要将 `fd 1` 复制到 `fd 2` 表项中即可 
+> 
+
+![[Pasted image 20241029223716.png]]
+
+实现文件描述符复制的接口有 $4$ 个
 
 ### dup
 
@@ -442,7 +456,7 @@ newfd = fcntl(oldfd, F_DUPFD, startfd)
 文件描述符和其副本之间共享同一打开文件句柄所含的 **文件偏移量** 和 **状态标志**。然而，新文件描述符有其自己的一套文件描述符标志，且其 `close-on-exec` 标志（`FD_CLOEXEC`）总是处于关闭状态
 
 ```c
-#define __USE_GNU
+#define _GNU_SOURCE
 #include <unistd.h>
 
 int dup3(int oldfd, int newfd, int flags);
@@ -678,4 +692,3 @@ gcc -D _FILE_OFFSET_BITS=64 ...
 >  
 > 由于 **内核缓冲区保证了普通文件 IO 不会陷入阻塞**，故而打开普通文件时一般会忽略 `O_NONBLOCK` 标志。然而，当使用 **强制文件锁** 时，`O_NONBLOCK` 标志对普通文件也是起作用的
 > 
-

@@ -22,8 +22,23 @@
               "icon": "lucide-file",
               "title": "README"
             }
+          },
+          {
+            "id": "b548cfed6493b19f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/深入文件 IO.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "深入文件 IO"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -95,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "笔记/深入文件 IO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,7 +120,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "README 的反向链接列表"
+              "title": "深入文件 IO 的反向链接列表"
             }
           },
           {
@@ -114,12 +129,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "笔记/深入文件 IO.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "README 的出链列表"
+              "title": "深入文件 IO 的出链列表"
             }
           },
           {
@@ -141,10 +156,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "笔记/深入文件 IO.md"
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "深入文件 IO 的大纲"
             }
           }
         ],
@@ -169,11 +184,21 @@
       "obsidian-translator:Translate": false
     }
   },
-  "active": "e9c70ca3995437ea",
+  "active": "b548cfed6493b19f",
   "lastOpenFiles": [
-    "笔记/内存映射.md",
+    "assets/attachments/Pasted image 20241029223716.png",
     "README.md",
+    "笔记/文件 IO：通用 IO 模型.md",
+    "笔记/深入文件 IO.md",
+    "作业/作业19：深入文件 IO.md",
+    "assets/attachments/Pasted image 20241029214719.png",
+    "assets/attachments/Pasted image 20241029212149.png",
+    "assets/Excalidraw/Drawing 2024-10-29 20.56.29.excalidraw.md",
+    "笔记/管道和FIFO.md",
     "作业/作业27：内存映射.md",
+    "作业/作业22：内存分配.md",
+    "笔记/内存映射.md",
+    "笔记/文件 IO 缓冲.md",
     "作业/作业18：文件 IO 通用 IO 模型.md",
     "笔记/Linux 命令和 vim 操作.md",
     "笔记/虚拟内存操作.md",
@@ -187,8 +212,6 @@
     "笔记/虚拟内存.md",
     "assets/attachments/Pasted image 20241028230019.png",
     "assets/attachments/Pasted image 20241028225517.png",
-    "assets/attachments/Pasted image 20241028225113.png",
-    "assets/attachments/Pasted image 20241028223031.png",
     "笔记/内存管理.md",
     "笔记/时间.md",
     "笔记/进程凭证.md",
@@ -197,16 +220,8 @@
     "笔记/文件系统的实现.md",
     "笔记/结构体.md",
     "笔记/存储技术.md",
-    "笔记/文件 IO：通用 IO 模型.md",
-    "笔记/深入文件 IO.md",
     "笔记/文件属性.md",
-    "笔记/文件 IO 缓冲.md",
-    "作业/作业19：深入文件 IO.md",
     "作业/作业21：目录与链接.md",
-    "作业/作业20：文件属性.md",
-    "作业/作业16：无符号整数转浮点数.md",
-    "笔记/浮点数表示与运算.md",
-    "作业/作业24：时间.md",
     "assets/canvas/任务.canvas",
     "assets/attachments/The_Holy_Bible.txt",
     "assets/The_Holy_Bible.txt",
