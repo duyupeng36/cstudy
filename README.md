@@ -101,6 +101,19 @@
 | [[库基础]]     | 制作和使用静态库和共享库      |
 | [[共享库高级特性]] | 延迟加载库函数，符号可见性与版本化 |
 
+#### 用户 进程 时间
+
+| 内容          | 描述         | 系统调用/库函数                                                                                                                                                                                        |
+| :---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 理论：操作系统     |            |                                                                                                                                                                                                 |
+| [[进程概念与调度]] | 进程概念和调度    |                                                                                                                                                                                                 |
+|             |            |                                                                                                                                                                                                 |
+| Linux 系统调用  |            |                                                                                                                                                                                                 |
+| [[进程]]      | 进程的相关属性    | `getpid` `getppid` `getenv`<br>`putenv` `setenv` `unsetenv`<br>`clearenv`                                                                                                                       |
+| [[用户和组]]    | Linux 用户管理 | `getpwnam` `getpwuid` <br>`getgrnam` `getgrgid` <br>`getspnam`<br>`getpwent` `setpwent` `getpwent`<br>`getgrent` `setgrent` `endgrent`<br>`getspent` `setspent` `endspent`<br>`crypt` `getpass` |
+| [[进程凭证]]    | 进程权限认证     | 获取实际ID: `getuid` `getgid`<br>获取有效ID: `geteuid` `getegid` <br>修改有效ID: `setuid` `setgid` `seteuid` `setegid`<br>文件系统ID: `setfsuid` `setfsgid`<br>辅助组ID: `getgroups` `setgroups` `initgroups`      |
+| [[时间]]      | 时间处理       | 日历时间：`gettimeofday` `settimeofday`<br>获取当前时间：`time`  `mktime` <br>分解时间: `gmtime` `localtime` `strptime`<br>打印时间: `ctime` `asctime` `strftime` <br>进程时间: `times` `clock`                         |
+
 #### 文件系统
 
 | 内容                 | 描述           | 系统调用/库函数                                                                                                                                             |
@@ -116,34 +129,36 @@
 | [[文件属性]]           | 文件元数据        | `stat` `utime` `access`<br> `umask` `chmod`                                                                                                          |
 | [[目录与链接]]          | 目录和链接操作      | `link` `unlink` `symlink`<br>`readlink` `mkdir` `rmdir`<br>`remove` `rename` `opendir`<br>`fdopendir` `readdir` `dirfd`<br>`getcwd` `chdir` `chroot` |
 
-#### 用户 进程 时间
+#### 内存管理
 
-| 内容          | 描述          | 系统调用/库函数                                                                                                                                                                                        |
-| :---------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 理论：操作系统     |             |                                                                                                                                                                                                 |
-| [[进程概念与调度]] | 进程概念和进程调度算法 |                                                                                                                                                                                                 |
-|             |             |                                                                                                                                                                                                 |
-| Linux 系统调用  |             |                                                                                                                                                                                                 |
-| [[进程]]      | 进程的相关属性     | `getpid` `getppid` `getenv`<br>`putenv` `setenv` `unsetenv`<br>`clearenv`                                                                                                                       |
-| [[内存分配]]    | 虚拟内存分配      | `brk` 和 `sbrk()`                                                                                                                                                                                |
-| [[用户和组]]    | Linux 用户管理  | `getpwnam` `getpwuid` <br>`getgrnam` `getgrgid` <br>`getspnam`<br>`getpwent` `setpwent` `getpwent`<br>`getgrent` `setgrent` `endgrent`<br>`getspent` `setspent` `endspent`<br>`crypt` `getpass` |
-| [[进程凭证]]    | 进程权限认证      | 获取实际ID: `getuid` `getgid`<br>获取有效ID: `geteuid` `getegid` <br>修改有效ID: `setuid` `setgid` `seteuid` `setegid`<br>文件系统ID: `setfsuid` `setfsgid`<br>辅助组ID: `getgroups` `setgroups` `initgroups`      |
-| [[时间]]      | 时间处理        | 日历时间：`gettimeofday` `settimeofday`<br>获取当前时间：`time`  `mktime` <br>分解时间: `gmtime` `localtime` `strptime`<br>打印时间: `ctime` `asctime` `strftime` <br>进程时间: `times` `clock`                         |
+| 内容          | 描述             | 系统调用/库函数                                                |
+| :---------- | -------------- | ------------------------------------------------------- |
+| 理论：硬件       |                |                                                         |
+| [[存储器层次结构]] | 组织存储器，避免 IO 低效 |                                                         |
+|             |                |                                                         |
+| 理论：内存管理     |                |                                                         |
+| [[虚拟内存]]    |                |                                                         |
+|             |                |                                                         |
+| Linux 系统调用  |                |                                                         |
+| [[内存分配]]    | 虚拟内存分配         | `brk` `sbrk`                                            |
+| [[内存映射]]    | 将文件映射到虚拟内存     | `mmap` `munmap`                                         |
+| [[虚拟内存操作]]  | 虚拟地址空间上执行系统调用  | `mprotect`<br>`mlock` `mlockall`<br>`mincore` `madvise` |
 
-#### 内存
+#### 进程管理
 
-| 内容          | 描述         | 系统调用/库函数 |
-| :---------- | ---------- | -------- |
-| 理论：硬件       |            |          |
-| [[存储器层次结构]] |            |          |
-|             |            |          |
-| 理论：内存管理     |            |          |
-| [[内存管理]]    |            |          |
-| [[虚拟内存]]    |            |          |
-|             |            |          |
-| Linux 系统调用  |            |          |
-| [[内存映射]]    | 将文件映射到虚拟内存 |          |
-|             |            |          |
+| 内容  | 描述  | 系统调用/库函数 |
+| :-- | --- | -------- |
+|     |     |          |
+
+
+#### 进程间通信
+
+| 内容                 | 描述  | 系统调用/库函数 |
+| :----------------- | --- | -------- |
+|                    |     |          |
+| [[信号]]             |     |          |
+| [[System V IPC介绍]] |     |          |
+| [[System V 共享内存]]  |     |          |
 
 
 

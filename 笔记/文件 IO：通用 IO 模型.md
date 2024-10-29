@@ -108,7 +108,7 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 > 
 > 下表列出了所有的 `flags` 参数取值的宏。这些宏定义在 `<fcntl.h>` 头中，具体取值如下表
 > 
-> + 前 $3$ 个是文件访问标志：只能选择其中一个
+> 前 $3$ 个是文件访问标志：只能选择其中一个
 > 
 
 | 标志常量          | 用途                             | 值/八进制      |
@@ -142,7 +142,6 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 > 
 > 被连接的两个位共同提供了 `O_SYNC` 标志
 > 
-
 
 > [!tip] mode：位掩码，指定文件的 **访问权限**
 > 

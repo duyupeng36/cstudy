@@ -360,3 +360,164 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
 }
 ```
+
+---
+
+### 结构体输入输出
+
+定义一个学生结构体类型 `struct student`，里边含有学号(`int`)，姓名，分数(`float`)。定义结构体数组 `struct student s[3]`,给数组赋初值后，写入文件，然后通过 `lseek` 偏移到开头，然后再读取并使用 `printf` 输出
+
+```c title:fileio/io_struct.c
+#include <sys/types.h>  
+#include <fcntl.h>  
+#include <unistd.h>  
+  
+#include "base.h"  
+  
+  
+typedef struct {  
+    int id;  
+    char name[20];  
+    float score;  
+} student_t;  
+  
+int main(int argc, char *argv[]) {  
+  
+    if(argc != 2 || strcmp(argv[1], "--help") == 0) {  
+        usageErr("%s [filename]\n", argv[0]);  
+    }  
+  
+    int fd = open(argv[1], O_RDWR | O_CREAT | O_TRUNC, 0644);  
+    if(fd == -1) {  
+        errExit("open %s error: ", argv[1]);  
+    }  
+  
+    student_t stu[3] = {  
+        {1, "Cai xu kun", 88.8f},  
+        {2, "Wu yi fan", 59.9f},  
+        {3, "Li yi feng", 77.7f}  
+    };  
+  
+    if(write(fd, stu, sizeof(stu)) != sizeof(stu)) {  
+        errExit("write error: ");  
+    }  
+  
+    if(lseek(fd, 0, SEEK_SET) == -1) {  
+        errExit("lseek error: ");  
+    }  
+  
+    memset(stu, 0, sizeof(stu)/sizeof(stu[0]));  
+  
+    if(read(fd, stu, sizeof(stu)) == -1) {  
+        errExit("read error: ");  
+    }  
+  
+    for(int i =0; i < sizeof(stu)/sizeof(stu[0]); i++) {  
+        printf("num = %d,score = %f,name = %s\n",  
+              stu[i].id,stu[i].score,stu[i].name);  
+    }  
+  
+    close(fd);  
+    return 0;  
+}
+```
+
+### 对比两个文件是否完成一致
+
+编写C程序，判断任意两个文件，其内容是否是完全一致
+
+```c title:fileio/file_cmp.c
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "base.h"
+
+int main(int argc, char *argv[]) {
+    if(argc != 3) {
+        usageErr("%s <pathname> <pathname>", argv[0]);
+    }
+
+    int fd1 = open(argv[1], O_RDONLY);
+    if(fd1 == -1) {
+        errExit("open %s error: ", argv[1]);
+    }
+
+    int fd2 = open(argv[2], O_RDONLY);
+
+    if(fd2 == -1) {
+        errExit("open %s error: ", argv[2]);
+    }
+
+    char buffer1[BUFSIZ];
+    char buffer2[BUFSIZ];
+
+    while (true) {
+        // 缓冲区清零
+        memset(buffer1, 0, BUFSIZ);
+        memset(buffer2, 0, BUFSIZ);
+        ssize_t bytesRead1 = read(fd1, buffer1, BUFSIZ);
+        if(bytesRead1 < 0) {
+            errExit("read %s error: ", argv[1]);
+        }
+        ssize_t bytesRead2 = read(fd2, buffer2, BUFSIZ);
+        if(bytesRead2 < 0) {
+            errExit("read %s error: ", argv[2]);
+        }
+
+        if(bytesRead1 != bytesRead2) {
+            printf("Not the same\n");
+            break;
+        }
+        if(memcmp(buffer1, buffer2, bytesRead1) != 0) {
+            printf("Not the same\n");
+            break;
+        }
+        if(bytesRead1 == 0) {
+            printf("The same\n");
+            break;
+        }
+    }
+    close(fd1);
+    close(fd2);
+    return 0;
+}
+```
+
+### 创建文件并写入
+
+创建一个文件，里面有 $100$ 万个字符 `'1'`
+
+```c title:fileio/create.c
+
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "base.h"
+
+
+int main(int argc, char *argv[]) {
+    if(argc != 2 || strcmp(argv[1], "--help") == 0) {
+        usageErr("%s filename\n", argv[0]);
+    }
+
+    int fd = open(argv[1], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+    if(fd == -1) {
+        errExit("open %s error: ", argv[1]);
+    }
+
+    char buf[10000];
+    for(int i = 0; i < 100; i++) {
+        memset(buf, '1', sizeof(buf));
+        if(write(fd, buf, sizeof(buf)) == -1) {
+            errExit("write error");
+        }
+    }
+    close(fd);
+    return 0;
+}
+```
+
+
+
