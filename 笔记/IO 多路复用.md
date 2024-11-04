@@ -166,22 +166,370 @@
 
 > [!tip] 
 > 
-> 应用程序进程通过系统调用 `select/poll` 将需要监控的文件描述符注册到内核，让内核监控这些文件描述符。当文件描述符就绪时，`select/poll` 返回。然后，对已就绪的文件描述符执行 IO 操作
+> 通过 `select/poll` 系统调用将需要监视的文件描述符提交给 **内核**；内核不断 **轮询检测** 这些文件描述符是否就绪；此时用户进程等待 `select/poll` 的返回，内核发现至少有一个文件描述符就绪时，`select/poll` 就立即返回
 > 
 
 ### select
 
+系统调用 `select()` 会一直阻塞，直到一个或多个文件描述符集合成为就绪态
+
+```c
+#include <sys/time.h>
+#include <sys/select.h>
+
+int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *execptfds, struct timeval *timeout);
+/* 成功返回就绪文件描述符的数量；超时返回 0；错误返回 -1*/
+```
+
+> [!tip] 参数 `readfds` `writefds` `execptfds` ：指向文件描述符集合的指针
+> 
+> 所指向的数据类型是 `fd_set`
+> 
+
+下表列出了参数 `readfds` `writefds` `execptfds` 的含义
+
+| 参数          | 描述                 |
+| :---------- | ------------------ |
+| `readfds`   | 检测输入是否就绪的文件描述符集合   |
+| `writefds`  | 检测输出是否就绪的文件描述符集合   |
+| `execptfds` | 检测异常情况是否发生的文件描述符集合 |
+
+> [!tip] 
+> 
+> **异常情况** 不是文件描述符上出现了一些错误。在 Linux 上，异常情况只会出在下面两种情形下发生
+> + 连接到处于信包模式下的伪终端主设备上的从设备状态发生了改变，参考 [[伪终端]]
+> + 流式套接字上接收到了带外数据，参考 [[socket：高级主题]]
+> 
+
+**数据类型 `fd_set` 以位掩码的形式来实现**，不需要知道其中的细节，所有关于文件描述符集合的操作都是通过下表中的四个宏函数来完成的
+
+| 宏                                 | 描述                           |
+| :-------------------------------- | ---------------------------- |
+| `FD_ZERO(fd_set *fdset)`          | 将集合 `fdset` 初始化为空            |
+| `FD_SET(int fd, fd_set *fdset)`   | 将文件描述符 `fd` 添加到集合 `fdset`    |
+| `FD_CLR(int fd, fd_set *fdset)`   | 将文件描述符 `fd` 从集合 `fdset` 中移除  |
+| `FD_ISSET(int fd, fd_set *fdset)` | 判断文件描述符 `fd` 是否在集合 `fdset` 中 |
+
+> [!tip] 
+> 
+> **文件描述符集合有一个最大容量限制**，由常量 `FD_SETSIZE` 来决定。在 **Linux 上，该常量的值为 $1024$**
+> 
+
+参数 `readfds` `writefds` 和 `exceptfds` 所指向的结构体都是保存结果值的地方。在调用 `select()` 之前，这些参数指向的结构体必须初始化(通过 `FD_ZERO()` 和 `FD_SET()`)，以包含我们感兴趣的文件描述符集合
+
+> [!important] 
+> 
+> `select()` 调用会修改这些结构体。当 `select()` 返回时，它们包含的就是已处于就绪态的文件描述符集合了
+> 
+> 由于这些结构体会在调用中被修改，**如果要在循环中重复调用 `select()`，我们必须保证每次都要重新初始化它们**
+> 
+
+如果我们对某一类型的事件不感兴趣，那么相应的 `fd_set` 参数可以指定为 `NULL`
+
+> [!tip] 参数 `nfds`：必须设为比 $3$ 个文件描述符集合中所包含的 **最大文件描述符号** 还要大 $1$
+> 
+
+> [!tip] 参数 `timeout`：控制 `select()` 的阻塞行为
+> 
+> 该参数可指定为 `NULL`，此时 `select()` 会一直阻塞
+> 
+> 如果非空，`select()` 返回时会更新 `timeout` 所指向的结构体以此来表示 **剩余的超时时间**。这种行为与具体实现有关，SUSv3 标准不允许系统修改 `timeout` 指向的结构体。**在循环中使用了 `select()` 并且指定 `timeout` 参数，应该在每次调用 `select()` 之前重新初始化 `timeout`**
+>  
+
+> [!tip] 返回值
+> 
+> 返回 $-1$ 表示有错误发生。`errno` 被设置为 `EBADF` 和 `EINTR`
+> + `EBADF` 表示  `readfds` `writefds` 和 `exceptfds`  中有一个文件描述符非法(例如，文件描述符没有被打卡)
+> + `EINTR` 表示该调用被信号处理程序中断
+> 
+> 返回 $0$ 在任何文件描述符就绪之前 `select()` 调用已超时。此时，文件描述符集合被清空
+> 
+> 返回正数表示有文件描述符处于就绪状态，该值表示 **就绪文件描述符的个数**
+> 
+
+下面将 [[FIFO#使用 FIFO 实现全双工通信]] 中的代码改造为使用 `select()` IO 多路复用的代码
+
+```c title:altio/programA_select.c
+#include <sys/stat.h>
+#include <sys/select.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include "base.h"
+
+int main(int argc, char *argv[]) {
+    // programA_select A2B_FIFO B2A_FIFO
+    if(argc != 3) {
+        usageErr("%s <fifo 1> <fifo 2>", argv[0]);
+    }
+
+    // B2A_FIFO 以 O_RDONLY 打开
+    int b2a = open(argv[2], O_RDONLY);
+    if(b2a == -1) {
+        errExit("open %s error: ", argv[2]);
+    }
+    printf("%s read side opened\n", argv[2]);
+
+    // A2B_FIFO 以 O_WRONLY 打开
+    int a2b = open(argv[1], O_WRONLY);
+    if(a2b == -1) {
+        errExit("open %s error: ", argv[1]);
+    }
+    printf("%s write side opened\n", argv[1]);
+
+    fd_set readfds;
+
+    while(true) {
+        FD_ZERO(&readfds); // 情况 readfds
+        FD_SET(b2a, &readfds);  // 从 B2A_FIFO 中读
+        FD_SET(STDIN_FILENO, &readfds); // 从 STDIN_FILENO 中读
+
+        int ret = select(b2a + 1, &readfds, nullptr, nullptr, nullptr);
+        if(ret == -1) {
+            errExit("select error");
+        }
+
+        // 到此，readfds 现在为就绪集合
+        char buffer[BUFSIZ] = {};
+        ssize_t bytes;
+        // STDIN_FILENO 就绪
+        if(FD_ISSET(STDIN_FILENO, &readfds)) {
+            bytes = read(STDIN_FILENO, buffer, BUFSIZ);
+            if(bytes == -1 || bytes == 0) {
+                errExit("read error");
+            }
+            if(write(a2b, "programA: ", 10) < 0) {
+                errExit("write error");
+            }
+            if(write(a2b, buffer, bytes) < 0) {
+                errExit("write error");
+            }
+        }
+
+        // B2A_FIFO 就绪
+        if(FD_ISSET(b2a, &readfds)) {
+            bytes = read(b2a, buffer, BUFSIZ);
+            if(bytes == -1 || bytes == 0) {
+                errExit("read error");
+            }
+            if(write(STDOUT_FILENO, buffer, bytes) < 0) {
+                errExit("write error");
+            }
+        }
+    }
+}
+```
+
+```c title:altio/programB_select.c
+#include <sys/stat.h>
+#include <sys/select.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "base.h"
+
+int main(int argc, char *argv[]) {
+    // programB_select A2B_FIFO B2A_FIFO
+    if(argc != 3) {
+        usageErr("%s <fifo 1> <fifo 2>", argv[0]);
+    }
+
+    // B2A_FIFO 以 O_WRONLY 打开
+    int b2a = open(argv[2], O_WRONLY);
+    if(b2a == -1) {
+        errExit("open %s error: ", argv[2]);
+    }
+    printf("%s write side opened\n", argv[2]);
+
+    // A2B_FIFO 以 O_RDONLY 打开
+    int a2b = open(argv[1], O_RDONLY);
+    if(a2b == -1) {
+        errExit("open %s error: ", argv[1]);
+    }
+    printf("%s read side opened\n", argv[1]);
+
+    fd_set readfds;
+
+    while(true) {
+        FD_ZERO(&readfds);
+        FD_SET(a2b, &readfds);// 在 A2B_FIFO 中读
+        FD_SET(STDIN_FILENO, &readfds); // 在 STDIN_FILENO 中读
+
+        int ret = select(a2b + 1, &readfds, nullptr, nullptr, nullptr);
+        if(ret == -1) {
+            errExit("select error");
+        }
+        char buffer[BUFSIZ] = {};
+        ssize_t bytes;
+        // STDIN_FILENO 就绪
+        if(FD_ISSET(STDIN_FILENO, &readfds)) {
+            bytes = read(STDIN_FILENO, buffer, BUFSIZ);
+            if(bytes == -1 || bytes == 0) {
+                errExit("read error");
+            }
+            if(write(b2a, "programB: ", 10) < 0) {
+                errExit("write error");
+            }
+            if(write(b2a, buffer, bytes) < 0) {
+                errExit("write error");
+            }
+        }
+        // A2B_FIFO 就绪
+        if(FD_ISSET(a2b, &readfds)) {
+            bytes = read(a2b, buffer, BUFSIZ);
+            if(bytes == -1 || bytes == 0) {
+                errExit("read error");
+            }
+            if(write(STDOUT_FILENO, buffer, bytes) < 0) {
+                errExit("write error");
+            }
+        }
+    }
+}
+```
+
+#### select 的底层原理
+
+`select()` 使用了一个核心数据结构 `fd_set`，定义如下
+
+```c
+typedef long int __fd_mask;
+
+typedef struct  
+{  
+	__fd_mask fds_bits[1024 / (8 * (int) sizeof (__fd_mask))];  
+} fd_set;
+```
+
+> [!tip] 在 $64$ 位系统中
+> 
+> `__fd_mask` 是 `long int` 的别名。`long int` 占据 $8$ 字节($64$ 位)，所以 `1024 / (8 * (int)sizeof(__fd_mask)) = 1024 / (8 * 8) = 16` 
+> 
+> 综上，`__fd_mask fds_bits[...]` 等价于 `__fd_mask fds_bits[16]`，总计占 $1024$ 位
+> 
+
+> [!tip] 在 $32$ 位系统中
+> `__fd_mask` 是 `long int` 的别名。`long int` 占据 $4$ 字节($32$ 位)，所以 `1024 / (8 * (int)sizeof(__fd_mask)) = 1024 / (4 * 8) = 32` 
+> 
+> 综上，`__fd_mask fds_bits[...]` 等价于 `__fd_mask fds_bits[32]` ，总计占 $1024$ 位
+> 
+
+> [!important] 
+> 
+> 由于系统资源限制，默认情形下，一个进程最多打开 $1024$ 个文件描述
+> 
+
+`select()` 使用 `fd_set` 的第 $i$ 位表示 `fd i` 是否在 `fd_set` 中。如下图，展示 `fd_set` 的概念
+
+![[Pasted image 20241101125046.png]]
+
+根据 **位图** 中的位 **是否置位** 判断文件描述符 $i$ 是否在 `fd_set` 中
 
 
+`select()` 执行过程如下
++ `fd_set` 拷贝到内核中，并清空
++ 内核开始轮询：从 `0` 到 `nfds` 遍历每个文件描述符，检查每个文件描述符是否就绪
+	+ 如果已就绪，就添加到 `fd_set` 中
+	+ 如果为就绪，继续遍历
++ 如果 `fd_set` 中有就绪的文件描述符，`select()` 返回，否则继续遍历
+
+
+#### select 的缺陷
+
+`fd_set` 这一个位图使用数组实现，大小是固定的。如果需要修改它的长度，需要重新编译
+
+涉及到达将 `fd_set` 的拷贝，如果监控的文件描述符太多，拷贝将浪费大量的时间
+
+监控文件描述符集合和就绪文件描述符的集合 **耦合** 在一起。在一个循环中，每次监听的文件描述符不同，会带来编程上的复杂性
+
+内核使用 **轮询** 方式获取就绪文件描述符集合。如果 **监控的文件描述符很多**，但是 **就绪的文件描述符很少** 时，发现这些就绪的文件描述符将浪费 CPU 
+
+> [!tip] 
+> 
+> select 的 **轮询** 机制，导致 **获取就绪文件描述符集合的性能较低**
+> 
 
 ### poll
 
+系统调用 `poll()` 执行的任务同 `select()` 很相似。两者间主要的区别在于我们要如何指定待检查的文件描述符
 
+在 `poll()` 中我们提供一列文件描述符，并在每个文件描述符上标明我们感兴趣的事件
 
+```c
+#include <poll.h>
 
+int poll(struct pollfd fds[], nfds_t nfds, int timeout);
+/* 返回就绪的文件描述符个数; 超时返回 0; 错误返回 -1*/
+```
 
+参数 `nfds` 是 `fds` 列表的长度。参数 `fds` 列出了我们需要 `poll()` 检查的文件描述符。该参数是 `pollfd` 结构体数组，定义如下
 
+```c
+struct pollfd {
+	int fd;  // 文件描述符
+	short events; // 监控文件描述符的事件，一个位掩码
+	short revents; // 文件描述符就绪的事件，一个位掩码
+};
+```
 
+> [!tip] 
+> 
+> `events` 字段：指定在文件描述符 `fd` 上监控的事件
+> 
+> `revents` 字段：指定文件描述符 `fd` 上就绪的事件
+> 
 
+下表列出来 `events` 和 `revents` 字段中出现的掩码值(符号常量)
 
+| 位掩码          | `events` 中的输入 | 返回到 `revents` | 描述                  |
+| :----------- | :------------ | ------------- | ------------------- |
+| `POLLIN`     | 是             | 是             | 可读取非高优先级的数据         |
+| `POLLRDNORM` | 是             | 是             | 等价于 `POLLIN`        |
+| `POLLRDBAND` | 是             | 是             | 读取优先数据(Linux 中无法使用) |
+| `POLLPRI`    | 是             | 是             | 读取高优先级数据            |
+| `POLLRDHUP`  | 是             | 是             | 对端套接字关闭             |
+|              |               |               |                     |
+| `POLLOUT`    | 是             | 是             | 普通数据可写              |
+| `POLLWRNORM` | 是             | 是             | 等同于 `POLLOUT`       |
+| `POLLWRBAND` | 是             | 是             | 优先级数据可写入            |
+|              |               |               |                     |
+| `POLLERR`    |               | 是             | 有错误发生               |
+| `POLLHUB`    |               | 是             | 出现挂断                |
+| `POLLNVAL`   |               | 是             | 文件描述符未打卡            |
+|              |               |               |                     |
+| `POLLMSG`    |               |               | Linux 中不使用          |
 
+`poll()` 真正关心的标志位就是 `POLLIN` `POLLOUT` `POLLPRI` `POLLRDHUP` `POLLHUP` 以及 `POLLERR`
+
+> [!attention] 
+> 
+> 在提供 STREAMS 设备的 UNIX 实现中，`POLLMSG` 表示包含有 `SIGPOLL` 信号的消息已到达 stream 头部
+> 
+> Linux 没有实现 STREAMS
+> 
+
+> [!tip] 关闭对某个文件描述符的检查
+> 
+> 如果我们对某个文件描述符上的事件不感兴趣，可以将 `events` 设为 $0$
+> 
+> 给 `fd` 字段指定一个负数将导致对应的 `events` 字段被忽略，且 `revents` 字段总是返回 $0$
+> 
+> 这两种方式都不需要从新建立整个 `fds` 列表
+> 
+
+> [!tip] 参数 `timeout`：决定了 `poll()` 的阻塞行为
+> 
+> + `timeout == -1`，`poll()` 阻塞直到 `fds` 中的文件描述就绪或者捕获到一个信号
+> + `timeout == 0`，`poll()` 不会阻塞，只执行一次检查看看哪个文件描述符处于就绪状态
+> + `timeout > 0`，`poll()` 阻塞 `timeout` 毫秒，直到 `fds` 中的文件描述符中有一个就绪，或者捕获一个信号为止
+> 
+
+`poll()` 的返回值与 `select()` 类似
+
++ 返回 $-1$ 表示错误发生
++ 返回 $0$ 表示任意文件描述符就绪前超时
++ 返回正整数表示至少有 $1$ 个文件描述符就绪，该返回表示就绪文件描述符的个数
+
+> [!attention] 
+> 
+> `poll()` 返回的正数是 `fds` 列表中就绪的文件描述符个数，注意任何文件描述符只会统计一次
+> 
