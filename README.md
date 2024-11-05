@@ -71,7 +71,7 @@
 | [[GCC]]      | GCC 生产可执行文件的步骤，及涉及的命令 |
 | [[GDB]]      | 代码调试，必须会使用            |
 | [[Makefile]] | 使用 `make` 构建工具        |
-| [[CMake]]    | 更现代的构建工具              |
+| [[CMake]]    | 现代的构建工具               |
 
 ### 数据和程序的表示
 
@@ -118,16 +118,16 @@
 
 #### 进程 用户 时间
 
-| 内容         | 描述                 | 系统调用/库函数                                                                                                                                                                                                                                  |
-| :--------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 理论：操作系统    |                    |                                                                                                                                                                                                                                           |
-| [[进程概念]]   | 进程概念               |                                                                                                                                                                                                                                           |
-| [[进程调度]]   | 介绍进程调度算法           |                                                                                                                                                                                                                                           |
-|            |                    |                                                                                                                                                                                                                                           |
-| Linux 系统调用 |                    |                                                                                                                                                                                                                                           |
-| [[进程]]     | 进程的相关属性<br>进程的操作命令 | PID和PPID: `getpid` `getppid` <br>环境变量: `getenv` `putenv` `setenv` `unsetenv` `clearenv`                                                                                                                                                   |
-| [[用户和组]]   | Linux 用户管理         | 读密码文件：`getpwnam` `getpwuid` <br>读组文件：`getgrnam` `getgrgid` <br>读影子文件：`getspnam`<br>遍历密码文件：`getpwent` `setpwent` `getpwent`<br>遍历组文件：`getgrent` `setgrent` `endgrent`<br>遍历影子文件：`getspent` `setspent` `endspent`<br>密码验证：`crypt` `getpass` |
-| [[时间]]     | 时间处理               | 日历时间：`gettimeofday` `settimeofday`<br>获取当前时间：`time`  `mktime` <br>分解时间: `gmtime` `localtime` `strptime`<br>打印时间: `ctime` `asctime` `strftime` <br>进程时间: `times` `clock`                                                                   |
+| 内容         | 描述                                                                 | 系统调用/库函数                                                                                                                                                                                                                                  |
+| :--------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 理论：操作系统    |                                                                    |                                                                                                                                                                                                                                           |
+| [[进程概念]]   | 进程内存结构<br>进程状态转换                                                   |                                                                                                                                                                                                                                           |
+| [[进程调度]]   | 先来先服务<br>短作业优先<br>最短剩余时间优先<br><br>时间片轮转<br>优先级调度<br>多级队列<br>多级反馈队列 |                                                                                                                                                                                                                                           |
+|            |                                                                    |                                                                                                                                                                                                                                           |
+| Linux 系统调用 |                                                                    |                                                                                                                                                                                                                                           |
+| [[进程]]     | 进程的属性                                                              | PID和PPID: `getpid` `getppid` <br>环境变量: `getenv` `putenv` `setenv` `unsetenv` `clearenv`                                                                                                                                                   |
+| [[用户和组]]   | Linux 用户管理                                                         | 读密码文件：`getpwnam` `getpwuid` <br>读组文件：`getgrnam` `getgrgid` <br>读影子文件：`getspnam`<br>遍历密码文件：`getpwent` `setpwent` `getpwent`<br>遍历组文件：`getgrent` `setgrent` `endgrent`<br>遍历影子文件：`getspent` `setspent` `endspent`<br>密码验证：`crypt` `getpass` |
+| [[时间]]     | 时间处理                                                               | 日历时间：`gettimeofday` `settimeofday`<br>获取当前时间：`time`  `mktime` <br>分解时间: `gmtime` `localtime` `strptime`<br>打印时间: `ctime` `asctime` `strftime` <br>进程时间: `times` `clock`                                                                   |
 
 #### 内存管理
 
@@ -147,39 +147,42 @@
 
 #### 进程管理
 
-| 内容         | 描述           | 系统调用/库函数                                                                                                                                                                                   |
-| :--------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [[进程凭证]]   | 进程权限认证       | 获取实际ID: `getuid` `getgid`<br>获取有效ID: `geteuid` `getegid` <br>修改有效ID: `setuid` `setgid` `seteuid` `setegid`<br>文件系统ID: `setfsuid` `setfsgid`<br>辅助组ID: `getgroups` `setgroups` `initgroups` |
-| [[进程创建]]   | 创建进程         | 写时复制创建子进程：`fork` <br>子进程使用父进程内存：`vfork`                                                                                                                                                    |
-| [[进程终止]]   | 进程退出<br>退出处理 | 系统调用：`_exit`<br>库函数: `exit` <br>注册退出处理程序：`atexit` `on_exit`                                                                                                                                |
-| [[监控子进程]]  | 子进程状态        | 等待子进程: `wait` `waitpid` <br>等待子进程状态变化：`waitid` <br>获取子进程资源使用情况：`wait3` `wait4`                                                                                                             |
-| [[程序执行]]   | 加载程序         | 系统调用: `execve` <br>库函数: `execl`  `execle` `execlp`  `execv` `execvp`                                                                                                                       |
-| [[优先级和调度]] | 进程调度相关       | 获取 nice 值：`getpriority`<br>设置 nice 值：`setpriority`                                                                                                                                         |
-| [[进程间关系]]  | 进程组 会话       |                                                                                                                                                                                            |
+| 内容          | 描述                              | 系统调用/库函数                                                                                                                                                                                   |
+| :---------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [[进程凭证]]    | 进程权限认证                          | 获取实际ID: `getuid` `getgid`<br>获取有效ID: `geteuid` `getegid` <br>修改有效ID: `setuid` `setgid` `seteuid` `setegid`<br>文件系统ID: `setfsuid` `setfsgid`<br>辅助组ID: `getgroups` `setgroups` `initgroups` |
+| [[进程创建]]    | 创建进程                            | 写时复制创建子进程：`fork` <br>子进程使用父进程内存：`vfork`                                                                                                                                                    |
+| [[进程终止]]    | 进程退出<br>退出处理                    | 系统调用：`_exit`<br>库函数: `exit` <br>注册退出处理程序：`atexit` `on_exit`                                                                                                                                |
+| [[监控子进程]]   | 子进程状态                           | 等待子进程: `wait` `waitpid` <br>等待子进程状态变化：`waitid` <br>获取子进程资源使用情况：`wait3` `wait4`                                                                                                             |
+| [[程序执行]]    | 加载程序                            | 系统调用: `execve` <br>库函数: `execl`  `execle` `execlp`  `execv` `execvp`                                                                                                                       |
+| [[优先级和调度]]  | 进程调度相关                          | 获取 nice 值：`getpriority`<br>设置 nice 值：`setpriority`                                                                                                                                         |
+| [[进程间关系]]   | 进程组和会话                          | 获取进程的 PGID: `getpgrp` `getpgid`<br>修改进程的 PGID: `setpgid`<br>获取进程的 SID: `getsid`<br>新建会话: `setsid`                                                                                          |
+| [[守护进程]]    | 守护进程<br>syslog                  | `openlog`<br>`syslog`<br>`closelog`                                                                                                                                                        |
+| [[多进程编程细节]] | 探讨 `exec()` 和 `fork()` 对进程属性的影响 | 克隆子进程: `clone`                                                                                                                                                                             |
+
+#### 进程间通信(IPC)
+
+| 内容                 | 描述   | 系统调用/库函数          |
+| :----------------- | ---- | ----------------- |
+| [[进程间通信简介]]        |      |                   |
+| [[PIPE]]           | 无名管道 | 创建 PIPE: `pipe()` |
+| [[FIFO]]           | 有名管道 | 创建 FIFO: `mkfifo` |
+| [[信号]]             |      |                   |
+| [[System V IPC介绍]] |      |                   |
+| [[System V 共享内存]]  |      |                   |
+| [[System V 消息队列]]  |      |                   |
+| [[System V 信号量]]   |      |                   |
+|                    |      |                   |
+|                    |      |                   |
+|                    |      |                   |
 
 #### IO 多路复用
 
 | 内容          | 描述         | 系统调用/库函数               |
 | :---------- | ---------- | ---------------------- |
-| [[FIFO]]    | FIFO 创建和使用 | 创建 FIFO：`mkfifo`       |
 | [[IO 多路复用]] | 监控多路IO     | IO多路复用：`select` `poll` |
 | [[epoll]]   |            |                        |
 | [[信号驱动 IO]] |            |                        |
 | [[异步 IO]]   |            |                        |
-
-#### 进程间通信(IPC)
-
-| 内容                 | 描述   | 系统调用/库函数 |
-| :----------------- | ---- | -------- |
-| [[信号]]             |      |          |
-| [[PIPE]]           | 无名管道 |          |
-| [[System V IPC介绍]] |      |          |
-| [[System V 共享内存]]  |      |          |
-| [[System V 消息队列]]  |      |          |
-| [[System V 信号量]]   |      |          |
-|                    |      |          |
-|                    |      |          |
-
 
 
 
