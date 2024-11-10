@@ -189,7 +189,21 @@
 | 通信工具：信号               |                                                                         |                                                                                                                                                                                               |
 | [[信号基本概念]]            | 信号概念 <br>信号类型和处置<br>改变信号处置<br>发送信号                                      | 注册处理函数: `signal`<br>发送信号: `kill` `raise`  `killpg`<br>信号描述: `strsignal`                                                                                                                       |
 | [[信号集]]               | 信号集<br>阻塞信号传递<br>改变信号处置                                                 | 初始化信号集: `sigemptyset` `sigfillset`<br>添加或移除信号: `sigaddset` `sigdelset`<br>测试信号集: `sigismember`<br>添加/获取信号掩码: `sigprocmask`<br>获取等待信号集: `sigpending`<br>改变信号处置: `sigaction`<br>暂停等待信号: `pause` |
-| [[信号处理器函数]]           | 可重入函数<br>异步信号安全函数<br>从信号处理器函数中返回<br>备选信号栈<br>SA_SIGINFO 标志<br>重启中断的系统调用 |                                                                                                                                                                                               |
+| [[信号处理器函数]]           | 可重入函数<br>异步信号安全函数<br>从信号处理器函数中返回<br>备选信号栈<br>SA_SIGINFO 标志<br>重启中断的系统调用 | 保存跳转环境: `sigsetjmp`<br>执行非局部跳转: `siglongjmp`                                                                                                                                                  |
+| [[信号高级特性]]            | 实时信号：用于进程间通信                                                            | 发送实时信号: `sigqueue`<br>等待信号: `sigsuspend` `sigwaitinfo`                                                                                                                                        |
+
+#### 多线程
+
+| 内容     | 描述  | 系统调用/库函数 |
+| :----- | --- | -------- |
+| 理论：多线程 |     |          |
+|        |     |          |
+|        |     |          |
+|        |     |          |
+
+
+
+
 
 #### 备选 IO 模型
 
@@ -200,7 +214,6 @@
 | [[信号驱动 IO]] |        |                        |
 | [[异步 IO]]   |        |                        |
 |             |        |                        |
-
 
 
 
