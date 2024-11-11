@@ -191,18 +191,23 @@
 | [[信号集]]               | 信号集<br>阻塞信号传递<br>改变信号处置                                                 | 初始化信号集: `sigemptyset` `sigfillset`<br>添加或移除信号: `sigaddset` `sigdelset`<br>测试信号集: `sigismember`<br>添加/获取信号掩码: `sigprocmask`<br>获取等待信号集: `sigpending`<br>改变信号处置: `sigaction`<br>暂停等待信号: `pause` |
 | [[信号处理器函数]]           | 可重入函数<br>异步信号安全函数<br>从信号处理器函数中返回<br>备选信号栈<br>SA_SIGINFO 标志<br>重启中断的系统调用 | 保存跳转环境: `sigsetjmp`<br>执行非局部跳转: `siglongjmp`                                                                                                                                                  |
 | [[信号高级特性]]            | 实时信号：用于进程间通信                                                            | 发送实时信号: `sigqueue`<br>等待信号: `sigsuspend` `sigwaitinfo`                                                                                                                                        |
+| [[定时器与休眠]]            | 定时器：到期通知<br>休眠：暂停执行                                                     | 创建定时器: `setitimer` `alam` <br>获取定时器状态: `getitimer`<br>暂停运行: `sleep` `nanosleep`                                                                                                               |
 
 #### 多线程
 
-| 内容     | 描述  | 系统调用/库函数 |
-| :----- | --- | -------- |
-| 理论：多线程 |     |          |
-|        |     |          |
-|        |     |          |
-|        |     |          |
-
-
-
+| 内容                  | 描述                         | 系统调用/库函数                                                                                                                                                                                             |
+| :------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 理论：多线程              |                            |                                                                                                                                                                                                      |
+| [[多线程概念]]           |                            |                                                                                                                                                                                                      |
+|                     |                            |                                                                                                                                                                                                      |
+| Pthreads            |                            |                                                                                                                                                                                                      |
+| [[Pthreads API 介绍]] | 概述 Pthreads API<br>创建和管理线程 | 创建线程: `pthread_create`<br>线程终止:`pthread_exit`<br>线程ID: `pthread_self` `pthread_equal`<br>连接终止线程: `pthread_join`<br>线程分离: `pthread_detach`                                                            |
+| [[线程同步]]            | 互斥量和条件变量                   | 互斥量初始化: `pthread_mutex_init`<br>互斥量销毁: `pthread_mutex_destroy`<br>锁定互斥量: `pthread_mutex_lock` <br>非阻塞加锁: `pthread_mutex_trylock`<br>加锁超时: `pthread_mutex_timedlock`<br>解锁互斥量: `pthread_mutex_unlock` |
+|                     |                            |                                                                                                                                                                                                      |
+|                     |                            |                                                                                                                                                                                                      |
+|                     |                            |                                                                                                                                                                                                      |
+| 理论：死锁               |                            |                                                                                                                                                                                                      |
+| [[死锁]]              | 讨论死锁避免算法                   |                                                                                                                                                                                                      |
 
 
 #### 备选 IO 模型

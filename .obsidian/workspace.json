@@ -29,12 +29,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/信号处理器函数.md",
+                "file": "笔记/多线程概念.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "信号处理器函数"
+              "title": "多线程概念"
             },
             "group": "ed196da4fcb269cf"
           }
@@ -50,12 +50,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/信号处理器函数.md",
+                "file": "笔记/多线程概念.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "信号处理器函数"
+              "title": "多线程概念"
             },
             "group": "ed196da4fcb269cf"
           }
@@ -115,8 +115,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 225.5,
-    "collapsed": true
+    "width": 225.5
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -132,7 +131,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "笔记/管道.md",
+                "file": "笔记/线程同步.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -142,7 +141,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "管道 的反向链接列表"
+              "title": "线程同步 的反向链接列表"
             }
           },
           {
@@ -151,12 +150,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/管道.md",
+                "file": "笔记/线程同步.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "管道 的出链列表"
+              "title": "线程同步 的出链列表"
             }
           },
           {
@@ -189,7 +188,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 372.5
+    "width": 248.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -208,23 +207,35 @@
   },
   "active": "e9c70ca3995437ea",
   "lastOpenFiles": [
-    "笔记/信号处理器函数.md",
+    "笔记/多线程概念.md",
     "README.md",
+    "笔记/线程同步.md",
+    "笔记/死锁.md",
+    "笔记/System V 信号量.md",
+    "assets/attachments/Pasted image 20241111232243.png",
+    "assets/attachments/Pasted image 20241111212505.png",
+    "assets/attachments/Pasted image 20241111203752.png",
+    "笔记/Pthreads API 介绍.md",
+    "作业/作业37：Pthreads API 介绍.md",
+    "assets/attachments/Pasted image 20241111190607.png",
+    "作业/作业36：信号处理器函数.md",
+    "assets/attachments/Pasted image 20241111105201.png",
+    "assets/attachments/Pasted image 20241111102024.png",
+    "assets/attachments/Pasted image 20241111102000.png",
+    "assets/attachments/Pasted image 20241111101847.png",
+    "assets/attachments/Pasted image 20241111002027.png",
+    "assets/attachments/Pasted image 20241111001916.png",
+    "笔记/定时器与休眠.md",
+    "笔记/时间.md",
     "笔记/信号高级特性.md",
+    "笔记/信号处理器函数.md",
     "笔记/信号集.md",
     "笔记/守护进程.md",
     "笔记/多进程编程细节.md",
     "笔记/监控子进程.md",
     "笔记/进程创建.md",
     "笔记/信号基本概念.md",
-    "作业/作业36：信号处理器函数.md",
-    "assets/attachments/Pasted image 20241110085029.png",
-    "assets/attachments/Pasted image 20241109234253.png",
     "作业/作业35：信号基本概念和信号集.md",
-    "assets/attachments/Pasted image 20241109173246.png",
-    "assets/attachments/Pasted image 20241108230300.png",
-    "assets/attachments/Pasted image 20241108230228.png",
-    "assets/attachments/Pasted image 20241108225944.png",
     "作业/作业22：内存分配.md",
     "作业/作业26：虚拟内存.md",
     "笔记/虚拟内存.md",
@@ -232,18 +243,6 @@
     "笔记/System V IPC 介绍.md",
     "笔记/进程间通信简介.md",
     "作业/作业33：守护进程.md",
-    "笔记/进程间关系.md",
-    "assets/attachments/Pasted image 20241108195358.png",
-    "assets/attachments/Pasted image 20241108185318.png",
-    "assets/attachments/Pasted image 20241108165915.png",
-    "笔记/文件锁.md",
-    "assets/attachments/Pasted image 20241108145901.png",
-    "笔记/System V 消息队列.md",
-    "作业/作业34：System V 信号量和 System V 共享内存.md",
-    "笔记/System V 信号量.md",
-    "笔记/内存映射.md",
-    "笔记/PIPE.md",
-    "作业/作业32：程序执行.md",
     "assets/canvas/任务.canvas",
     "assets/attachments/The_Holy_Bible.txt",
     "assets/The_Holy_Bible.txt",
