@@ -29,16 +29,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/多线程概念.md",
+                "file": "作业/作业37：Pthreads API 介绍.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "多线程概念"
+              "title": "作业37：Pthreads API 介绍"
             },
             "group": "ed196da4fcb269cf"
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "f32776aefdff8ef0",
@@ -50,12 +51,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/多线程概念.md",
+                "file": "作业/作业37：Pthreads API 介绍.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "多线程概念"
+              "title": "作业37：Pthreads API 介绍"
             },
             "group": "ed196da4fcb269cf"
           }
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "作业/作业37：Pthreads API 介绍.md"
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "作业37：Pthreads API 介绍 的大纲"
             }
           }
         ],
@@ -205,10 +206,10 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "e9c70ca3995437ea",
+  "active": "b7ea4370d7677aca",
   "lastOpenFiles": [
-    "笔记/多线程概念.md",
     "README.md",
+    "笔记/多线程概念.md",
     "笔记/线程同步.md",
     "笔记/死锁.md",
     "笔记/System V 信号量.md",
