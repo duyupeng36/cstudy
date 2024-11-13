@@ -122,6 +122,8 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void*(*start)(
 > 
 > 如果需要向 `start()` 传递多个参数，可以将 `arg` 指向一个结构，该结构的各个字段则对应于待传递的参数
 > 
+> 通过审慎的类型强制转换，`arg` 甚至可以传递 `int` 类型的值
+> 
 
 > [!tip] 返回值
 > 
@@ -189,11 +191,11 @@ void pthread_exit(void *retval);
 
 调用 `pthread_exit()` 相当于在线程的 `start` 函数中执行 `return`，不同之处在于，可在线程 `start` 函数所调用的任意函数中调用 `pthread_exit()` 
 
-> [!tip] 参数 `retval`：指定线程的返回值
+> [!tip] 参数 `retval`：指向线程的返回值对象的地址
 > 
 > 注意：`retval` 指向的内容不应该在线程栈上分配，因为线程终止后，无法确定线程栈的内容是否有效
 > 
-> 出于同样的理由，也不应在线程栈中分配线程 `start` 函数的返回值
+> 出于同样的理由，线程 `start` 函数的返回值也不应在线程栈中分配
 > 
 
 如果主线程调用了 `pthread_exit()`，而非调用 `exit()` 或是执行 `return` 语句，那么其他线程将继续运行

@@ -100,6 +100,163 @@ int main(int argc, char *argv[]) {
 
 ---
 
+分析下面代码的输出
+
+```c
+#include <pthread.h>
+#include <unistd.h>
+
+#include "base.h"
+
+void * routine(void * arg) {
+    printf("I am child thread\n");
+    return NULL;
+}
+
+int main() {
+
+    pthread_t tid;
+    int err = pthread_create(&tid, nullptr, routine, nullptr);
+
+    if(err != 0) {
+        fprintf(stderr, "Error creating thread: %s\n", strerror(err));
+        return -1;
+    }
+    printf("I am main thread\n");
+    usleep(100);  // 暂停 100 微秒
+    return 0;
+}
+```
+
+`printf` 写入标准 IO 流，这个操作并不是原子操作的，这操作可以分为下面 $3$ 步 
+
+```shell
+#   I 退出点
+A: 从用户空间拷贝到标准 IO 流缓冲区
+#  II 退出点
+B: 从标准 IO 缓冲区拷贝到内核缓冲区
+# III 退出点
+C: 清空标准 IO 缓冲区
+#  IV 退出点
+```
+
+主线程在输出 `"I am main thread\n"` 后，可能在上述三个步骤中的任意一个退出点退出
++ 退出点 Ⅰ：子线程尚未执行，只有一行主线程的输出 
++ 退出点 Ⅱ：进程正常结束，`stdout` 被清理，有两行输出
++ 退出点 Ⅲ：子线程已经完成输出，但是标准 IO 流中缓存尚未清除。进程结束，`stdout` 被清理，有 $3$ 行输出
++ 退出点 Ⅳ：正常情形，有 $2$ 行输出
+
+---
+
+如下示例代码：分析其中可能出现的错误
+
+```c
+#include <pthread.h>
+#include <unistd.h>
+
+#include "base.h"
+
+void * routine(void * arg) {
+    char *msg = (char *) arg;
+    printf("I am child thread: %s\n", msg);
+    return NULL;
+}
+
+void func() {
+    pthread_t tid;
+    char *msg = malloc(1024 * sizeof(char));
+    strcpy(msg, "This is a test heap memory\n");
+    int err = pthread_create(&tid, nullptr, routine, msg);
+    if(err != 0) {
+        fprintf(stderr, "Error creating thread: %s\n", strerror(err));
+        return;
+    }
+    free(msg);  // 此时 free() 之后，子线程可能尚未读取堆中的数据，从而导致子线程访问不受进程管理的内存
+}
+
+int main() {
+    func();
+    sleep(1);
+    return 0;
+}
+```
+
+> [!success] 
+> 
+> **主线程在创建子线程之后立即释放了传递给子线程的堆内存**。这可能导致子线程在尝试访问这块内存时遇到问题，因为这块内存可能已经被操作系统回收或分配给其他用途
+> 
+
+## 编程题
+
+在主线程中创建一个链表，并插入若干节点。然后，将其传递给子线程，在子线程中遍历。链表的代码参考 [[线性表#链表]]
+
+```c
+
+#include <pthread.h>
+#include "list.h"
+
+void apply(const void *e) {
+    elem_t elem = *(elem_t *)e;
+    printf("%d ", elem);
+}
+
+void *routine(void *arg) {
+    list_t *list = (list_t *) arg;
+    traversalList(list, apply);
+    return NULL;
+}
+
+int main() {
+
+    list_t *list = createList((elem_t []){9, 7, 9, 0, 1}, 5);
+    pthread_t thread;
+    int err = pthread_create(&thread, nullptr, routine, list);
+    if (err != 0) {
+        fprintf(stderr, "pthread_create() failed: %s\n", strerror(err));
+        exit(EXIT_FAILURE);
+    }
+    pthread_join(thread, nullptr);
+    destroyList(list);
+    return 0;
+}
+```
+
+---
+
+编程测试在主线程中打开的文件对象是否能被子线程访问
+
+```c
+#include <fcntl.h>
+#include <pthread.h>
+#include <unistd.h>
+
+#include "base.h"
+
+void * routine(void * arg) {
+    int fd = *(int *) arg;
+
+    char buf[100];
+    while (read(fd, buf, 100) > 0) {
+        write(STDOUT_FILENO, buf, 100);
+    }
+
+    return NULL;
+}
 
 
+int main(int argc, char *argv[]) {
 
+    if(argc != 2) {
+        usageErr("Usage: test <testfile>\n");
+    }
+
+    int fd = open(argv[1], O_RDONLY);
+
+    pthread_t thread;
+    pthread_create(&thread, nullptr, routine, (void *)&fd);
+
+    pthread_join(thread, nullptr);
+    close(fd);
+    return 0;
+}
+```

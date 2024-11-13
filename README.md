@@ -195,24 +195,26 @@
 
 #### 多线程
 
-| 内容                  | 描述                         | 系统调用/库函数                                                                                                                                                                                                                  |
-| :------------------ | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 理论：多线程              |                            |                                                                                                                                                                                                                           |
-| [[多线程概念]]           |                            |                                                                                                                                                                                                                           |
-|                     |                            |                                                                                                                                                                                                                           |
-| Pthreads            |                            |                                                                                                                                                                                                                           |
-| [[Pthreads API 介绍]] | 概述 Pthreads API<br>创建和管理线程 | 创建线程: `pthread_create`<br>线程终止:`pthread_exit`<br>线程ID: `pthread_self` `pthread_equal`<br>连接终止线程: `pthread_join`<br>线程分离: `pthread_detach`                                                                                 |
-| [[线程同步]]            | 互斥量和条件变量                   | 互斥量初始化: `pthread_mutex_init`<br>互斥量销毁: `pthread_mutex_destroy`<br>锁定互斥量: `pthread_mutex_lock` <br>非阻塞加锁: `pthread_mutex_trylock`<br>加锁超时: `pthread_mutex_timedlock`<br>解锁互斥量: `pthread_mutex_unlock`<br><br>条件变量初始化: <br> |
-|                     |                            |                                                                                                                                                                                                                           |
-|                     |                            |                                                                                                                                                                                                                           |
-|                     |                            |                                                                                                                                                                                                                           |
-| 理论：死锁               |                            |                                                                                                                                                                                                                           |
-| [[死锁]]              | 讨论死锁避免算法                   |                                                                                                                                                                                                                           |
+| 内容                  | 描述                         | 系统调用/库函数                                                                                                                                                                                             |
+| :------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 理论：多线程              |                            |                                                                                                                                                                                                      |
+| [[多线程概念]]           |                            |                                                                                                                                                                                                      |
+|                     |                            |                                                                                                                                                                                                      |
+| Pthreads：线程管理       |                            |                                                                                                                                                                                                      |
+| [[Pthreads API 介绍]] | 概述 Pthreads API<br>创建和管理线程 | 创建线程: `pthread_create`<br>线程终止:`pthread_exit`<br>线程ID: `pthread_self` `pthread_equal`<br>连接终止线程: `pthread_join`<br>线程分离: `pthread_detach`                                                            |
+| [[互斥量]]             | 互斥量                        | 互斥量初始化: `pthread_mutex_init`<br>互斥量销毁: `pthread_mutex_destroy`<br>锁定互斥量: `pthread_mutex_lock` <br>非阻塞加锁: `pthread_mutex_trylock`<br>加锁超时: `pthread_mutex_timedlock`<br>解锁互斥量: `pthread_mutex_unlock` |
+| [[条件变量]]            | 条件变量                       | 初始化条件变量：`pthread_cond_init`<br>销毁条件变量：`pthread_cond_destroy`<br>通知一个线程：`pthread_cond_signal`<br>通知所有线程：`pthread_cond_broadcast`<br>等待条件变量通知：`pthread_cond_wait`                                      |
+| [[线程安全]]            | 线程特有数据                     | 创建key: `pthread_key_create`<br>设置线程特有数据：`pthread_setsprcific`<br>获取线程特有数据：`pthread_getsprcific`                                                                                                      |
+| [[线程取消]]            | POSIX 线程取消                 | 发送取消请求: `pthread_cancle`<br>测试取消请求: `pthread_testcancle`<br>设置取消状态: `pthread_setcanclestate`<br>设置取消类型: `pthread_setcancletype`<br>添加清理函数: `pthread_cleanup_push`<br>移除清理函数: `pthread_cleanup_pop`   |
+| [[线程细节]]            |                            |                                                                                                                                                                                                      |
+|                     |                            |                                                                                                                                                                                                      |
+| 理论：死锁               |                            |                                                                                                                                                                                                      |
+| [[死锁]]              | 讨论死锁避免算法                   |                                                                                                                                                                                                      |
 
 #### 网络编程
 
 
-
+ 
 
 
 
@@ -234,6 +236,9 @@
 
 
 
+
+
+## 脚本语言：Python
 
 
 
