@@ -24,42 +24,35 @@
             }
           },
           {
-            "id": "b7ea4370d7677aca",
+            "id": "6772bd7b69393f70",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "作业/作业39：线程取消.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "作业39：线程取消"
-            },
-            "group": "ed196da4fcb269cf"
-          }
-        ]
-      },
-      {
-        "id": "f32776aefdff8ef0",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "34f6597990e4a7d7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "作业/作业39：线程取消.md",
+                "file": "笔记/网络.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "作业39：线程取消"
-            },
-            "group": "ed196da4fcb269cf"
+              "title": "网络"
+            }
+          },
+          {
+            "id": "511e1c9b0d09491b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "作业/作业38：线程同步.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "作业38：线程同步"
+            }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -177,10 +170,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "作业/作业38：线程同步.md"
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "作业38：线程同步 的大纲"
             }
           }
         ],
@@ -199,54 +192,53 @@
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "file-cleaner-redux:Clean files": false,
-      "oz-clear-unused-images:Clear Unused Images": false,
-      "obsidian-read-it-later:ReadItLater: Save clipboard": false,
       "obsidian-translator:Translate": false,
+      "oz-clear-unused-images:Clear Unused Images": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "e9c70ca3995437ea",
+  "active": "511e1c9b0d09491b",
   "lastOpenFiles": [
     "作业/作业39：线程取消.md",
-    "笔记/线程取消.md",
     "README.md",
-    "assets/attachments/Pasted image 20241113140021.png",
-    "assets/attachments/Pasted image 20241113140002.png",
-    "笔记/线程安全.md",
-    "笔记/目录与链接.md",
-    "assets/attachments/Pasted image 20241113102813.png",
-    "assets/attachments/Pasted image 20241113100904.png",
-    "assets/attachments/Pasted image 20241113100759.png",
-    "assets/attachments/Pasted image 20241113001713.png",
-    "assets/attachments/Pasted image 20241112232554.png",
-    "笔记/信号处理器函数.md",
+    "笔记/网络.md",
     "作业/作业38：线程同步.md",
-    "笔记/Pthreads API 介绍.md",
-    "笔记/System V 消息队列.md",
-    "作业/作业37：Pthreads API 介绍.md",
-    "笔记/线性表.md",
-    "笔记/条件变量.md",
-    "笔记/多线程概念.md",
-    "笔记/互斥量.md",
-    "作业/作业29：进程创建.md",
-    "笔记/死锁.md",
-    "笔记/System V 信号量.md",
-    "assets/attachments/Pasted image 20241111232243.png",
-    "assets/attachments/Pasted image 20241111212505.png",
-    "assets/attachments/Pasted image 20241111203752.png",
-    "作业/作业36：信号处理器函数.md",
-    "笔记/定时器与休眠.md",
-    "笔记/时间.md",
+    "作业/未命名.md",
     "笔记/信号高级特性.md",
-    "笔记/信号集.md",
-    "笔记/守护进程.md",
-    "笔记/多进程编程细节.md",
-    "笔记/监控子进程.md",
-    "笔记/进程创建.md",
+    "assets/Excalidraw/Drawing 2024-11-13 23.09.21.excalidraw.md",
+    "assets/Excalidraw/Drawing 2024-11-13 23.35.51.excalidraw.md",
+    "assets/attachments/Pasted image 20241114003826.png",
+    "assets/attachments/Pasted image 20241114002905.png",
+    "assets/attachments/Pasted image 20241114002323.png",
+    "assets/attachments/Pasted image 20241114002243.png",
+    "assets/attachments/Pasted image 20241114000512.png",
+    "assets/attachments/Pasted image 20241113235946.png",
+    "assets/attachments/Pasted image 20241113235717.png",
+    "assets/attachments/Pasted image 20241113231025.png",
+    "assets/Excalidraw/Drawing 2024-11-13 22.32.11.excalidraw.md",
+    "ReadItLater Inbox/Note 2024-11-13 23-01-00.md",
+    "ReadItLater Inbox",
+    "ReadItLater Inbox/Note 2024-11-13 23-00-49.md",
+    "assets/attachments/Pasted image 20241113230034.png",
+    "assets/attachments/Pasted image 20241113225954.png",
+    "assets/Excalidraw/Drawing 2024-09-26 10.57.45.excalidraw.md",
+    "笔记/函数.md",
+    "assets/Excalidraw/Drawing 2024-09-21 16.33.54.excalidraw.md",
+    "笔记/基本概念.md",
+    "assets/Excalidraw/Drawing 2024-09-10 16.46.58.excalidraw.md",
+    "assets/Excalidraw/Drawing 2024-06-21 14.35.48.excalidraw.md",
+    "assets/Excalidraw/Drawing 2024-09-21 16.09.50.excalidraw.md",
+    "笔记/数据存储.md",
+    "笔记/数字系统.md",
+    "assets/Excalidraw/Drawing 2024-06-21 11.01.23.excalidraw.md",
+    "assets/Excalidraw/Drawing 2024-06-21 10.56.32.excalidraw.md",
+    "assets/Excalidraw/Drawing 2024-06-21 10.49.42.excalidraw.md",
+    "笔记/计算机模型.md",
+    "assets/Excalidraw/Drawing 2024-06-21 10.43.23.excalidraw.md",
+    "assets/Excalidraw/Drawing 2024-11-13 22.30.21.excalidraw.md",
     "assets/canvas/任务.canvas",
     "assets/attachments/The_Holy_Bible.txt",
     "assets/The_Holy_Bible.txt",
-    "ReadItLater Inbox",
     "作业",
     "笔记",
     "assets/canvas",

@@ -4523,8 +4523,8 @@ function checkMarkdown(file, app, settings) {
   return __async(this, null, function* () {
     if (file.extension !== "md") return false;
     const metadata = app.metadataCache;
-    const links = Object.keys(metadata.getBacklinksForFile(file).data);
-    if (links.length > 0) return false;
+    const links = metadata.getBacklinksForFile(file).data;
+    if (links.size > 0) return false;
     if (file.stat.size === 0) return true;
     const content = yield app.vault.cachedRead(file);
     if (content.trim().length === 0) return true;
@@ -4769,3 +4769,5 @@ moment/moment.js:
   (*! license : MIT *)
   (*! momentjs.com *)
 */
+
+/* nosourcemap */
