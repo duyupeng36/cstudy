@@ -24,7 +24,29 @@
             }
           },
           {
-            "id": "6772bd7b69393f70",
+            "id": "611cae6b9be2b0c6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/网络.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "网络"
+            },
+            "group": "dc2a5c248395b533"
+          }
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "5d6204f215797b81",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "57ff2ef01c15f06b",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -35,24 +57,10 @@
               },
               "icon": "lucide-file",
               "title": "网络"
-            }
-          },
-          {
-            "id": "511e1c9b0d09491b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "作业/作业38：线程同步.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "作业38：线程同步"
-            }
+            },
+            "group": "dc2a5c248395b533"
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -170,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "作业/作业38：线程同步.md"
+                "file": "笔记/网络.md"
               },
               "icon": "lucide-list",
-              "title": "作业38：线程同步 的大纲"
+              "title": "网络 的大纲"
             }
           }
         ],
@@ -197,30 +205,33 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "511e1c9b0d09491b",
+  "active": "611cae6b9be2b0c6",
   "lastOpenFiles": [
-    "作业/作业39：线程取消.md",
-    "README.md",
+    "assets/attachments/Pasted image 20241117215229.png",
+    "assets/attachments/Pasted image 20241117214707.png",
+    "assets/attachments/Pasted image 20241117214039.png",
+    "assets/attachments/Pasted image 20241117214012.png",
+    "assets/attachments/Pasted image 20241117213658.png",
+    "assets/attachments/Pasted image 20241117213529.png",
+    "assets/attachments/Pasted image 20241117211517.png",
+    "assets/attachments/Pasted image 20241117205227.png",
+    "assets/attachments/Pasted image 20241117093825.png",
+    "assets/attachments/Pasted image 20241116113017.png",
+    "assets/attachments/Pasted image 20241116105054.png",
+    "assets/Excalidraw/Drawing 2024-11-16 00.33.15.excalidraw.md",
     "笔记/网络.md",
+    "assets/Excalidraw/Drawing 2024-11-13 23.09.21.excalidraw.md",
+    "README.md",
     "作业/作业38：线程同步.md",
+    "笔记/条件变量.md",
+    "作业/作业39：线程取消.md",
     "作业/未命名.md",
     "笔记/信号高级特性.md",
-    "assets/Excalidraw/Drawing 2024-11-13 23.09.21.excalidraw.md",
     "assets/Excalidraw/Drawing 2024-11-13 23.35.51.excalidraw.md",
-    "assets/attachments/Pasted image 20241114003826.png",
-    "assets/attachments/Pasted image 20241114002905.png",
-    "assets/attachments/Pasted image 20241114002323.png",
-    "assets/attachments/Pasted image 20241114002243.png",
-    "assets/attachments/Pasted image 20241114000512.png",
-    "assets/attachments/Pasted image 20241113235946.png",
-    "assets/attachments/Pasted image 20241113235717.png",
-    "assets/attachments/Pasted image 20241113231025.png",
     "assets/Excalidraw/Drawing 2024-11-13 22.32.11.excalidraw.md",
     "ReadItLater Inbox/Note 2024-11-13 23-01-00.md",
     "ReadItLater Inbox",
     "ReadItLater Inbox/Note 2024-11-13 23-00-49.md",
-    "assets/attachments/Pasted image 20241113230034.png",
-    "assets/attachments/Pasted image 20241113225954.png",
     "assets/Excalidraw/Drawing 2024-09-26 10.57.45.excalidraw.md",
     "笔记/函数.md",
     "assets/Excalidraw/Drawing 2024-09-21 16.33.54.excalidraw.md",
@@ -233,9 +244,6 @@
     "assets/Excalidraw/Drawing 2024-06-21 11.01.23.excalidraw.md",
     "assets/Excalidraw/Drawing 2024-06-21 10.56.32.excalidraw.md",
     "assets/Excalidraw/Drawing 2024-06-21 10.49.42.excalidraw.md",
-    "笔记/计算机模型.md",
-    "assets/Excalidraw/Drawing 2024-06-21 10.43.23.excalidraw.md",
-    "assets/Excalidraw/Drawing 2024-11-13 22.30.21.excalidraw.md",
     "assets/canvas/任务.canvas",
     "assets/attachments/The_Holy_Bible.txt",
     "assets/The_Holy_Bible.txt",
