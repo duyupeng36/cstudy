@@ -10,7 +10,7 @@
   "alwaysUpdateLinks": true,
   "showLineNumber": true,
   "defaultViewMode": "preview",
-  "readableLineLength": false,
+  "readableLineLength": true,
   "pdfExportSettings": {
     "pageSize": "A4",
     "landscape": false,
