@@ -29,12 +29,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/SOCKET 概览.md",
-                "mode": "preview",
+                "file": "作业/作业41：SOCKET 概览 和 SOCKET 地址转换.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SOCKET 概览"
+              "title": "作业41：SOCKET 概览 和 SOCKET 地址转换"
             }
           }
         ],
@@ -156,10 +156,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/SOCKET 概览.md"
+                "file": "作业/作业41：SOCKET 概览 和 SOCKET 地址转换.md"
               },
               "icon": "lucide-list",
-              "title": "SOCKET 概览 的大纲"
+              "title": "作业41：SOCKET 概览 和 SOCKET 地址转换 的大纲"
             }
           }
         ],
@@ -184,10 +184,10 @@
   },
   "active": "8f700a49065d68fe",
   "lastOpenFiles": [
-    "README.md",
-    "作业/作业41：SOCKET 概览 和 SOCKET 地址转换.md",
-    "作业/作业42：基于 TCP 实现聊天服务器.md",
     "笔记/SOCKET 概览.md",
+    "作业/作业41：SOCKET 概览 和 SOCKET 地址转换.md",
+    "README.md",
+    "作业/作业42：基于 TCP 实现聊天服务器.md",
     "笔记/SOCKET 服务器设计.md",
     "笔记/SOCKET：地址转换.md",
     "作业/作业42：基于 TCP 网络编程.md",
