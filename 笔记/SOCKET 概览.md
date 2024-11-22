@@ -6,6 +6,8 @@ socket 是一种 IPC 方法，它允许 **位于同一主机** 或 **使用网�
 > 
 > 实际上这组 API 已经被移植到了所有 UNIX 实现以及其他大多数操作系统上了。
 > 
+> 实现了传输层及以下的所有层次
+> 
 
 在一个典型的 **客户端-服务器** 场景中，应用程序使用 `socket` 进行通信的方式如下
 
@@ -93,7 +95,7 @@ int socket(int domain, int type, int protocol);
 > + `AF_DECnet`：DECet协议套接字
 > + `AF_KEY`：密钥管理协议，最初是为IPsec开发的
 > + `AF_NETLINK`：内核用户界面设备
-> + `AF_PACKET`：低级分组接口
+> + `AF_PACKET`：**低级分组接口**，以太网
 > + `AF_RDS`：可靠数据报套接字(RDS)协议
 > + `AF_PPPOX`：通用 PPP 传输层，用于建立 L2 隧道(L2TP和PPPoE)
 > + `AF_LLC`：逻辑链路控制(IEEE 802.2 LLC)协议
@@ -110,6 +112,15 @@ int socket(int domain, int type, int protocol);
 > `AF` 表示 **地址族(Address Family)**，另外还有 `PF_` 开头的常量，表示 **协议族(Protocol Family)**。然而，SUSv3 标准没有规定 `PF_` 常量，为了可移植性，不建议使用 `PF_` 常量 
 > 
 
+下表总结了常用 domain 的取值
+
+| domain             | 描述        |
+| :----------------- | :-------- |
+| `AF_UNIX/AF_LOCAL` | 本地主机通信    |
+| `AF_INET`          | IPv4 网络通信 |
+| `AF_INET6`         | IPv6 网络通信 |
+| `AF_PACKET`        | 以太网通信     |
+
 > [!tip] 参数 `type`：指定 SOCKET 类型
 > 
 > type 参数的取值下列预定义宏之一
@@ -123,6 +134,14 @@ int socket(int domain, int type, int protocol);
 > + `SOCK_CLOEXEC`：为 SOCKET 文件描述符启用 close-on-exec 标记(执行时关闭)
 > + `SOCK_NONBLOCK`：为 SOCKET 文件描述符设置 `O_NONBLOCK` 标记(非阻塞 IO)
 > 
+
+下表总结了可能使用 `type` 的取值
+
+| `type`        | 描述                                               |
+| :------------ | :----------------------------------------------- |
+| `SOCK_STREAM` | 流式 SOCKET。通常是 TCP                                |
+| `SOCK_DGRAM`  | 数据报 SOCKET。通常是 UDP                               |
+| `SOCK_RAW`    | 裸 SOCKET。通常是 IP。如果 `domain` 指定 `AF_PACKET`，则是以太网 |
 
 > [!tip] 参数 `protocol`：协议族中特定的 **套接字类型** 支持协议的协议号
 > 
@@ -278,6 +297,23 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 > + 向对等 SOCKET 上 **写入** 数据，那么进程将会 **收到 SIGPIPE 信号**，并且系统调用会返回 `EPIPE`
 > 
 
+`send()` 函数向 SOCKET 写入数据；`recv()` 函数从 SOCKET 读取数据
+
+```c
+#include <sys/socket.h>
+
+ssize_t send(int sockfd, const void *buf, size_t len, int flags);
+
+ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+/* 成功返回读取的字节数，失败返回 -1 */
+```
+
+`send()` 和 `recv()` 前 $3$ 个参数和返回值与通用 IO 系统调用 `read()` 和 `write()` 是一样的，这里不在重复介绍
+
+> [!tip] 参数 `flags`：控制 SOCKET 特定的 IO 的特性
+> 
+> 这些特性会在 [[SOCKET：高级主题]] 中进行介绍。。如果无需使用其中任何一种特性，那么可以将 `flags` 指定为 $0$。
+
 ### 连接终止
 
 终止一个流式 SOCKET 连接的常见方式是调用 `close()`。如果多个文件描述符引用了同一个 SOCKET，那么当所有描述符被关闭之后连接就会终止
@@ -308,7 +344,7 @@ ssize_t sendto(int sockfd, const void *bufferm, size_t lengthm int flags, const 
 
 > [!tip] 参数 `flags`：控制 SOCKET 特定的 IO 的特性
 > 
-> 这些特性会在 [[socket：高级主题]] 中进行介绍。。如果无需使用其中任何一种特性，那么可以将 `flags` 指定为 $0$。
+> 这些特性会在 [[SOCKET：高级主题]] 中进行介绍。。如果无需使用其中任何一种特性，那么可以将 `flags` 指定为 $0$。
 > 
 
 > [!tip] 参数 `src_addr` 和 `addrlen`：获取对等 SOCKET 的地址和地址结构的长度
