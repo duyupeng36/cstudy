@@ -219,12 +219,38 @@ int listen(int sockfd, int blocklog);
 > 
 > 内核必须要记录所有未决的连接请求的相关信息，这样后续的 accept()就能够处理这些请求了
 > 
-> SUSv3 规定实现应该通过在 `<sys/socket.h>` 中定义 `SOMAXCONN` 常量来限制未决连接数。在 Linux 上，这个常量值被定义为 $128$。从内核 2.4.25 起，Linux 允许运行时通过 Linux 特有的 `/proc/sys/net/core/somaxconn` 文件修改这个值
+> SUSv3 规定实现应该通过在 `<sys/socket.h>` 中定义 `SOMAXCONN` 常量来限制未决连接数。
+> + 在 Linux 上，这个常量值被定义为 $128$
+> 
+> 从内核 2.4.25 起，Linux 允许运行时通过 Linux 特有的 `/proc/sys/net/core/somaxconn` 文件修改 `SOMAXCONN` 值
+> 
+
+`listen()` 会修改 `sockfd` 指定的 SOCKET 对象，在其中建立两个队列：**半连接队列** 和 **全连接队列**。相当于告诉系统内核，这个 SOCKET 对象可以与客户端建立连接了
+
+> [!tip] 半连接队列：连接处于 SYN_RCVD 状态
+> 
+>  + 客户端调用 `connect()`，会向服务端发送一个 SYN 报文段(第一次挥手)
+>  + 服务端会向客户端发送 ACK+SYN 报文段作为响应(第二次挥手)，并将连接放入半连接队列，然后等待客户端的 ACK 报文段
+> 
+
+> [!tip] 全连接队列：连接处于 ESTABLISHED 状态
+> 
+> + 客户端收到服务端的 ACK+SYN 报文段之后，再次向服务端发送 ACK 报文段(第三次挥手)。此时，`connect()` 函数返回
+> + 收到客户端的 ACK 报文段之后，会将连接移入全连接队列
+> 
+
+此时，客户端与服务端的连接就已经建立好了。只是，该连接还处于 **未决状态**
+
+> [!attention] 
+> 
+> 上述操作（三次握手，移入队列）都是由内核完成的。因此，及时应用程序在做其他事情，客户端依旧可以完成连接
+> 
+> `listen()` 之后，SOCKET 就只能用于建立连接，不能用于收发数据
 > 
 
 ### 接受连接
 
-`accept()` 系统调用在文件描述符 `sockfd` 引用的 **被动** 流式 SOCKET 上接受一个接入连接。如果在调用 `accept()` 时 **不存在未决的连接**，那么调用就会 **阻塞直到有连接请求到达为止**
+`accept()` 系统调用在 **监听 SOCKET 对象** 的全连接队列中 **取出一个未决连接** 并构建一个全新的 SOCKET 对象，这个新的 SOCKET 对象成为 **通信 SOCKET 对象**。如果在调用 `accept()` 时 **不存在未决的连接**，那么调用就会 **阻塞直到有连接请求到达为止**
 
 ```c
 #include <sys/socket.h>
@@ -244,18 +270,18 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 > 
 
 > [!tip] 参数 `addrlen`：对端地址结构的长度
+> 
 
+> [!warning] 参数 `addr` 和 `addrlen` 必须一起使用
+> 
+> 如果需要获取对端的 SOCKET 地址，`addrlen` 必须要给定一个 SOCKET 地址的最大值
+> 
 
 `accept()` 会创建一个全新的流式 SOCKET，并且正是这个新的流式 SOCKET 与执行 `connect()` 的对等 SOCKET 进行连接
 
 > [!tip] 返回值
 > 
 > `accetp()` 返回的结果是 **已连接** 的 SOCKET 的文件描述符
-> 
-
-> [!attention] 
-> 
-> **监听 SOCKET 保存打开**，并且可以被用于接受后续的连接
 > 
 
 ### 连接到对等 SOCKET
@@ -277,6 +303,8 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 > [!tip] 参数 `addr`：被动 SOCKET 所在的地址
 
 > [!tip] 参数 `addrlen`：被动 SOCKET 地址结构的长度
+
+`connect()` 系统调用会发起第一次挥手，并在发送第三次挥手后返回
 
 ### 流式 SOCKET IO
 
@@ -313,6 +341,13 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 > [!tip] 参数 `flags`：控制 SOCKET 特定的 IO 的特性
 > 
 > 这些特性会在 [[SOCKET：高级主题]] 中进行介绍。。如果无需使用其中任何一种特性，那么可以将 `flags` 指定为 $0$。
+
+> [!warning] 
+> 
+> `send()` 并不是真正的发送数据，只是将 `buf` 中的数据拷贝到 **发送缓冲区**
+> 
+> `recv()` 并不是真正的接收数据，而是将 **接收缓冲区** 中的内容拷贝到 `buf` 中
+> 
 
 ### 连接终止
 
