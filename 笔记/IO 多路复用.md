@@ -448,6 +448,11 @@ typedef struct
 > select 的 **轮询** 机制，导致 **获取就绪文件描述符集合的性能较低**
 > 
 
+> [!attention] 更严重的问题
+> 
+> 每当 `select()` 返回，我们并不知道哪个文件描述符就绪了，还需要挨个循环
+> 
+
 ### poll
 
 系统调用 `poll()` 执行的任务同 `select()` 很相似。两者间主要的区别在于我们要如何指定待检查的文件描述符
@@ -533,3 +538,158 @@ struct pollfd {
 > 
 > `poll()` 返回的正数是 `fds` 列表中就绪的文件描述符个数，注意任何文件描述符只会统计一次
 > 
+
+```c title:altio/programA_poll.c
+#include <sys/stat.h>  
+#include <poll.h>  
+#include <fcntl.h>  
+#include <unistd.h>  
+#include "base.h"  
+
+int main(int argc, char *argv[]) {  
+    // programA_poll A2B_FIFO B2A_FIFO  
+    if(argc != 3) {  
+        usageErr("%s <fifo 1> <fifo 2>", argv[0]);  
+    }  
+  
+    // B2A_FIFO 以 O_RDONLY 打开  
+    int b2a = open(argv[2], O_RDONLY);  
+    if(b2a == -1) {  
+        errExit("open %s error: ", argv[2]);  
+    }  
+    printf("%s read side opened\n", argv[2]);  
+  
+    // A2B_FIFO 以 O_WRONLY 打开  
+    int a2b = open(argv[1], O_WRONLY);  
+    if(a2b == -1) {  
+        errExit("open %s error: ", argv[1]);  
+    }  
+    printf("%s write side opened\n", argv[1]);  
+  
+    while(true) {  
+        struct pollfd pfds[2] = {{.fd=STDIN_FILENO, .events = POLLIN, .revents = 0},{.fd = b2a, .events = POLLIN | POLLHUP, .revents = 0}};  
+  
+        int ret = poll(pfds, 2, -1);  
+        if(ret == -1) {  
+            errExit("select error");  
+        }  
+  
+        char buffer[BUFSIZ] = {};  
+        ssize_t bytes;  
+        for (int i = 0; i < 2; i++) {  
+            // 可读  
+            if (pfds[i].revents & POLLIN) {  
+                if (pfds[i].fd == STDIN_FILENO) {  
+                    bytes = read(pfds[i].fd, buffer, BUFSIZ);  
+                    if (bytes == -1 || bytes == 0) {  
+                        errExit("read error: ");  
+                    }  
+                    write(a2b, buffer, bytes);  
+                }  
+                if (pfds[i].fd == b2a) {  
+                    bytes = read(pfds[i].fd, buffer, BUFSIZ);  
+                    if (bytes == -1) {  
+                        errExit("read error: ");  
+                    }  
+                    write(STDOUT_FILENO, buffer, bytes);  
+                }  
+            }
+            // 关闭
+            if (pfds[i].revents & POLLHUP) {  
+                errExit("poll hup error: ");  
+            }  
+        }  
+    }  
+}
+```
+
+```c title:altio/programB_poll.c
+#include <sys/stat.h>
+#include <sys/poll.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include "base.h"
+
+int main(int argc, char *argv[]) {
+    // programB_select A2B_FIFO B2A_FIFO
+    if(argc != 3) {
+        usageErr("%s <fifo 1> <fifo 2>", argv[0]);
+    }
+
+    // B2A_FIFO 以 O_WRONLY 打开
+    int b2a = open(argv[2], O_WRONLY);
+    if(b2a == -1) {
+        errExit("open %s error: ", argv[2]);
+    }
+    printf("%s write side opened\n", argv[2]);
+
+    // A2B_FIFO 以 O_RDONLY 打开
+    int a2b = open(argv[1], O_RDONLY);
+    if(a2b == -1) {
+        errExit("open %s error: ", argv[1]);
+    }
+    printf("%s read side opened\n", argv[1]);
+
+
+    while(true) {
+        struct pollfd pfds[2] = {{.fd=STDIN_FILENO, .events = POLLIN, .revents = 0},{.fd = a2b, .events = POLLIN | POLLHUP, .revents = 0}};
+
+        int ret = poll(pfds, 2, -1);
+        if(ret == -1) {
+            errExit("select error");
+        }
+
+        char buffer[BUFSIZ] = {};
+        ssize_t bytes;
+        for (int i = 0; i < 2; i++) {
+            // 可读
+            if (pfds[i].revents & POLLIN) {
+                if (pfds[i].fd == STDIN_FILENO) {
+                    bytes = read(pfds[i].fd, buffer, BUFSIZ);
+                    if (bytes == -1 || bytes == 0) {
+                        errExit("read error");
+                    }
+                    write(b2a, buffer, bytes);
+                }
+                if (pfds[i].fd == a2b) {
+                    bytes = read(pfds[i].fd, buffer, BUFSIZ);
+                    if (bytes == -1 || bytes == 0) {
+                        errExit("read error");
+                    }
+                    write(STDOUT_FILENO, buffer, bytes);
+                }
+            }
+            if (pfds[i].revents & POLLHUP) {
+                errExit("poll hup error: ");
+            }
+        }
+    }
+}
+```
+
+## 文件描述符何时就绪
+
+
+> [!tip] 正确使用 `select()` 和 `poll()` 需要理解在什么情况下文件描述符会表示为就绪态
+> 
+> SUSv3 中说，如果 **对 I/O 函数的调用不会阻塞**，而不论该函数是否能够实际传输数据，此时文件描述符（未指定 `O_NONBLOCK` 标志）**被认为是就绪的**
+> 
+
+**`select()` 和 `poll()` 只会告诉我们 IO 操作是否会阻塞**，而不是告诉我们到底能否成功传输数据
+
+下面我们考虑 `select()` 和 `poll()` 在不同类型的文件描述符上所做的操作
+
+### 管道和 FIFO
+
+下表总结了`select()` 和 `poll()` 在管道或 FIFO 读端上的通知。
+
+![[Pasted image 20241128232422.png]]
+
+下表总结了 `select()` 和 `poll()` 在管道或 FIFO 写端上的通知。
+
+![[Pasted image 20241128232531.png]]
+
+### 套接字
+
+![[Pasted image 20241128232548.png]]

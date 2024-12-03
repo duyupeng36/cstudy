@@ -313,6 +313,128 @@ const char * inet_ntop(int domain, const void *addrptr, char *dst_str, size_t le
 #define INET6_ADDRSTRLEN 46 /* IPv6 十六进制字符串长度的最大值*/
 ```
 
+## 客户端/服务器示例（数据报 socket）
+
+这里给出一个大小写转换服务器和客户端示例程序，使用 `AF_INET` domain 中的数据报 SOCKET
+
+```c title:sockets/ucase.h
+#ifndef UCASE_H
+#define UCASE_H
+
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+
+#define PORT_NUM 8080
+
+#endif //UCASE_H
+```
+
+下面的代码给出了服务端的实现。
+
+```c title:sockets/ucase_sv.c
+
+#include <ctype.h>
+
+#include "ucase.h"
+#include "base.h"
+
+int main() {
+	// 首先，创建一个 AF_INET 的 SOCK_DGRAM SOCKET 
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd == -1) {
+        errExit("socket: ");
+    }
+	
+	// 构建 SOCKET 地址
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;  // IPv4
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);  // 通配地址
+    addr.sin_port = htons(PORT_NUM); // 端口
+
+	// 然后，给 SOCET 绑定地址
+    if (bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+        errExit("bind: ");
+    }
+    
+    // 数据报 SOCKET 不需要进行将其转换为被动套接字，因为数据报 SOCKET 是无连接的
+    char buffer[BUFSIZ];
+    while (true) {
+        struct sockaddr_in client;
+        socklen_t len = sizeof(struct sockaddr_in);
+        
+        // 直接读取数据
+        ssize_t numBytes = recvfrom(sockfd, buffer, BUFSIZ, 0, (struct sockaddr *)&client, &len);
+        if (numBytes == -1) {
+            errExit("recvfrom: ");
+        }
+        
+        // 将 SOCKET 地址转换为展现形式
+        char claddr[INET_ADDRSTRLEN];
+        if (inet_ntop(AF_INET, &client.sin_addr, claddr, INET_ADDRSTRLEN ) == NULL) {
+            fprintf(stderr, "inet_ntop: %s", strerror(errno));
+        } else {
+            printf("Server received %ld bytes form(%s,%hu)\n", (long)numBytes, claddr, ntohs(client.sin_port));
+        }
+        
+        // 转成大写
+        for (int j = 0; j < numBytes; j++) {
+            buffer[j] = (char)toupper(buffer[j]);
+        }
+        
+        // 回复给客户端
+        if (sendto(sockfd, buffer, numBytes, 0, (struct  sockaddr *)&client, len) != numBytes) {
+            errExit("sendto: ");
+        }
+    }
+}
+```
+
+下面代码给出客户端实现
+
+```c title:sockets/ucase_cl.c
+#include <base.h>
+#include <unistd.h>
+
+#include "ucase.h"
+
+int main() {
+
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd == 0) {
+        errExit("socket");
+    }
+    
+    // 此处的地址是服务端所在的地址
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    addr.sin_port = htons(PORT_NUM);
+
+    char buffer[BUFSIZ];
+    while (true) {
+        memset(buffer, 0, BUFSIZ);
+        ssize_t numRead = read(STDIN_FILENO, buffer, BUFSIZ);
+        if (numRead == -1 || numRead == 0) {
+            errExit("read");
+        }
+
+        if (sendto(sockfd, buffer, numRead, 0, (struct sockaddr*)&addr, sizeof(addr)) != numRead) {
+            errExit("sendto");
+        }
+
+        numRead = recvfrom(sockfd, buffer, BUFSIZ, 0, nullptr, nullptr);
+        if (numRead == -1) {
+            errExit("read");
+        }
+        printf("%s\n", buffer);
+    }
+}
+```
+
+
 ## 域名系统
 
 IP 地址太过繁琐，难以记忆和使用，因此互联网支持使用 **主机名称(host name)** 来识别包括客户机和服务器在内的主机。为了使用 TCP 和 IP 等协议，主机名称通过 **名称解析** 的过程转换成 IP 地址
@@ -341,7 +463,7 @@ DNS 中的域名都是用句点来分隔的，比如 `www.server.com `，这里�
 + 顶级域 DNS 服务器（.com）
 + 权威 DNS 服务器（server.com）
 
-![[Pasted image 20241122102749.png]]
+![[Pasted image 20241123195028.png]]
 
 > [!tip]
 > 
