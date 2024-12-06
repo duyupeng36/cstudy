@@ -4084,6 +4084,10 @@ var enUS = {
           PermanentDelete: "Permanently delete"
         }
       },
+      ObsidianTrashCleanupAge: {
+        Label: "Trash directory age threshold",
+        Description: "Amount of days files can be in the `.trash` folder before they are permanently removed (minimum 1 day)."
+      },
       FolderFiltering: {
         Excluded: {
           Label: "Excluded folders",
@@ -4305,6 +4309,7 @@ var ExcludeInclude = ((ExcludeInclude2) => {
 })(ExcludeInclude || {});
 var DEFAULT_SETTINGS = {
   deletionDestination: "system" /* SystemTrash */,
+  obsidianTrashCleanupAge: -1,
   excludeInclude: ExcludeInclude.Exclude,
   excludedFolders: [],
   attachmentsExcludeInclude: ExcludeInclude.Include,
@@ -4346,8 +4351,24 @@ var FileCleanerSettingTab = class extends import_obsidian2.PluginSettingTab {
             break;
         }
         this.plugin.saveSettings();
+        this.display();
       })
     );
+    this.plugin.settings.deletionDestination === "obsidian" /* ObsidianTrash */ && new import_obsidian2.Setting(containerEl).setName(
+      translate().Settings.RegularOptions.ObsidianTrashCleanupAge.Label
+    ).setDesc(
+      translate().Settings.RegularOptions.ObsidianTrashCleanupAge.Description
+    ).addText((text) => {
+      const days = this.plugin.settings.obsidianTrashCleanupAge;
+      text.setPlaceholder("7");
+      text.setValue(days >= 0 ? String(days) : "");
+      text.inputEl.style.minWidth = "18rem";
+      text.onChange((value) => {
+        const days2 = Number(value.match(/^\d+/)) || -1;
+        this.plugin.settings.obsidianTrashCleanupAge = days2;
+        this.plugin.saveSettings();
+      });
+    });
     new import_obsidian2.Setting(containerEl).setName(translate().Settings.RegularOptions.FolderFiltering.Label).setDesc(translate().Settings.RegularOptions.FolderFiltering.Description).addToggle((toggle) => {
       toggle.setValue(Boolean(this.plugin.settings.excludeInclude));
       toggle.onChange((value) => {
@@ -4651,6 +4672,33 @@ function isFolderExcluded(folder, settings) {
 function isFolderIncluded(folder, settings) {
   return settings.excludedFolders.map((excludedFolder) => folder.path.match(RegExp(`^${excludedFolder}`))).filter((x) => x).length === 0;
 }
+function cleanTrashFolder(app, settings) {
+  return __async(this, null, function* () {
+    if (settings.obsidianTrashCleanupAge < 0) return;
+    if (!app.vault.adapter.exists(".trash")) return;
+    const date = /* @__PURE__ */ new Date();
+    const ageThreshold = date.setDate(
+      date.getDate() - settings.obsidianTrashCleanupAge
+    );
+    console.group("Checking '.trash' folder");
+    const trashDirectory = yield app.vault.adapter.list(".trash");
+    for (const file of trashDirectory.files) {
+      const f = yield app.vault.adapter.stat(file);
+      if (f.ctime < ageThreshold) {
+        app.vault.adapter.remove(file);
+        console.debug("Removed file:", file);
+      }
+    }
+    for (const folder of trashDirectory.folders) {
+      const f = yield app.vault.adapter.stat(folder);
+      if (f.ctime < ageThreshold) {
+        app.vault.adapter.rmdir(folder, true);
+        console.debug("Removed folder:", folder);
+      }
+    }
+    console.groupEnd();
+  });
+}
 function runCleanup(app, settings) {
   return __async(this, null, function* () {
     const indexingStart = Date.now();
@@ -4722,6 +4770,8 @@ function runCleanup(app, settings) {
       foldersToRemove.forEach((item) => console.debug(item.path));
       console.groupEnd();
     }
+    if (settings.deletionDestination === "obsidian" /* ObsidianTrash */)
+      cleanTrashFolder(app, settings);
     console.groupEnd();
   });
 }
