@@ -203,11 +203,12 @@
       "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
-  "active": "9aca4cac2c5634ad",
+  "active": "a348d57576ebaba7",
   "lastOpenFiles": [
     "README.md",
-    "笔记/网络：传输层协议.md",
+    "笔记/GDB.md",
     "笔记/进程池.md",
+    "笔记/网络：传输层协议.md",
     "笔记/SOCKET：高级主题.md",
     "笔记/Makefile.md",
     "笔记/Linux 命令和 vim 操作.md",
@@ -231,7 +232,6 @@
     "assets/Excalidraw/Drawing 2024-12-05 22.01.27.excalidraw.md",
     "assets/Excalidraw",
     "作业/作业41：SOCKET 概览 和 SOCKET 地址转换.md",
-    "笔记/GDB.md",
     "笔记/信号驱动 IO.md",
     "笔记/深入文件 IO.md",
     "笔记/FIFO.md",
