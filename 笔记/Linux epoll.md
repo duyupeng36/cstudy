@@ -324,7 +324,6 @@ epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event);
 下面的示例程序是 [[IO 多路复用]] 中两个进程通信的例子使用 epoll 的实现
 
 ```c title:programA_epoll.c
-  
 #include <sys/types.h>  
 #include <sys/epoll.h>  
 #include <sys/stat.h>  
@@ -432,8 +431,7 @@ int main(int argc, char *argv[]) {
 ```
 
 ```c title:programB_epoll.c
-  
-#include <sys/types.h>  
+  #include <sys/types.h>  
 #include <sys/epoll.h>  
 #include <sys/stat.h>  
 #include <fcntl.h>  

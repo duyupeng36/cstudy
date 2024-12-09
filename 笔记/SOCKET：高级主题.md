@@ -368,3 +368,160 @@ if(getsockopt(sockfd, SOL_SOCKET, SO_TYPE, &optval, &optlen) == -1) {
 当一个套接字接收到带外数据可用的通知时，**内核为套接字的属主（通常是使用该套接字的进程）生成 `SIGURG` 信号**，如同 `fcntl()` 的 `F_SETOWN` 操作一样
 
 当采用 TCP 套接字时，任意时刻最多只有 $1$ 字节数据可被标记为带外数据。如果在接收端处理完前一个带外数据字节之前，发送端发送了额外的带外数据，那么之前对带外数据的通知就会丢失
+
+> [!warning] 
+> 
+> 现如今是 **不提倡使用带外数据** 的，在某些情况下它可能是不可靠的
+> 
+
+另外一种方法是 **维护两个流式套接字** 用作通信。其中一个用来做 **普通的通信**，而另一个用来做 **高优先级通信**。然后使用 [[IO 多路复用]] 和 [[Linux epoll]] 中介绍的技术同时监控这两个通道。这种方法 **允许让多个字节的优先级数据得到传送**
+
+### sendmsg() 和 recvmsg()
+
+`sendmsg()` 和 `recvmsg()` 是 **套接字 I/O** 系统调用中 **最为通用** 的两种
+
+> [!tip] 
+> 
+> `write()` `send()` 以及 `sendto()` 系统调用可以使用 `sendmsg()` 系统调用替换
+> 
+> `read()` `recv()` 以及 `recvfrom()` 系统调用可以使用  `recvmsg()` 系统调用替换
+> 
+
+`sendmsg()` 和 `recvmsg()` 系统调用的原型如下
+
+```c
+#include <sys/socket.h>
+
+ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags);
+/* 成功返回发送的字节数，失败返回 -1 */
+
+ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
+/* 成功返回读取的字节数；EOF返回 0；失败返回 -1 */
+```
+
+> [!tip] 参数 `sockfd`：套接字
+> 
+> 通常是 `socket()` 的返回值
+> 
+
+> [!tip] 参数 `msghdr`：指向一个结构。代表了待发送的消息，或者接收缓冲区
+> 
+
+结构 `msghdr` 的定义如下
+
+```c
+struct msghdr {
+	void         *msg_name;       /* Optional address */
+	socklen_t     msg_namelen;    /* Size of address */
+	struct iovec *msg_iov;        /* Scatter/gather array */
+	size_t        msg_iovlen;     /* # elements in msg_iov */
+	void         *msg_control;    /* Ancillary data, see below */
+	size_t        msg_controllen; /* Ancillary data buffer len */
+	int           msg_flags;      /* Flags on received message */
+};
+```
+
+下表总结了各个字段的含义
+
+| 字段名              | `sendmsg()` | `recvmsg()`                                                                             | 备注                              |
+| :--------------- | :---------- | --------------------------------------------------------------------------------------- | ------------------------------- |
+| `msg_name`       | 目标地址        | 源地址缓冲区                                                                                  | 调用者分配                           |
+| `msg_namelen`    | 目标地址长度      | 缓冲区长度                                                                                   |                                 |
+|                  |             |                                                                                         |                                 |
+| `msg_iov`        | 聚集输出        | 分散输入                                                                                    | 参考 [[深入文件 IO#分散输入和集中输出\|分散-聚集]] |
+| `msg_iovlen`     | 聚集长度        | 分散长度                                                                                    | 参考 [[深入文件 IO#分散输入和集中输出\|分散-聚集]] |
+|                  |             |                                                                                         |                                 |
+| `msg_control`    | 控制信息        | 存储控制信息缓冲区                                                                               | 内核数据结构                          |
+| `msg_controllen` | 控制信息长度      | 缓冲区长度                                                                                   |                                 |
+|                  |             |                                                                                         |                                 |
+| `msg_flags`      | 忽略          | `MSG_EOR` `MSG_TRUNC`<br>`MSG_CTRUNC` `MSG_OOB`<br>`MSG_ERRQUEUE`<br>`MSG_CMSG_CLOEXEC` |                                 |
+> [!tip] 
+> 
+> 长度为 `msg_namelen` 的 `msg_name`：对于数据报 SOCKET，该字段必须是目标地址；如果是流式 SOCKET，该字段是 `NULL`
+> 
+> **长度为 `msg_iovlen` 的 `msg_iov` 必须存在**。即使我们只想要发送一个控制信息，也需要携带者两个字段
+> 
+
+`recvmsg()` 的 `msghdr.msg_control` 中的信息定义为如下结构
+
+```c
+struct cmsghdr {
+   size_t cmsg_len;    /* Data byte count, including header
+						  (type is socklen_t in POSIX) */
+   int    cmsg_level;  /* Originating protocol */
+   int    cmsg_type;   /* Protocol-specific type */
+/* followed by
+   unsigned char cmsg_data[]; */
+};
+```
+
+下表总结了 `cmsghdr` 各个字段的含义
+
+| 字段            | 描述                                               |
+| :------------ | :----------------------------------------------- |
+| `cmsg_len`    | 控制消息的总字节数，即 `sizeof(struct cmsghdr) + 控制消息数据的长度` |
+| `cmsg_level`  | 控制消息所属的协议层级                                      |
+| `cmsg_type`   | 具体的控制消息类型。与协议相关，具体取值取决于 `cmsg_level`             |
+| `cmsg_data[]` | 协议特定的控制数据                                        |
+
+常见的 `cmsg_level` 和 `cmsg_type` 的取值如下
+
+| `cmsg_level`  | `cmsg_type`    | 用途/描述                     |
+| ------------- | -------------- | ------------------------- |
+| **套接字层**      |                |                           |
+| `SOL_SOCKET`  | `SO_RCVBUF`    | 设置或获取套接字的接收缓冲区大小          |
+| `SOL_SOCKET`  | `SO_SNDBUF`    | 设置或获取套接字的发送缓冲区大小          |
+| `SOL_SOCKET`  | `SO_TIMESTAMP` | 获取套接字接收到数据包的时间戳           |
+| `SOL_SOCKET`  | `SO_LINGER`    | 设置套接字关闭时的延迟行为             |
+| `SOL_SOCKET`  | `SCM_RIGHTS`   | **传递文件描述符**               |
+|               |                |                           |
+| **IP协议层**     |                |                           |
+| `IPPROTO_IP`  | `IP_TTL`       | 设置或获取 IP 数据包的生存时间（TTL）    |
+| `IPPROTO_IP`  | `IP_TOS`       | 设置或获取 IP 数据包的服务类型（TOS）    |
+| `IPPROTO_IP`  | `IP_PKTINFO`   | 获取 IP 数据包的源地址信息           |
+|               |                |                           |
+| **TCP 协议层**   |                |                           |
+| `IPPROTO_TCP` | `TCP_NODELAY`  | 禁用 Nagle 算法（即禁用延迟合并小数据包）  |
+| `IPPROTO_TCP` | `TCP_MAXSEG`   | 设置或获取 TCP 的最大分段大小（MSS）    |
+| `IPPROTO_TCP` | `TCP_CORK`     | 禁止 TCP 将数据拆分（用于优化大数据包的发送） |
+|               |                |                           |
+| **UPD 协议层**   |                |                           |
+| `IPPROTO_UDP` | `UDP_GRO`      | 启用 UDP 聚合（GRO）            |
+
+辅助数据只能由 `cmsg` 中定义的宏访问
+
+```c
+#include <sys/socket.h>
+
+// msghdr 关联的辅助数据缓冲区中第一个 cmsghdr 的指针
+struct cmsghdr *CMSG_FIRSTHDR(struct msghdr *msgh);
+/* 成功返回 cmsghdr 的指针;失败返回 NULL */
+
+// 下一个有效的 cmsghdr
+struct cmsghdr *CMSG_NXTHDR(struct msghdr *msgh, struct cmsghdr *cmsg);
+/* 成功返回 cmsghdr 的指针; 失败返回 NULL */
+
+// 返回包含所需对齐方式的长度
+size_t CMSG_ALIGN(size_t length);
+
+// 返回有效负载为所传递数据长度的辅助元素占用的字节数
+size_t CMSG_SPACE(size_t length);
+
+// 考虑任何必要的对齐方式，返回要存储在 cmsghdr 结构的 cmsg_len 成员中的值
+size_t CMSG_LEN(size_t length);
+
+// 返回一个指向 cmsghdr 的数据部分的指针
+unsigned char *CMSG_DATA(struct cmsghdr *cmsg);
+```
+
+可见 `sendmsg()` 和 `recvmsg()` 提供了更加复杂的功能：**分散输入和集中输出** 和 **传送包含特定于域的辅助数据**
+
+### 传递打开文件描述
+
+通过 `sendmsg()` 和 `recvmsg()`，可在同一台主机上通过 UNIX 域套接字将包含文件描述符的辅助数据从一个进程传递到另一个进程上。以这种方式可以 **传递任意类型的文件描述符**
+
+主服务器可以 **在 TCP 监听套接字上接受客户端连接**，然后 **将返回的文件描述符传递给进程池中的其中一个成员上**，这些成员由服务器的子进程组成。之后，子进程就可以响应客户端的请求了
+
+虽然这种技术通常称为传递文件描述符，但实际上在两个进程间 **传递的是对同一个 _打开文件描述_ 的引用**。在接收进程中使用的文件描述符号一般和发送进程中采用的文件描述符号不同
+
+关于传递打开文件描述参考 [[进程池#父子进程之间共享打开文件描述]]

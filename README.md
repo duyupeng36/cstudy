@@ -222,6 +222,7 @@
 | [[SOCKET 概览]]   | 初步介绍 SOCKET API                                                                 | 创建 SOCKET：`socket`<br>绑定地址：`bind`<br>监听连接：`listen`<br>接受连接：`accept`<br>连接对等套接字: `connect`                                            |
 | [[SOCKET：地址转换]] | 网络的地址转换                                                                         | 主网字节序: `hton{s, l}`<br>网主字节序: `ntoh{s, l}`<br>地址转换: `inet_pton` `inet_ntop`<br>地址转换: `getaddrinfo` <br>`getnameinfo` <br>            |
 | [[SOCKET：高级主题]] |                                                                                 | 关闭一端：`shutdown`<br>发送文件：`sendfile`<br>本地套接字地址：`getsockname`<br>对端套接字地址：`getpeername`<br>获取套接字选项：`getsockopt`<br>设置套接字选项：`setsockopt` |
+| [[服务器设计]]       | 迭代服务器和并发服务器<br>并发服务器：基于进程/线程并发；基于事件的并发；池方案                                      |                                                                                                                                      |
 
 #### 备选 IO 模型
 
@@ -233,8 +234,11 @@
 
 #### 进程池和线程池
 
-
-
+| 内容      | 描述              |
+| :------ | --------------- |
+| [[进程池]] | 基于进程池实现文件上传下载任务 |
+| [[线程池]] |                 |
+|         |                 |
 
 ### 数据库
 
