@@ -194,12 +194,12 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 
 下表总结了 `recv()` 的第 $4$ 个参数 `flags` 的取值
 
-| `flags`        | 描述           |
-| :------------- | :----------- |
-| `MSG_DONTWAIT` | 非阻塞 `recv()` |
-| `MSG_OOB`      | 接收带外数据       |
-| `MSG_PEEK`     | 可重复的请求缓冲区    |
-| `MSG_WAITALL`  | 阻塞等待请求的字节数   |
+| `flags`        | 描述                 |
+| :------------- | :----------------- |
+| `MSG_DONTWAIT` | 非阻塞 `recv()`       |
+| `MSG_OOB`      | 接收带外数据             |
+| `MSG_PEEK`     | 可重复的请求缓冲区          |
+| `MSG_WAITALL`  | 阻塞等待请求的字节数，或对端断开连接 |
 
 > [!tip] 对于 `send()` 的第 $4$ 个参数 `flags` 的取值如下
 > 
