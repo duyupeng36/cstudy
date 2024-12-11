@@ -213,11 +213,13 @@
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
-      "oz-clear-unused-images:Clear Unused Images": false
+      "oz-clear-unused-images:Clear Unused Images": false,
+      "obsidian-excalidraw-plugin:新建绘图文件": false
     }
   },
   "active": "9aca4cac2c5634ad",
   "lastOpenFiles": [
+    "assets/attachments/Pasted image 20241210233618.png",
     "笔记/SOCKET：高级主题.md",
     "笔记/进程池.md",
     "README.md",
@@ -254,7 +256,6 @@
     "笔记/守护进程.md",
     "作业/作业28：FIFO和IO多路复用.md",
     "作业/作业18：文件 IO 通用 IO 模型.md",
-    "assets/Excalidraw/Drawing 2024-11-13 23.35.51.excalidraw.md",
     "ReadItLater Inbox",
     "assets/canvas/任务.canvas",
     "assets/attachments/The_Holy_Bible.txt",
