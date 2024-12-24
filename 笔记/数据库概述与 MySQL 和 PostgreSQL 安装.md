@@ -402,3 +402,4 @@ CREATE DATABASE classicmodels;
 ![[Pasted image 20241224231855.png]]
 
 现在，我们就在 MySQL 和 PostgreSQL 中准备好了示例数据库
+

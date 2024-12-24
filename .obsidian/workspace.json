@@ -38,8 +38,7 @@
             },
             "group": "03e0f1d40938e3b1"
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "9233bc6e6c22e391",
@@ -178,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/数据库概述与 MySQL 和 PostgreSQL 安装.md"
+                "file": "README.md"
               },
               "icon": "lucide-list",
-              "title": "数据库概述与 MySQL 和 PostgreSQL 安装 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -203,15 +202,16 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "9aca4cac2c5634ad",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
+    "笔记/数据库概述与 MySQL 和 PostgreSQL 安装.md",
+    "README.md",
+    "assets/attachments/Pasted image 20241224232243.png",
     "assets/attachments/Pasted image 20241224231855.png",
     "assets/attachments/Pasted image 20241224231807.png",
     "assets/attachments/Pasted image 20241224231745.png",
     "assets/mysqlsampledatabase.sql",
     "assets/attachments/Pasted image 20241224102843.png",
-    "README.md",
-    "笔记/数据库概述与 MySQL 和 PostgreSQL 安装.md",
     "assets/attachments/25E84352.png",
     "笔记/线程池.md",
     "笔记/线程取消.md",
@@ -238,8 +238,6 @@
     "笔记/SOCKET 概览.md",
     "assets/attachments/Pasted image 20241207234647.png",
     "assets/attachments/Pasted image 20241207210443.png",
-    "assets/attachments/Pasted image 20241207210047.png",
-    "assets/attachments/Pasted image 20241207205435.png",
     "作业/作业42：Linux epoll.md",
     "笔记/服务器设计.md",
     "assets/Excalidraw",
