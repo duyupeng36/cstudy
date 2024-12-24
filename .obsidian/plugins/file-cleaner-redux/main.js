@@ -4260,12 +4260,18 @@ function DeletionConfirmationModal({
     }),
     onConfirm
   );
+  const container = modal.content.createDiv();
+  container.setCssStyles({
+    marginTop: "0.5rem",
+    maxHeight: "50vh",
+    overflowY: "auto"
+  });
   const files = filesAndFolders.filter((file) => file instanceof import_obsidian.TFile);
   if (files.length > 0) {
-    modal.content.createEl("p", {
+    container.createEl("p", {
       text: translate().Modals.DeletionConfirmation.Files + ":"
     });
-    const ulFiles = modal.content.createEl("ul");
+    const ulFiles = container.createEl("ul");
     files.map((file) => {
       const li = ulFiles.createEl("li");
       li.createEl("a", { text: file.path });
@@ -4277,10 +4283,10 @@ function DeletionConfirmationModal({
   }
   const folders = filesAndFolders.filter((file) => file instanceof import_obsidian.TFolder);
   if (folders.length > 0) {
-    modal.content.createEl("p", {
+    container.createEl("p", {
       text: translate().Modals.DeletionConfirmation.Folders + ":"
     });
-    const ulFolders = modal.content.createEl("ul");
+    const ulFolders = container.createEl("ul");
     folders.map((file) => {
       const li = ulFolders.createEl("li");
       li.createEl("a", { text: file.path });
@@ -4538,6 +4544,10 @@ function getExtensions(settings) {
   if (settings.attachmentExtensions.includes("*")) extensions.push(".*");
   return RegExp(`^(${["md", ...extensions].join("|")})$`);
 }
+function userHasPlugin(id, app) {
+  const plugins = app.plugins.plugins;
+  return plugins.hasOwnProperty(id);
+}
 
 // src/helpers/markdown.ts
 function checkMarkdown(file, app, settings) {
@@ -4651,10 +4661,43 @@ function getAdmonitionAttachments(app) {
   });
 }
 
+// src/helpers/extras/excalidraw.ts
+function checkExcalidraw(file, app) {
+  return __async(this, null, function* () {
+    const metadata = app.metadataCache;
+    const frontmatter = metadata.getFileCache(file).frontmatter;
+    if (!frontmatter) return false;
+    if (!Object.keys(frontmatter).contains("excalidraw-plugin") && frontmatter.excalidraw !== "parsed")
+      return false;
+    const links = metadata.getBacklinksForFile(file).keys();
+    if (links.length > 0) return false;
+    const content = yield app.vault.cachedRead(file);
+    const blockStart = content.search(/{[ \t\n]*"type":[ ]*"excalidraw"/);
+    const blockEnd = content.search(/```\n?%%/);
+    if (blockStart < 0) return false;
+    if (blockEnd < 0) {
+      console.warn(
+        `Could not determine codeblock boundary for the following Excalidraw file: ${file.path}`
+      );
+      return false;
+    }
+    const codeBlockRaw = content.slice(blockStart, blockEnd);
+    if (codeBlockRaw.length === 0) return false;
+    const data = JSON.parse(codeBlockRaw);
+    const elements = data.elements;
+    if (elements.length === 0) return true;
+    const activeElements = elements.filter((el) => !el.isDeleted);
+    if (activeElements.length === 0) return true;
+    return false;
+  });
+}
+
 // src/util.ts
 function checkFile(app, settings, file, extensions) {
   return __async(this, null, function* () {
     if (file.extension === "md") {
+      if (userHasPlugin("obsidian-excalidraw-plugin", app) && (yield checkExcalidraw(file, app)))
+        return true;
       return yield checkMarkdown(file, app, settings);
     } else if (file.extension === "canvas") {
       return yield checkCanvas(file, app);
@@ -4706,8 +4749,7 @@ function runCleanup(app, settings) {
     console.log(`Starting cleanup`);
     const inUseAttachmentsInitial = getInUseAttachments(app);
     inUseAttachmentsInitial.push(...yield getCanvasAttachments(app));
-    const plugins = app.plugins.plugins;
-    if (plugins.hasOwnProperty("obsidian-admonition"))
+    if (userHasPlugin("obsidian-admonition", app))
       inUseAttachmentsInitial.push(...yield getAdmonitionAttachments(app));
     const inUseAttachments = Array.from(new Set(inUseAttachmentsInitial));
     const folders = getFolders(app).filter((folder) => folder.path !== "/").sort(

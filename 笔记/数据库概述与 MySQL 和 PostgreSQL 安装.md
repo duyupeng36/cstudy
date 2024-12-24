@@ -293,11 +293,12 @@ sudo apt -y install postgresql
 # 启动 PostgreSQL 服务
 sudo systemctl enable postgresql
 sudo systemctl start postgresql
+sudo /usr/lib/systemd/systemd-sysv-install enable postgresql
 ```
 
-### 保护 PostgreSQL 服务器
+### 连接 PostgreSQL 服务器
 
-首先，使用 `postgres` 用户连接 PostgreSQL 服务器
+如果通过 UNIX domain 登陆 PostgreSQL 默认使用 `peer` 验证。即，使用系统用户进行验证。 `postgres` 用户是安装 PostgreSQL 时创建的超级用户。因此，连接 PostgreSQL 服务器可以使用如下命令
 
 ```shell
 sudo -u postgres psql
@@ -307,6 +308,50 @@ sudo -u postgres psql
 
 ```sql
 ALTER USER postgres PASSWORD '<password>';
+```
+
+如果需要在 UNIX domain 登陆 PostgreSQL  采用密码认证，需要将配置文件 `pg_hba.conf` 中的
+
+```shell
+# Database administrative login by Unix domain socket
+local   all             postgres                                peer
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+```
+
+修改为
+
+```shell
+# Database administrative login by Unix domain socket
+local   all             postgres                                 scram-sha-256
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     scram-sha-256
+```
+
+最后，让 PostgreSQL 重新加载配置文件
+
+```shell
+sudo systemctl reload postgresql
+```
+
+现在我们就可以通过秘密登陆 PostgreSQL 服务器了。`psql` 是基于终端的应用程序。`psql` 命令的连接选项有下面几个
+
+```shell
+-h, --host=主机名        数据库服务器主机或socket目录(默认："localhost")
+-p, --port=端口          数据库服务器的端口(默认："5432")
+-U, --username=用户名    指定数据库用户名
+-w, --no-password        永远不提示输入口令
+-W, --password           强制口令提示 (自动)
+```
+
+连接本地的 PostgreSQL 服务器最简单的命令为
+
+```shell
+psql -U postgres -W
 ```
 
 ## 加载示例数据库
@@ -342,7 +387,18 @@ Query OK, 1 row affected (0.04 sec)
 
 ### PostgreSQL 
 
-下面将 MySQL 数据库导入到 PostgreSQL 中
+下面将 MySQL 数据库导入到 PostgreSQL 中。首先，在 PostgreSQL 中准备好目标数据库
 
+```sql
+CREATE DATABASE classicmodels;
+```
 
+然后使用 Navicat 的 数据传输工具，从 MySQL 服务端传输到 PostgreSQL 服务端中
 
+![[Pasted image 20241224231745.png]]
+
+![[Pasted image 20241224231807.png]]
+
+![[Pasted image 20241224231855.png]]
+
+现在，我们就在 MySQL 和 PostgreSQL 中准备好了示例数据库

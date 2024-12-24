@@ -116,7 +116,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 365.5
+    "width": 200
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -199,12 +199,15 @@
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
-      "oz-clear-unused-images:Clear Unused Images": false,
-      "obsidian-excalidraw-plugin:新建绘图文件": false
+      "obsidian-excalidraw-plugin:新建绘图文件": false,
+      "oz-clear-unused-images:Clear Unused Images": false
     }
   },
   "active": "9aca4cac2c5634ad",
   "lastOpenFiles": [
+    "assets/attachments/Pasted image 20241224231855.png",
+    "assets/attachments/Pasted image 20241224231807.png",
+    "assets/attachments/Pasted image 20241224231745.png",
     "assets/mysqlsampledatabase.sql",
     "assets/attachments/Pasted image 20241224102843.png",
     "README.md",
@@ -239,8 +242,6 @@
     "assets/attachments/Pasted image 20241207205435.png",
     "作业/作业42：Linux epoll.md",
     "笔记/服务器设计.md",
-    "assets/attachments/Pasted image 20241206235626.png",
-    "assets/attachments/Pasted image 20241206235348.png",
     "assets/Excalidraw",
     "ReadItLater Inbox",
     "assets/canvas/任务.canvas",
@@ -251,7 +252,6 @@
     "assets/canvas",
     "日记",
     "assets/markmind",
-    "Tags",
     "//Untitled.canvas",
     "Untitled.canvas"
   ]
