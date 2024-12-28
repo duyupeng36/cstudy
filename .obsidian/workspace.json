@@ -29,16 +29,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/分组与聚合.md",
+                "file": "笔记/集合运算符.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "分组与聚合"
+              "title": "集合运算符"
             },
             "group": "03e0f1d40938e3b1"
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "9233bc6e6c22e391",
@@ -50,12 +51,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/分组与聚合.md",
+                "file": "笔记/集合运算符.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "分组与聚合"
+              "title": "集合运算符"
             },
             "group": "03e0f1d40938e3b1"
           }
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "笔记/集合运算符.md"
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "集合运算符 的大纲"
             }
           }
         ],
@@ -202,10 +203,14 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "8d2f73eaa5bd1a92",
+  "active": "9aca4cac2c5634ad",
   "lastOpenFiles": [
-    "笔记/分组与聚合.md",
+    "assets/attachments/Pasted image 20241229000027.png",
+    "assets/attachments/Pasted image 20241228235940.png",
+    "assets/attachments/Pasted image 20241228235826.png",
     "README.md",
+    "笔记/集合运算符.md",
+    "笔记/分组与聚合.md",
     "assets/attachments/Pasted image 20241228213056.png",
     "assets/attachments/Pasted image 20241228211142.png",
     "assets/attachments/Pasted image 20241228210300.png",
@@ -215,8 +220,6 @@
     "assets/attachments/Pasted image 20241228095646.png",
     "assets/attachments/Pasted image 20241227225142.png",
     "assets/attachments/Pasted image 20241227223444.png",
-    "assets/attachments/Pasted image 20241227221402.png",
-    "assets/attachments/Pasted image 20241227204644.png",
     "笔记/过滤数据.md",
     "笔记/查询数据.md",
     "笔记/排序与去重.md",
@@ -239,7 +242,6 @@
     "作业/作业32：程序执行.md",
     "笔记/System V 信号量.md",
     "笔记/GDB.md",
-    "笔记/网络：传输层协议.md",
     "assets/Excalidraw",
     "ReadItLater Inbox",
     "assets/canvas/任务.canvas",
