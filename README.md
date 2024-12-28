@@ -247,7 +247,8 @@
 |                                  |                                                                                                                                                                         |
 | [[查询数据]]                         | 查询：`SELECT ... FROM`<br>别名：`AS`<br>排序：`ORDER BY ...[ASC DESC]`<br>自定义列表：`FILED(value, value1,...)`<br>含NULL值：`NULLS FIRST`  `NULLS LAST`<br>去重：`DISTINCT` `DISTINCT ON` |
 | [[过滤数据]]                         | 条件: `WHERE`<br>运算符：`AND` `OR` `NOT` <br>运算符：`LIKE` `IN` `BETWEEN` `IS NULL`<br>运算符： `LIMIT ... OFFSET..` <br>运算符：`OFFSET ... FETCH ...`                                 |
-| [[连接表]]                          |                                                                                                                                                                         |
+| [[连接表]]                          | 内连接：`INNER JOIN`<br>外连接：`LEFT OUTER JOIN` `RIGHT OUTER JOIN`<br>自连接：SELF-JOIN，自选连接语法<br>全连接：`FULL OUTER JOIN`<br>笛卡尔连接：`CROSS JOIN`<br>自然连接：`NATURAL JOIN`              |
+| [[分组与聚合]]                        | 分组：`GROUP BY`<br>过滤：`HAVING`                                                                                                                                            |
 |                                  |                                                                                                                                                                         |
 
 ### 项目：网盘
