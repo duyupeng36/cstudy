@@ -245,6 +245,7 @@
 | :------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [[数据库概述与 MySQL 和 PostgreSQL 安装]] | 安装 MySQL 和 PostgreSQL                                                                                                                                                   |
 |                                  |                                                                                                                                                                         |
+| **数据操作语言 DML**：查询                |                                                                                                                                                                         |
 | [[查询数据]]                         | 查询：`SELECT ... FROM`<br>别名：`AS`<br>排序：`ORDER BY ...[ASC DESC]`<br>自定义列表：`FILED(value, value1,...)`<br>含NULL值：`NULLS FIRST`  `NULLS LAST`<br>去重：`DISTINCT` `DISTINCT ON` |
 | [[过滤数据]]                         | 条件: `WHERE`<br>运算符：`AND` `OR` `NOT` <br>运算符：`LIKE` `IN` `BETWEEN` `IS NULL`<br>运算符： `LIMIT ... OFFSET..` <br>运算符：`OFFSET ... FETCH ...`                                 |
 | [[连接表]]                          | 内连接：`INNER JOIN`<br>外连接：`LEFT OUTER JOIN` `RIGHT OUTER JOIN`<br>自连接：SELF-JOIN，自选连接语法<br>全连接：`FULL OUTER JOIN`<br>笛卡尔连接：`CROSS JOIN`<br>自然连接：`NATURAL JOIN`              |
@@ -252,6 +253,16 @@
 | [[集合运算符]]                        | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                 |
 | [[子查询]]                          | 不相关子查询<br>相关子查询                                                                                                                                                         |
 | [[CTE]]                          | 公用表表达式                                                                                                                                                                  |
+|                                  |                                                                                                                                                                         |
+| **数据定义语言 DDL**：定义数据库和表           |                                                                                                                                                                         |
+| [[管理数据库]]                        | 创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                                                        |
+| [[管理表]]                          |                                                                                                                                                                         |
+| [[约束]]                           |                                                                                                                                                                         |
+|                                  |                                                                                                                                                                         |
+| **数据操作语言 DML**：插入 更新 删除          |                                                                                                                                                                         |
+| [[插入数据]]                         |                                                                                                                                                                         |
+| [[更新数据]]                         |                                                                                                                                                                         |
+| [[删除数据]]                         |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
 
 ### 项目：网盘
