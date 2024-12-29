@@ -251,6 +251,7 @@
 | [[分组与聚合]]                        | 分组：`GROUP BY`<br>过滤：`HAVING`<br>聚合函数：`SUM` `AVG` `COUNT` `MAX` `MIN`<br>分组集：`GROUPING SETS` `CUBE` `ROLLUP`                                                             |
 | [[集合运算符]]                        | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                 |
 | [[子查询]]                          | 不相关子查询<br>相关子查询                                                                                                                                                         |
+| [[CTE]]                          | 公用表表达式                                                                                                                                                                  |
 
 ### 项目：网盘
 
