@@ -250,7 +250,7 @@
 | [[连接表]]                          | 内连接：`INNER JOIN`<br>外连接：`LEFT OUTER JOIN` `RIGHT OUTER JOIN`<br>自连接：SELF-JOIN，自选连接语法<br>全连接：`FULL OUTER JOIN`<br>笛卡尔连接：`CROSS JOIN`<br>自然连接：`NATURAL JOIN`              |
 | [[分组与聚合]]                        | 分组：`GROUP BY`<br>过滤：`HAVING`<br>聚合函数：`SUM` `AVG` `COUNT` `MAX` `MIN`<br>分组集：`GROUPING SETS` `CUBE` `ROLLUP`                                                             |
 | [[集合运算符]]                        | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                 |
-|                                  |                                                                                                                                                                         |
+| [[子查询]]                          | 不相关子查询<br>相关子查询                                                                                                                                                         |
 
 ### 项目：网盘
 
