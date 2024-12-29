@@ -21,33 +21,34 @@ FROM cte_name;
 > 
 >  
 
-查询员工所在的部门的详细信息
+### 示例
+
+我们将使用示例数据库中的 `customers` 表进行演示
+
+![[Pasted image 20241229210106.png]]
+
+以下示例说明如何使用 CTE 从示例数据库的 `customers` 表中查询数据
 
 ```sql
-SELECT  
-    *  
-FROM  
-    departments  
-WHERE department_id IN (  
-    SELECT  
-        department_id  
-    FROM  
-        employees  
-    );
-```
-
-可以使用 CTE 完成
-
-```sql
-WITH emp_dep_id AS (
-    SELECT DISTINCT employees.department_id FROM employees
-)
-SELECT
-    *
-FROM
-    departments
-INNER JOIN emp_dep_id
-ON emp_dep_id.department_id = departments.department_id;
+mysql> WITH customers_in_usa AS (SELECT customerName,state FROM customers WHERE country = 'USA')
+    -> SELECT customerName FROM customers_in_usa WHERE state='CA'
+    -> ORDER BY customerName;
++------------------------------+
+| customerName                 |
++------------------------------+
+| Boards & Toys Co.            |
+| Collectable Mini Designs Co. |
+| Corporate Gift Ideas Co.     |
+| Men 'R' US Retailers, Ltd.   |
+| Mini Gifts Distributors Ltd. |
+| Mini Wheels Co.              |
+| Signal Collectibles Ltd.     |
+| Technics Stores Inc.         |
+| The Sharp Gifts Warehouse    |
+| Toys4GrownUps.com            |
+| West Coast Collectables Co.  |
++------------------------------+
+11 rows in set (0.01 sec)
 ```
 
 ## 递归共用表表达式
@@ -69,20 +70,12 @@ AS(
 SELECT * FROM cte_name;
 ```
 
-```sql
-WITH RECURSIVE cte  
-                   AS  
-                   (SELECT employee_id, last_name, manager_id, 1 AS n  
-                    FROM emps  
-                    WHERE employee_id = 100  -- 子查询，找到第一代领导  
-                    
-                    UNION ALL  
-                    SELECT a.employee_id, a.last_name, a.manager_id, n + 1  
-                    FROM emps AS a  
-                             JOIN cte  
-                                  ON (a.manager_id = cte.employee_id) -- 递归查询，找出以递归公用表表达式的人为领导的人  
-                   )  
-SELECT employee_id, last_name  
-FROM cte  
-WHERE n >= 3;
-```
+> [!attention] 
+> 
+> 递归成员不得包含以下结构
+> + 聚合函数
+> + GROUP BY 子句
+> + ORDER BY 子句
+> + LIMIT 子句
+> + DISTINCT 子句
+> 
