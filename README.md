@@ -255,8 +255,8 @@
 | [[CTE]]                          | 公用表表达式                                                                                                                                                                  |
 |                                  |                                                                                                                                                                         |
 | **数据定义语言 DDL**：定义数据库和表           |                                                                                                                                                                         |
-| [[管理数据库]]                        | 创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                                                        |
-| [[管理表]]                          |                                                                                                                                                                         |
+| [[管理数据库]]                        | 显示数据库：`SHOW DATABASES`<br>创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                              |
+| [[管理表]]                          | 创建表：`CREATE TABLE` `CREATE TABLE AS`<br>修改表：                                                                                                                            |
 | [[约束]]                           |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
 | **数据操作语言 DML**：插入 更新 删除          |                                                                                                                                                                         |
@@ -264,6 +264,8 @@
 | [[更新数据]]                         |                                                                                                                                                                         |
 | [[删除数据]]                         |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
+| PostgreSQL 独有                    |                                                                                                                                                                         |
+| [[SCHEMA]]                       |                                                                                                                                                                         |
 
 ### 项目：网盘
 
