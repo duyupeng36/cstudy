@@ -256,13 +256,12 @@
 |                                  |                                                                                                                                                                         |
 | **数据定义语言 DDL**：定义数据库和表           |                                                                                                                                                                         |
 | [[管理数据库]]                        | 显示数据库：`SHOW DATABASES`<br>创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                              |
-| [[管理表]]                          | 创建表：`CREATE TABLE` `CREATE TABLE AS`<br>修改表：                                                                                                                            |
-| [[约束]]                           |                                                                                                                                                                         |
+| [[管理表]]                          | 创建表：`CREATE TABLE` `CREATE TABLE AS`<br>生成列约束：`GENERATE ALWAYS AS (expr)`<br>修改表：`ALTER TABLE`<br>删除表：`DROP TABLE`                                                      |
+| [[约束]]                           | 主键约束：`PRIMARY KEY`<br>外键约束：`FOREIGN KEY`<br>CHECK 约束：`CHECK(expr)`<br>UNIQUE 约束：`UNIQUE KEY`<br>NOT NULL 约束：`NOT NULL`<br>DEFAULT 约束：`DEFAULT value/expr`               |
 |                                  |                                                                                                                                                                         |
-| **数据操作语言 DML**：插入 更新 删除          |                                                                                                                                                                         |
-| [[插入数据]]                         |                                                                                                                                                                         |
-| [[更新数据]]                         |                                                                                                                                                                         |
-| [[删除数据]]                         |                                                                                                                                                                         |
+| **数据操作语言 DML**：修改数据              |                                                                                                                                                                         |
+| [[修改数据]]                         | 插入数据：`INSERT INTO tb_name VALUES (...) ...`<br>修改数据：`UPDATE tb_name SET column=value WHERE condition`<br>删除数据：`DELETE FROM tb_name WHERE condition`                     |
+|                                  |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
 | PostgreSQL 独有                    |                                                                                                                                                                         |
 | [[SCHEMA]]                       |                                                                                                                                                                         |
