@@ -252,6 +252,7 @@
 | [[分组与聚合]]                        | 分组：`GROUP BY`<br>过滤：`HAVING`<br>聚合函数：`SUM` `AVG` `COUNT` `MAX` `MIN`<br>分组集：`GROUPING SETS` `CUBE` `ROLLUP`                                                             |
 | [[集合运算符]]                        | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                 |
 | [[子查询]]                          | 不相关子查询<br>相关子查询                                                                                                                                                         |
+| [[CTE]]                          | 公用表表达式                                                                                                                                                                  |
 |                                  |                                                                                                                                                                         |
 | **查询练习**                         |                                                                                                                                                                         |
 | [[作业43：SQL 练习 Part1]]            | 基本的查询和过滤                                                                                                                                                                |
@@ -270,8 +271,9 @@
 |                                  |                                                                                                                                                                         |
 | **数据定义语言 DDL**：视图                |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
-|                                  |                                                                                                                                                                         |
-| [[CTE]]                          | 公用表表达式                                                                                                                                                                  |
+| **MySQL/PostgreSQL C API**       |                                                                                                                                                                         |
+| [[MySQL C API]]                  |                                                                                                                                                                         |
+| [[PostgreSQL C API]]             |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
 | **事务**                           |                                                                                                                                                                         |
 | [[事务]]                           |                                                                                                                                                                         |
