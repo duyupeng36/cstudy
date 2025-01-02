@@ -6,7 +6,7 @@
   "attachmentFolderPath": "assets/attachments",
   "newFileLocation": "folder",
   "newFileFolderPath": "笔记",
-  "showUnsupportedFiles": false,
+  "showUnsupportedFiles": true,
   "alwaysUpdateLinks": true,
   "showLineNumber": true,
   "defaultViewMode": "preview",

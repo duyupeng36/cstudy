@@ -22,26 +22,42 @@
               "icon": "lucide-file",
               "title": "README"
             }
-          }
-        ]
-      },
-      {
-        "id": "9233bc6e6c22e391",
-        "type": "tabs",
-        "children": [
+          },
           {
-            "id": "a348d57576ebaba7",
+            "id": "d359bb25cbd16ec7",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/查询数据.md",
+                "file": "作业/作业46：SQL 练习 Part4.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "查询数据"
-            }
+              "title": "作业46：SQL 练习 Part4"
+            },
+            "group": "6a21016d4d45d1e1"
+          }
+        ]
+      },
+      {
+        "id": "5325da4d2f5b6939",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bb26d61f48ddb378",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "作业/作业46：SQL 练习 Part4.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "作业46：SQL 练习 Part4"
+            },
+            "group": "6a21016d4d45d1e1"
           }
         ]
       }
@@ -188,10 +204,18 @@
   },
   "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
-    "笔记/查询数据.md",
+    "作业/作业46：SQL 练习 Part4.md",
     "README.md",
+    "作业/作业45：SQL 练习 Part3.md",
+    "作业/作业44：SQL 练习 Part2.md",
+    "作业/作业43：SQL 练习 Part1.md",
     "笔记/过滤数据.md",
+    "assets/mysql-company.sql",
+    "assets/company.sql",
+    "assets/attachments/company.png",
+    "笔记/SQL 练习.md",
     "笔记/修改数据.md",
+    "笔记/查询数据.md",
     "笔记/约束.md",
     "笔记/管理表.md",
     "笔记/管理数据库.md",
@@ -211,7 +235,6 @@
     "assets/attachments/Pasted image 20241229121529.png",
     "assets/attachments/Pasted image 20241229001635.png",
     "assets/attachments/Pasted image 20241229000027.png",
-    "assets/attachments/Pasted image 20241228235940.png",
     "笔记/分组与聚合.md",
     "笔记/连接表.md",
     "笔记/排序与去重.md",
@@ -220,11 +243,6 @@
     "笔记/线程取消.md",
     "笔记/进程池.md",
     "笔记/互斥量.md",
-    "作业/作业40：传输层协议.md",
-    "作业/作业38：线程同步.md",
-    "笔记/信号集.md",
-    "笔记/信号处理器函数.md",
-    "笔记/监控子进程.md",
     "assets/Excalidraw",
     "ReadItLater Inbox",
     "assets/canvas/任务.canvas",
@@ -233,8 +251,6 @@
     "作业",
     "笔记",
     "assets/canvas",
-    "日记",
-    "assets/markmind",
     "//Untitled.canvas",
     "Untitled.canvas"
   ]
