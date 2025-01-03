@@ -243,6 +243,8 @@
 | 内容                               | 描述                                                                                                                                                                      |
 | :------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [[数据库概述与 MySQL 和 PostgreSQL 安装]] | 安装 MySQL 和 PostgreSQL                                                                                                                                                   |
+| [[MySQL9.1-en.a4.pdf]]           | MySQL 参考文档                                                                                                                                                              |
+| [[postgresql-17-A4.pdf]]         | PostgreSQL 参考文档                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
 | **数据操作语言 DML**：查询                |                                                                                                                                                                         |
 | [[查询数据]]                         | 查询：`SELECT ... FROM`<br>别名：`AS`<br>排序：`ORDER BY ...[ASC DESC]`<br>自定义列表：`FILED(value, value1,...)`<br>含NULL值：`NULLS FIRST`  `NULLS LAST`<br>去重：`DISTINCT` `DISTINCT ON` |

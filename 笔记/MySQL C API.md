@@ -18,7 +18,7 @@ dyp@ubuntu:~$ locate libmysqlclient.so  # 库文件
 /usr/lib/x86_64-linux-gnu/libmysqlclient.so.21.2.40
 ```
 
-使用 MySQL C API 时，就需要包含头文件 `<mysql.h>` 
+使用 MySQL C API 时，就需要包含头文件 `<mysql.h>`。详细内容可以参考文档  [[MySQL-c-api-9.1-en.a4.pdf]]
 
 ## MySQL C API 数据结构
 
