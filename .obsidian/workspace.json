@@ -52,7 +52,7 @@
               "type": "markdown",
               "state": {
                 "file": "笔记/MySQL C API.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -207,6 +207,7 @@
   "lastOpenFiles": [
     "README.md",
     "笔记/MySQL C API.md",
+    "笔记/线性表.md",
     "笔记/连接表.md",
     "作业/作业46：SQL 练习 Part4.md",
     "作业/作业45：SQL 练习 Part3.md",
@@ -243,7 +244,6 @@
     "assets/mysqlsampledatabase.sql",
     "笔记/线程池.md",
     "笔记/线程取消.md",
-    "笔记/进程池.md",
     "assets/Excalidraw",
     "ReadItLater Inbox",
     "assets/canvas/任务.canvas",

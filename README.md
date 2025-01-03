@@ -71,7 +71,6 @@
 | [[GCC]]      | GCC 生产可执行文件的步骤，及涉及的命令 |
 | [[GDB]]      | 代码调试，必须会使用            |
 | [[Makefile]] | 使用 `make` 构建工具        |
-| [[CMake]]    | 现代的构建工具               |
 
 ### 数据和程序的表示
 
@@ -268,38 +267,13 @@
 | **数据操作语言 DML**：修改数据              |                                                                                                                                                                         |
 | [[修改数据]]                         | 插入数据：`INSERT INTO tb_name VALUES (...) ...`<br>修改数据：`UPDATE tb_name SET column=value WHERE condition`<br>删除数据：`DELETE FROM tb_name WHERE condition`                     |
 |                                  |                                                                                                                                                                         |
-|                                  |                                                                                                                                                                         |
-| **数据定义语言 DDL**：视图                |                                                                                                                                                                         |
-|                                  |                                                                                                                                                                         |
 | **MySQL/PostgreSQL C API**       |                                                                                                                                                                         |
 | [[MySQL C API]]                  |                                                                                                                                                                         |
 | [[PostgreSQL C API]]             |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
-| **事务**                           |                                                                                                                                                                         |
-| [[事务]]                           |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
 |                                  |                                                                                                                                                                         |
 | PostgreSQL 独有                    |                                                                                                                                                                         |
 | [[SCHEMA]]                       |                                                                                                                                                                         |
 
 ### 项目：网盘
-
-
-
-
-## 第三阶段：C++ 
-
-
-| 内容  | 描述  |
-| :-- | --- |
-|     |     |
-|     |     |
-
-
-## 脚本语言：Python
-
-| 内容  | 描述  |
-| :-- | --- |
-|     |     |
-|     |     |
-
