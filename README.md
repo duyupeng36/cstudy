@@ -240,42 +240,53 @@
 
 ### 关系型数据库
 
-| 内容                               | 描述                                                                                                                                                                      |
-| :------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [[数据库概述与 MySQL 和 PostgreSQL 安装]] | 安装 MySQL 和 PostgreSQL                                                                                                                                                   |
-| [[MySQL9.1-en.a4.pdf]]           | MySQL 参考文档                                                                                                                                                              |
-| [[postgresql-17-A4.pdf]]         | PostgreSQL 参考文档                                                                                                                                                         |
-|                                  |                                                                                                                                                                         |
-| **数据操作语言 DML**：查询                |                                                                                                                                                                         |
-| [[查询数据]]                         | 查询：`SELECT ... FROM`<br>别名：`AS`<br>排序：`ORDER BY ...[ASC DESC]`<br>自定义列表：`FILED(value, value1,...)`<br>含NULL值：`NULLS FIRST`  `NULLS LAST`<br>去重：`DISTINCT` `DISTINCT ON` |
-| [[过滤数据]]                         | 条件: `WHERE`<br>运算符：`AND` `OR` `NOT` <br>运算符：`LIKE` `IN` `BETWEEN` `IS NULL`<br>运算符： `LIMIT ... OFFSET..` <br>运算符：`OFFSET ... FETCH ...`                                 |
-| [[连接表]]                          | 内连接：`INNER JOIN`<br>外连接：`LEFT OUTER JOIN` `RIGHT OUTER JOIN`<br>自连接：SELF-JOIN，自选连接语法<br>全连接：`FULL OUTER JOIN`<br>笛卡尔连接：`CROSS JOIN`<br>自然连接：`NATURAL JOIN`              |
-| [[分组与聚合]]                        | 分组：`GROUP BY`<br>过滤：`HAVING`<br>聚合函数：`SUM` `AVG` `COUNT` `MAX` `MIN`<br>分组集：`GROUPING SETS` `CUBE` `ROLLUP`                                                             |
-| [[集合运算符]]                        | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                 |
-| [[子查询]]                          | 不相关子查询<br>相关子查询                                                                                                                                                         |
-| [[CTE]]                          | 公用表表达式                                                                                                                                                                  |
-|                                  |                                                                                                                                                                         |
-| **查询练习**                         |                                                                                                                                                                         |
-| [[作业43：SQL 练习 Part1]]            | 基本的查询和过滤                                                                                                                                                                |
-| [[作业44：SQL 练习 Part2]]            | 多表查询，即连接表                                                                                                                                                               |
-| [[作业45：SQL 练习 Part3]]            | 分组与聚合                                                                                                                                                                   |
-| [[作业46：SQL 练习 Part4]]            | 子查询                                                                                                                                                                     |
-|                                  |                                                                                                                                                                         |
-| **数据定义语言 DDL**：库和表               |                                                                                                                                                                         |
-| [[管理数据库]]                        | 显示数据库：`SHOW DATABASES`<br>创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                              |
-| [[管理表]]                          | 创建表：`CREATE TABLE` `CREATE TABLE AS`<br>生成列约束：`GENERATE ALWAYS AS (expr)`<br>修改表：`ALTER TABLE`<br>删除表：`DROP TABLE`                                                      |
-| [[约束]]                           | 主键约束：`PRIMARY KEY`<br>外键约束：`FOREIGN KEY`<br>CHECK 约束：`CHECK(expr)`<br>UNIQUE 约束：`UNIQUE KEY`<br>NOT NULL 约束：`NOT NULL`<br>DEFAULT 约束：`DEFAULT value/expr`               |
-|                                  |                                                                                                                                                                         |
-| **数据操作语言 DML**：修改数据              |                                                                                                                                                                         |
-| [[修改数据]]                         | 插入数据：`INSERT INTO tb_name VALUES (...) ...`<br>修改数据：`UPDATE tb_name SET column=value WHERE condition`<br>删除数据：`DELETE FROM tb_name WHERE condition`                     |
-|                                  |                                                                                                                                                                         |
-| **MySQL/PostgreSQL C API**       |                                                                                                                                                                         |
-| [[MySQL C API]]                  |                                                                                                                                                                         |
-| [[PostgreSQL C API]]             |                                                                                                                                                                         |
-|                                  |                                                                                                                                                                         |
-|                                  |                                                                                                                                                                         |
-|                                  |                                                                                                                                                                         |
-| PostgreSQL 独有                    |                                                                                                                                                                         |
-| [[SCHEMA]]                       |                                                                                                                                                                         |
+| 内容                               | 描述                                                                                                                                                                                                                                                                     |
+| :------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [[数据库概述与 MySQL 和 PostgreSQL 安装]] | 安装 MySQL 和 PostgreSQL                                                                                                                                                                                                                                                  |
+| [[MySQL9.1-en.a4.pdf]]           | MySQL 参考文档                                                                                                                                                                                                                                                             |
+| [[postgresql-17-A4.pdf]]         | PostgreSQL 参考文档                                                                                                                                                                                                                                                        |
+|                                  |                                                                                                                                                                                                                                                                        |
+| **数据操作语言 DML**：查询                |                                                                                                                                                                                                                                                                        |
+| [[查询数据]]                         | 查询：`SELECT ... FROM`<br>别名：`AS`<br>排序：`ORDER BY ...[ASC DESC]`<br>自定义列表：`FILED(value, value1,...)`<br>含NULL值：`NULLS FIRST`  `NULLS LAST`<br>去重：`DISTINCT` `DISTINCT ON`                                                                                                |
+| [[过滤数据]]                         | 条件: `WHERE`<br>运算符：`AND` `OR` `NOT` <br>运算符：`LIKE` `IN` `BETWEEN` `IS NULL`<br>运算符： `LIMIT ... OFFSET..` <br>运算符：`OFFSET ... FETCH ...`                                                                                                                                |
+| [[连接表]]                          | 内连接：`INNER JOIN`<br>外连接：`LEFT OUTER JOIN` `RIGHT OUTER JOIN`<br>自连接：SELF-JOIN，自选连接语法<br>全连接：`FULL OUTER JOIN`<br>笛卡尔连接：`CROSS JOIN`<br>自然连接：`NATURAL JOIN`                                                                                                             |
+| [[分组与聚合]]                        | 分组：`GROUP BY`<br>过滤：`HAVING`<br>聚合函数：`SUM` `AVG` `COUNT` `MAX` `MIN`<br>分组集：`GROUPING SETS` `CUBE` `ROLLUP`                                                                                                                                                            |
+| [[集合运算符]]                        | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                                                                                                                |
+| [[子查询]]                          | 不相关子查询<br>相关子查询                                                                                                                                                                                                                                                        |
+| [[CTE]]                          | 公用表表达式                                                                                                                                                                                                                                                                 |
+|                                  |                                                                                                                                                                                                                                                                        |
+| **查询练习**                         |                                                                                                                                                                                                                                                                        |
+| [[作业43：SQL 练习 Part1]]            | 基本的查询和过滤                                                                                                                                                                                                                                                               |
+| [[作业44：SQL 练习 Part2]]            | 多表查询，即连接表                                                                                                                                                                                                                                                              |
+| [[作业45：SQL 练习 Part3]]            | 分组与聚合                                                                                                                                                                                                                                                                  |
+| [[作业46：SQL 练习 Part4]]            | 子查询                                                                                                                                                                                                                                                                    |
+|                                  |                                                                                                                                                                                                                                                                        |
+| **数据定义语言 DDL**：库和表               |                                                                                                                                                                                                                                                                        |
+| [[管理数据库]]                        | 显示数据库：`SHOW DATABASES`<br>创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                                                                                                                             |
+| [[管理表]]                          | 创建表：`CREATE TABLE` `CREATE TABLE AS`<br>生成列约束：`GENERATE ALWAYS AS (expr)`<br>修改表：`ALTER TABLE`<br>删除表：`DROP TABLE`                                                                                                                                                     |
+| [[约束]]                           | 主键约束：`PRIMARY KEY`<br>外键约束：`FOREIGN KEY`<br>CHECK 约束：`CHECK(expr)`<br>UNIQUE 约束：`UNIQUE KEY`<br>NOT NULL 约束：`NOT NULL`<br>DEFAULT 约束：`DEFAULT value/expr`                                                                                                              |
+|                                  |                                                                                                                                                                                                                                                                        |
+| **数据操作语言 DML**：修改数据              |                                                                                                                                                                                                                                                                        |
+| [[修改数据]]                         | 插入数据：`INSERT INTO tb_name VALUES (...) ...`<br>修改数据：`UPDATE tb_name SET column=value WHERE condition`<br>删除数据：`DELETE FROM tb_name WHERE condition`                                                                                                                    |
+|                                  |                                                                                                                                                                                                                                                                        |
+| **MySQL/PostgreSQL C API**       |                                                                                                                                                                                                                                                                        |
+| [[MySQL C API]]                  | 初始化库: `mysql_library_init()`<br>初始化 MYSQL: `mysql_init()`<br>建立连接: `mysql_real_connect()`<br>关闭连接: `mysql_close()`<br>执行 SQL: `mysql_query()`<br>获取一行： `mysql_fetch_row()`<br>获取列元数据: `mysql_fetch_fields()`<br>获取行数: `mysql_num_rows()`<br>获取列数: `mysql_num_fields()` |
+| [[PostgreSQL C API]]             |                                                                                                                                                                                                                                                                        |
+|                                  |                                                                                                                                                                                                                                                                        |
 
 ### 项目：网盘
+
+| 内容           | 描述  |
+| :----------- | --- |
+| [[版本控制：git]] |     |
+|              |     |
+
+## 第三阶段：GO 语言
+
+| 内容          | 描述           |
+| :---------- | ------------ |
+| [[Go 环境搭建]] | 搭建 Go 语言编译环境 |
+| [[]]        |              |
+|             |              |
+
+

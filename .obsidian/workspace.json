@@ -29,17 +29,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/MySQL C API.md",
+                "file": "笔记/版本控制：git.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "MySQL C API"
+              "title": "版本控制：git"
             },
             "group": "6a21016d4d45d1e1"
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "5325da4d2f5b6939",
@@ -51,12 +50,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/MySQL C API.md",
-                "mode": "preview",
+                "file": "笔记/版本控制：git.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "MySQL C API"
+              "title": "版本控制：git"
             },
             "group": "6a21016d4d45d1e1"
           }
@@ -151,12 +150,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/线程同步.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "线程同步 的出链列表"
+              "title": "README 的出链列表"
             }
           },
           {
@@ -178,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/MySQL C API.md"
+                "file": "README.md"
               },
               "icon": "lucide-list",
-              "title": "MySQL C API 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -189,7 +188,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 237.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -203,13 +202,25 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "d359bb25cbd16ec7",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
-    "assets/attachments/MySQL-c-api-9.1-en.a4.pdf",
+    "笔记/版本控制：git.md",
+    "assets/attachments/Pasted image 20250105213538.png",
+    "assets/attachments/Pasted image 20250105201555.png",
+    "assets/attachments/Pasted image 20250105195227.png",
+    "assets/attachments/Pasted image 20250105193937.png",
+    "assets/attachments/Pasted image 20250105190755.png",
+    "assets/attachments/Pasted image 20250105182546.png",
     "README.md",
+    "作业/作业7：函数.md",
+    "笔记/Go 环境搭建.md",
+    "笔记/PostgreSQL C API.md",
     "assets/attachments/postgresql-17-A4.pdf",
-    "assets/attachments/MySQL9.1-en.a4.pdf",
+    "assets/attachments/MySQL-c-api-9.1-en.a4.pdf",
+    "笔记/数据库概述与 MySQL 和 PostgreSQL 安装.md",
     "笔记/MySQL C API.md",
+    "笔记/SOCKET：高级主题.md",
+    "assets/attachments/MySQL9.1-en.a4.pdf",
     "笔记/线性表.md",
     "笔记/连接表.md",
     "作业/作业46：SQL 练习 Part4.md",
@@ -229,29 +240,16 @@
     "笔记/虚拟内存.md",
     "笔记/内存管理.md",
     "笔记/存储器层次结构.md",
-    "笔记/数据库概述与 MySQL 和 PostgreSQL 安装.md",
     "assets/attachments/Pasted image 20240404192849.png",
     "assets/attachments/Pasted image 20241229231251.png",
     "笔记/CTE.md",
     "assets/attachments/Pasted image 20241229210106.png",
-    "笔记/集合运算符.md",
-    "assets/attachments/Pasted image 20241229205803.png",
-    "笔记/子查询.md",
-    "assets/attachments/Pasted image 20241229184434.png",
-    "assets/attachments/Pasted image 20241229181511.png",
-    "assets/attachments/Pasted image 20241229121529.png",
-    "assets/attachments/Pasted image 20241229001635.png",
-    "assets/attachments/Pasted image 20241229000027.png",
-    "笔记/分组与聚合.md",
-    "笔记/排序与去重.md",
     "assets/mysqlsampledatabase.sql",
-    "笔记/线程池.md",
     "assets/Excalidraw",
     "ReadItLater Inbox",
     "assets/canvas/任务.canvas",
     "assets/attachments/The_Holy_Bible.txt",
     "assets/The_Holy_Bible.txt",
-    "作业",
     "//Untitled.canvas",
     "Untitled.canvas"
   ]
