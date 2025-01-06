@@ -29,16 +29,17 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/版本控制：git.md",
+                "file": "笔记/项目需求.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "版本控制：git"
+              "title": "项目需求"
             },
             "group": "6a21016d4d45d1e1"
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "5325da4d2f5b6939",
@@ -50,12 +51,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/版本控制：git.md",
+                "file": "笔记/项目需求.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "版本控制：git"
+              "title": "项目需求"
             },
             "group": "6a21016d4d45d1e1"
           }
@@ -150,12 +151,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "笔记/项目需求.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "README 的出链列表"
+              "title": "项目需求 的出链列表"
             }
           },
           {
@@ -177,10 +178,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "笔记/项目需求.md"
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "项目需求 的大纲"
             }
           }
         ],
@@ -202,8 +203,10 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "8d2f73eaa5bd1a92",
+  "active": "d359bb25cbd16ec7",
   "lastOpenFiles": [
+    "README.md",
+    "笔记/项目需求.md",
     "笔记/版本控制：git.md",
     "assets/attachments/Pasted image 20250105213538.png",
     "assets/attachments/Pasted image 20250105201555.png",
@@ -211,7 +214,6 @@
     "assets/attachments/Pasted image 20250105193937.png",
     "assets/attachments/Pasted image 20250105190755.png",
     "assets/attachments/Pasted image 20250105182546.png",
-    "README.md",
     "作业/作业7：函数.md",
     "笔记/Go 环境搭建.md",
     "笔记/PostgreSQL C API.md",
