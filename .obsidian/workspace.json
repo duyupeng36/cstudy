@@ -38,8 +38,7 @@
             },
             "group": "6a21016d4d45d1e1"
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "5325da4d2f5b6939",
@@ -52,7 +51,7 @@
               "type": "markdown",
               "state": {
                 "file": "笔记/项目需求.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -178,10 +177,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/项目需求.md"
+                "file": "README.md"
               },
               "icon": "lucide-list",
-              "title": "项目需求 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -203,10 +202,10 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "d359bb25cbd16ec7",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
-    "README.md",
     "笔记/项目需求.md",
+    "README.md",
     "笔记/版本控制：git.md",
     "assets/attachments/Pasted image 20250105213538.png",
     "assets/attachments/Pasted image 20250105201555.png",
