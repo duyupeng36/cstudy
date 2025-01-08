@@ -211,7 +211,7 @@ Python 内建复数类型(`complex` 类型)，只是该类型不常用。Python 
 
 Python 中的变量本质上是一个引用，类似与 C 语言中的指针变量
 
-![[Pasted image 20250108181852.png]]
+![[Pasted image 20250108230250.png]]
 
 > [!tip] 
 > 

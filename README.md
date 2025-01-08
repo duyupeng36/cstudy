@@ -272,14 +272,34 @@
 | [[MySQL C API]]                  | 初始化库: `mysql_library_init()`<br>初始化 MYSQL: `mysql_init()`<br>建立连接: `mysql_real_connect()`<br>关闭连接: `mysql_close()`<br>执行 SQL: `mysql_query()`<br>获取一行： `mysql_fetch_row()`<br>获取列元数据: `mysql_fetch_fields()`<br>获取行数: `mysql_num_rows()`<br>获取列数: `mysql_num_fields()` |
 | [[PostgreSQL C API]]             |                                                                                                                                                                                                                                                                        |
 
-## 第四阶段：Python 语言
+## 项目一：网盘
+
+| 内容        | 描述       |
+| :-------- | -------- |
+| [[网盘：一期]] | 实现网盘基础功能 |
+|           |          |
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 扩展：Python 语言
 
 | 内容                | 描述               |
 | :---------------- | ---------------- |
 | [[使用 Python 解释器]] | 安装 Python；两种使用方式 |
 | [[Python：基础语法]]   | 变量 基本类型 运算符 控制流程 |
-|                   |                  |
-|                   |                  |
+| [[Python：列表和元组]]  | 线性数据结构：列表 元组     |
+| [[Python：字符串]]    | 线性数据结构：字符串       |
+| [[Python：集合和字典]]  | 散列表：集合 字典        |
 
 ## 扩展：Go 语言
 
@@ -293,6 +313,4 @@
 | [[Go 语言：函数]]    |                    |
 | [[Go 语言：垃圾回收]]  |                    |
 | [[Go 语言：指针]]    |                    |
-
-
 
