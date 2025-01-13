@@ -13,7 +13,7 @@
 # 这是一行注释
 ```
 
-## 数值类型
+## 数字类型
 
 Python 解释器像一个简单计算器。我们可以输入一个表达式，它会给出表达式的结果
 
@@ -153,7 +153,31 @@ ValueError: invalid literal for int() with base 10: 'aaff'
 > 如果 `float()` 的参数是字符串时，则字符串必须符合的字符串字面值
 > 
 
-### 布尔类型
+### 复数类型
+
+Python 内建复数类型(`complex` 类型)，只是该类型不常用。Python 中复数类型的字面值为 `<real part> + <imaginary part>j`
+
+在 Python 中可以使用字面值构建 `complex` 类型的对象，也可以使用构造 `complex(real, imag)` 
+
+```python
+>>> 2 + 3j, type(2 + 3j)
+((2+3j), <class 'complex'>)
+>>> complex(2, 3)
+(2+3j)
+```
+
+### 其他数字类型
+
+除了 `int` `float` 和 `complex` 外，Python 通过标准库的方式提供了其他的数字类型。例如 [`Decimal`](https://docs.python.org/zh-cn/3.13/library/decimal.html) 和 [`Fraction`](https://docs.python.org/zh-cn/3.13/library/fractions.html)
+
+> [!tip] Decimal 
+> 
+> Decimal 提供了十进制定点和浮点算术：Decimal 类型的设计是基于人类习惯的浮点数模型，并且因此具有以下最高指导原则：**计算机必须提供与人们在学校所学习的算术相一致的算术**。
+> 
+> 这意味着，Decimal 数字可以完全 **精确地** 表示，并且这种精确性会延续到算术运算中
+> 
+
+## 布尔类型
 
 布尔类型表示逻辑值的类型。在 Python 中，布尔类型是整数类型的子类型，但是布尔类型只有 `True` 和 `False` 两个值
 
@@ -180,19 +204,6 @@ True
 True
 >>> bool("a")
 True
-```
-
-### 复数类型
-
-Python 内建复数类型(`complex` 类型)，只是该类型不常用。Python 中复数类型的字面值为 `<real part> + <imaginary part>j`
-
-在 Python 中可以使用字面值构建 `complex` 类型的对象，也可以使用构造 `complex(real, imag)` 
-
-```python
->>> 2 + 3j, type(2 + 3j)
-((2+3j), <class 'complex'>)
->>> complex(2, 3)
-(2+3j)
 ```
 
 ## 变量
@@ -261,7 +272,7 @@ TypeError: 'int' object is not callable
 
 Python 中真正意义上的常量只有 _字面值_ 和内置的 `True` `False` `None`
 
-## 字符串
+## 字符串类型
 
 除了数值外，Python 还可以处理文本，即 **字符串**。字符串字面值用成对的 **单引号 (`'...'`)** 或 **双引号 (`"..."`)** 来表示
 
@@ -413,6 +424,144 @@ Python 中字符串可以使用运算符 `+` 和 `*` 进行拼接
 > [!important] 
 > 
 > 字符串是不可变对象。运算符 `+` 和 `*` 操作字符串是，不会修改原始字符串对象，而是会产生一个全新的字符串对象
+> 
+
+### 索引与切片
+
+字符串支持 **索引** （下标访问），第一个字符的索引是 $0$。**单字符没有专用的类型**，就是长度为 $1$ 的字符串
+
+```python
+>>> word = 'Python'
+>>> word[0]  # 0 号位的字符
+'P'
+>>> word[5]  # 5 号位的字符
+'n'
+```
+
+**索引还支持负数**，用负数索引时，**从右边开始计数**：
+
+```python
+>>> word[-1]  # 最后一个字符
+'n'
+>>> word[-2]  # 倒数第二个字符
+'o'
+>>> word[-6]
+'P'
+```
+
+> [!attention] 
+> 
+> 注意，$-0$ 和 $0$ 一样，因此，负数索引从 $-1$ 开始。
+> 
+
+索引越界会报错：
+
+```python
+>>> word[42]
+Traceback (most recent call last):
+  File "<python-input-14>", line 1, in <module>
+    word[42]
+    ~~~~^^^^
+IndexError: string index out of range
+```
+
+---
+
+除了索引操作，还支持 **切片**。 **索引用来获取单个字符**，而 **切片允许你获取子字符串**:
+
+```python
+>>> word[0:2] # 从索引为 0 (含) 到索引为 2 (不含) 的字符
+'Py'
+>>> word[2:5] # 从索引为 2 (含) 到索引为 5 (不含) 的字符
+'tho'
+```
+
+> [!tip] 切片索引的默认值很有用 
+> 
+> + 省略开始索引时，默认值为 $0$
+> + 省略结束索引时，默认为到字符串的结尾
+> 
+
+```python
+>>> word[:2] # 从开始到索引为 2 (不含) 的字符
+'Py'
+>>> word[4:] # 从索引为 4 (含) 到字符串末尾
+'on'
+>>> word[-2:] # 从倒数第 2 个 (含) 的字符到末尾
+'on'
+```
+
+> [!attention] 
+> 
+> 注意，**输出结果包含切片开始，但不包含切片结束**。因此，`s[:i] + s[i:]` 总是等于 `s`
+> 
+
+```python
+>>> word[:2] + word[2:]
+'Python'
+>>> word[:4] + word[4:]
+'Python'
+```
+
+还可以这样理解切片，**索引指向的是字符之间** ，第一个字符的左侧标为 $0$，最后一个字符的右侧标为 $n$ ，$n$ 是字符串长度。例如
+
+```
+ +---+---+---+---+---+---+
+ | P | y | t | h | o | n |
+ +---+---+---+---+---+---+
+ 0   1   2   3   4   5   6
+-6  -5  -4  -3  -2  -1
+```
+
+切片会自动处理越界
+
+```python
+>>> word[4:42]
+'on'
+>>> word[4:]
+'on'
+```
+
+### 字符串是不可变的
+
+Python 字符串不能修改，是 `immutable` 的。因此，为字符串中某个索引位置赋值会报错：
+
+```python
+>>> word[0] = 'J'
+Traceback (most recent call last):
+  File "<python-input-17>", line 1, in <module>
+    word[0] = 'J'
+    ~~~~^^^
+TypeError: 'str' object does not support item assignment
+```
+
+要生成不同的字符串，应新建一个字符串
+
+```python
+>>> 'J' + word[1:]
+'Jython'
+```
+
+> [!tip] immutable：不可变对象
+> 
+> **具有固定值的对象**。不可变对象包括**数字**、**字符串** 和 **元组**
+> 
+> 这样的对象不能被改变。如果必须存储一个不同的值，则必须创建新的对象。它们在需要常量 **哈希值** 的地方起着重要作用，例如作为字典中的键。
+> 
+
+### 字符串长度
+
+内置函数 `len()` 用于获取字符串的长度
+
+```python
+>>> s = 'supercalifragilisticexpialidocious'
+>>> len(s)
+34
+```
+
+> [!tip] 
+> 
+> 内置函数 `len()` 返回的是字符数
 > 
 
 ### 从标准输入中读取字符串
