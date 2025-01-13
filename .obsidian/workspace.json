@@ -37,8 +37,7 @@
               "title": "Python：列表和元组"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -156,10 +155,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/Python：列表和元组.md"
+                "file": "README.md"
               },
               "icon": "lucide-list",
-              "title": "Python：列表和元组 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -181,8 +180,10 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "a694c50b4de65390",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
+    "笔记/Python：列表和元组.md",
+    "assets/attachments/Pasted image 20240611224305.png",
     "assets/attachments/Pasted image 20250113143252.png",
     "assets/attachments/Pasted image 20250113143210.png",
     "assets/attachments/Pasted image 20250113142338.png",
@@ -190,7 +191,6 @@
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
     "assets/attachments/Pasted image 20250113132630.png",
     "assets/Excalidraw/Drawing 2025-01-13 13.19.22.excalidraw.md",
-    "笔记/Python：列表和元组.md",
     "assets/attachments/Pasted image 20250113132604.png",
     "README.md",
     "assets/attachments/Pasted image 20250113124805.png",
@@ -220,11 +220,9 @@
     "作业/Linux 系统编程",
     "作业/C 语言/作业15：排序算法.md",
     "作业/C 语言",
-    "assets/attachments/Pasted image 20250108230250.png",
     "assets/Excalidraw/Drawing 2025-01-08 22.55.17.excalidraw.md",
     "assets/Excalidraw",
     "笔记/C 语言：基本概念.md",
-    "assets/attachments/Pasted image 20250108181852.png",
     "assets/attachments/postgresql-17-A4.pdf",
     "assets/attachments/MySQL-c-api-9.1-en.a4.pdf",
     "assets/attachments/MySQL9.1-en.a4.pdf",
