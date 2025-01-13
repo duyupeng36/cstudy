@@ -22,34 +22,6 @@
               "icon": "lucide-file",
               "title": "README"
             }
-          },
-          {
-            "id": "9886f7c934d3d8b9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "笔记/Python：字符串.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Python：字符串"
-            }
-          },
-          {
-            "id": "804fc6870f6ffc6b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "笔记/Python：列表和元组.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Python：列表和元组"
-            }
           }
         ]
       }
@@ -196,9 +168,10 @@
   },
   "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
-    "笔记/Python：列表和元组.md",
-    "笔记/Python：字符串.md",
+    "笔记/Python：字节序列.md",
     "README.md",
+    "笔记/Python：字符串.md",
+    "笔记/Python：列表和元组.md",
     "笔记/Python：垃圾回收.md",
     "笔记/C 语言：基本概念.md",
     "assets/attachments/Pasted image 20240401205035.png",
@@ -234,7 +207,6 @@
     "作业/关系数据库/作业43：SQL 练习 Part1.md",
     "作业/Linux 系统编程/作业42：Linux epoll.md",
     "作业/关系数据库",
-    "作业/C 语言/作业1：第一个 C 程序.md",
     "作业/Linux 系统编程",
     "作业/C 语言",
     "assets/Excalidraw",
