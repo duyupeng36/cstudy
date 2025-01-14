@@ -269,7 +269,13 @@
 | [[MySQL C API]]                  | 初始化库: `mysql_library_init()`<br>初始化 MYSQL: `mysql_init()`<br>建立连接: `mysql_real_connect()`<br>关闭连接: `mysql_close()`<br>执行 SQL: `mysql_query()`<br>获取一行： `mysql_fetch_row()`<br>获取列元数据: `mysql_fetch_fields()`<br>获取行数: `mysql_num_rows()`<br>获取列数: `mysql_num_fields()` |
 | [[PostgreSQL C API]]             |                                                                                                                                                                                                                                                                        |
 
-## 第 四 阶段：Python 语言
+## 第四阶段：C++ 
+
+| 内容  | 描述  |
+| :-- | --- |
+|     |     |
+
+## 扩展：Python 语言
 
 | 内容                  | 描述                      |
 | :------------------ | ----------------------- |
