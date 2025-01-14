@@ -200,5 +200,278 @@ o    6f        01101111           0|1101111
 
 ### 字符串方法
 
+Python 提供了操作字符串的方法
+
+#### 检查系列的方法
+
+Python 字符串提供了一些列以 `is{...}` 开头的方法，这些方法用于判断字符串是否满足某些条件
+
+| 方法                       | 描述                         |
+| :----------------------- | :------------------------- |
+| `str.isalnum()`          | 检查字符串中的所有字符是否为 **字母** 或数字  |
+| `str.isalpha()`          | 检查字符串中的所有字符是否为 **字母**      |
+| `str.isascii()`          | 检查字符串中的所有字符是否为 ASCII 编码的字符 |
+| `str.isdecimal()`        | 检查字符串中的所有字符是否为十进制字符        |
+| `str.isdigit()`          | 检查字符串中的所有字符是否为数字           |
+| `str.isidentifier()`     | 检查字符串是否为标识符                |
+| `str.islower()`          | 检查字符串中的所有字符是否为小写           |
+| `str.isnumeric()`        | 检查字符串中的所有字符是否为 **数值字符**    |
+| `str.isprintable()`      | 检查字符串中的所有字符是否为可打印字符        |
+| `str.isspace()`          | 检查字符串中的所有字符是否为 **空白字符**    |
+| `str.istitle()`          | 检查字符串是否为标题字符串              |
+| `str.isupper()`          | 检查字符串中的所有字符是否为大写字符         |
+|                          |                            |
+| `str.endswith(suffix)`   | 检查 `str` 是否已 `suffix` 结尾   |
+| `str.startswith(prefix)` | 检查 `str` 是否已 `prefix` 开始   |
+
+> [!attention] 
+> 
+> **字母**：指 Unicode 字符数据库中被定义为 `"Letter"` 的字符。即通用类别属性为 `"Lm"`, `"Lt"`, `"Lu"`, `"Ll"` 或 `"Lo"` 之一的字符[](https://www.unicode.org/versions/Unicode15.1.0/ch04.pdf)
+> 
+> **数值字符**：包括数字字符，以及所有在 Unicode 中设置了数值特性属性的字符
+> 
+> **空白字符**：在 Unicode 字符数据库中主要类别为 `Zs` ("Separator, space") 或所属双向类为 `WS`, `B` 或 `S` 的字符。
+> 
+
+#### 大小写转换方法
+
+Python 字符串提供了一些方法按照某种规则生成字符串副本
+
+| 方法                 | 描述                             |
+| :----------------- | :----------------------------- |
+| `str.capitalize()` | 返回 `str` 的副本，其中首个字符大写，其余小写     |
+| `str.casefold()`   | 返回 `str` 清除大小写的副本，             |
+| `str.lower()`      | 返回 `str` 的副本，其所有区分大小写的字符均转为小写  |
+| `str.upper()`      | 返回 `str` 的副本，其所有区分大小写的字符均转为大写  |
+| `str.title()`      | 返回 `str` 的标题版本的副本              |
+| `str.swapcase()`   | 返回 `str` 的副本，其中大写转换为小写，小写转换为大写 |
+
+#### 居中和填充
+
+| 方法                             | 描述                                                 |
+| :----------------------------- | :---------------------------------------- |
+| `str.center(width[,fillchar])` | 返回长度为 `width`                                   间  |
+| `str. 返回长度为 `width` 的字符串，使用 `'0'` 在 `str` 左边填充  r`  r`  r`  r`  r`  r`  r`  r`  r`  |
+
+#### 移除字符和分割
+
+Python 提供了一些方法用于移除位于首尾指定的字符。还有一些方法将字符串分割为不同的部分
+
+| 方法                                | 描述                            |
+| :-------------------------------- | ----------------------------- |
+| `str.lstrip([chars])`             | 返回 `str` 的副本，移除其中的前导字符        |
+| `str.rstrip([chars])`             | 返回 `str` 的副本，移除其中的末尾字符        |
+| `str.strip([chars])`              | 返回 `str` 的副本，移除其中的前导和末尾字符     |
+|                                   |                               |
+| `str.split(sep=None,maxsplit=-1)` | 将字符串按 `sep` 分割 `maxsplit` 次   |
+| `str.splitlines(keepends=False)`  | 将字符串按行边界分割                    |
+| `str.partition(sep)`              | 将字符串在`sep` 首次出现处拆分为一个 $3$ 元组  |
+| `str.rpartition(sep)`             | 将字符串在`sep`最后一次出现处拆分为一个 $3$ 元组 |
+
+### 字符串格式
+
+Python 提供三种方式进行字符串格式化：`c-style` 风格，`str.format()` 风格 和 `f-string` 风格
+
+#### C-style 风格格式化
+
+字符串具有一种特殊的内置操作：使用 `%` (取模) 运算符。 这也被称为字符串的 **格式化** 或 **插值** 运算符。例如，
+
+```python
+format % value
+```
+
+将 `value` 值插入到 `format` 字符串中 **转换标记**(`%[可选项]转换符`)  的位置上。这是继承自 C 语言 `printf` 函数的格式化方式。请查阅 [[C 语言：基本概念#格式化输入和输出#格式化输出]]
+
+Python 对该 C-style 风格的格式化有一点改进。每个转换标记可以定义一个 **映射键**
+
+```python
+>>> print('%(language)s has %(number)03d quote types.'%{'language': "Python", "number": 2})
+Python has 002 quote types.
+```
+
+#### `format` 方法
+
+可以调用 `format` 字符串的 `str.format()` 方法产生一个 `format` 的副本，其中 `{}` 的位置被替换为 `format` 中指定的参数
+
+下面的例子是使用 `str.foramt()` 方法的最简单的形式，按照 `{}` 在 `format` 字符串中的位置与 `str.format()` 中给出的参数位置一一对应即可，称为 **位置映射**
+
+```python
+>>> print('{} has {} quote types.'.format("Python", 2))
+Python has 2 quote types.
+```
+
+位置映射还可以是这样的形式`{i}` ，其中 `i` 表示 `str.format()` 给出的参数索引
+
+```python
+>>> print("{1} has {0} quote types.".format(2, "Python"))
+Python has 2 quote types.
+```
+
+可以和 `c-style` 风格一样的方式指定格式化的形式，只需要在 花括号中添加冒号(`:`) 并在冒号后自定格式化参数。其中，格式化参数和 `c-style` 转换类型和转换 `flag` 一致
+
+```python
+>>> print('{} has {:>04d} quote types.'.format("Python", 2))  # 右对齐
+Python has 0002 quote types.
+>>> print('{} has {:<4d} quote types.'.format("Python", 2))  # 左对齐
+Python has 2    quote types.
+```
+
+注意，此时如果想要格式化后的值靠左对齐需要使用 `<` 标志
+
+**键值映射格式化**在 `format` 方法中也是可用的，只需要在花括号中指定名字 `{somename}` 并在 `str.format()` 方法中给出对应的名字和值即可
+
+```python
+>>> print('{language} has {number} quote types.'.format(language="Python", number=2))
+Python has 2 quote types.
+```
+
+#### `f-string` 方式
+
+注意，`f-string` 要求 Python $\ge$ 3.6 才可以使用 `f-string` 方式进行格式化。只需要在 `str.format()` 方式的 `format` 字符串前加上 `f` 即可直接在 `{}` 中书写 Python 表达式
+
+```python
+first_name = "ada" 
+last_name = "lovelace" 
+full_name = f"{first_name} {last_name}"
+print(full_name)
 
 
+name = "Fred"
+print(f"He said his name is {name!r}")  # !r 等价于 repr()
+
+width = 10
+precision = 4
+value = decimal.Decimal("3.1415926")
+print(f"result: {value:{width}.{precision}}")  # 嵌套的字段
+
+now = datetime.datetime.now()
+print(f"now:{now: %Y-%m-%d %H:%M:%S}")  # 使用日期格式说明符
+
+number = 1024
+print(f"{number:#0x}")  # 使用整数格式说明符
+
+foo = "bar"
+print(f"{foo = }")  # 保留空格
+
+line = "The mill's closed"
+print(f"{ line = }")
+print(f"{line = :20}")
+print(f"{line = !r:20}")
+```
+
+## 字节序列
+
+操作 **二进制数据** 的核心内置类型是 `bytes` 和 `bytearry`。它们由 `memoryview` 提供支持，该对象使用 [缓冲区协议](https://docs.python.org/zh-cn/3.13/c-api/buffer.html#bufferobjects) 来访问其他二进制对象所在内存，不需要创建对象的副本
+
+### bytes 对象
+
+`bytes` 对象是由 **单个字节** 构成的 **不可变序列**。 由于许多主要二进制协议都基于 ASCII 文本编码，因此 `bytes` 对象提供了一些仅在处理 `ASCII` 兼容数据时可用，并且在许多特性上与字符串对象紧密相关的方法
+
+在 Python 中，创建 `bytes` 对象可以使用 **字面值** 和 **构造函数**
+
+> [!tip] bytes 字面值
+> 
+> bytes 类型的字面值与字符串字面值类似，只是添加了一个前缀 `b`
+> + 单引号: `b'同样允许嵌入 "双" 引号'`。
+> + 双引号: `b"仍然允许嵌入 '单' 引号"`
+> + 三重引号: `b'''三重单引号'''`, `b"""三重双引号"""`
+> 
+
+> [!attention] 
+> 
+> 请注意，`bytes` 类型的字面值只允许出现 `ASCII` 字符，无论源码声明的编码方式是什么。对于超出 $127$ 的二进制值必须使用相应的转移序列加入 `bytes` 字面值
+> 
+
+虽然 `bytes` 字面值和表示法是基于 `ASCII` 文本的，但 **`bytes` 对象的行为实际上更像是不可变的整数序列**，序列中的每个值的大小被限制为 `0 <= x < 256` (如果违反此限制将引发 ValueError)。
+
+> [!tip] 
+> 
+> bytes 对象的行为等价于每个元素占 $8$ 位的整数序列
+> 
+
+> [!tip] 构造函数
+> 
+> 除了使用字面值形式创建 `bytes` 对象，还可以使用构造函数 `bytes()`
+> 
+> + 指定长度的 **以零值填充** 的 `bytes` 对象: `bytes(10)`
+> + 通过 **由整数组成的可迭代对象**: `bytes(range(20))`
+> + 通过 **缓冲区协议复制现有的二进制数据**: `bytes(obj)`
+> 
+
+由于 **两个十六进制数码精确对应一个字节**，因此 **十六进制数是描述二进制数据的常用格式**。 相应地，`bytes` 类型具有从此种格式读取数据的附加类方法：
+
+| 方法                               | 描述                                   |
+| :------------------------------- | :----------------------------------- |
+| `bytes.fromhex(string)`          | `bytes` 的类方法，返回一个解码给定字符串的 `bytes` 对象 |
+| `bytes.hex(sep[,bytes_per_sep])` | `fromhex()` 的逆方法                     |
+
+> [!important] `bytearry` 对象是 `bytes` 对象的可变版本
+> 
+> `bytearry` 是 `bytes` 对象的可变版本，除此之外没有任何差异
+> 
+
+### 字符串转为字节序列
+
+**字符串本质上就是一种字节序列**，只是在 Python 中的 `str` 类型不支持将字符串直接当作字节序列使用。
+
+Python 字符串对象提供了 `str.encode(encoding='utf-8', errors='strict')` 方法返回 `str` 的字节序列版本
+
+```python
+>>> "hello".encode()
+b'hello'
+>>> "你好".encode('gbk')
+b'\xc4\xe3\xba\xc3'
+>>> "你好".encode('utf-8')
+b'\xe4\xbd\xa0\xe5\xa5\xbd'
+```
+
+### 整数转为字节序序列
+
+Python 中整数没有尺寸限制，本质上也是字节序列。`int.to_bytes(length=1, byteorder='big', *, signed=False)` 方法用于返回整数的字节序列
+
+```python
+>>> (1024).to_bytes(2, byteorder='big')
+b'\x04\x00'
+>>> (1024).to_bytes(10, byteorder='big')
+b'\x00\x00\x00\x00\x00\x00\x00\x00\x04\x00'
+>>> (-1024).to_bytes(10, byteorder='big', signed=True)
+b'\xff\xff\xff\xff\xff\xff\xff\xff\xfc\x00'
+>>> x = 1000
+>>> x.to_bytes((x.bit_length() + 7) // 8, byteorder='little')
+b'\xe8\x03'
+```
+
+通用，如果知道一个字节序列，也可以将其转为一个整数。类方法 `int.from_bytes(bytes, byteorder='big', *, signed=False)` 使用字节序列 `bytes` 创建一个整数
+
+```python
+>>> int.from_bytes(b'\xe8\x03',byteorder='little')
+1000
+```
+
+> [!tip] 
+> 
+> 整数与字节序列的相互转换涉及 **字节序** 的问题，详细参考 [[信息存储#寻址和字节序]]
+> 
+
+## 内存视图
+
+`memoryview` 对象允许 Python 代码 **访问一个对象的内部数据**，只要该对象支持 **缓冲区协议** 而无需进行拷贝。创建 `memoryvie` 对象只能通过构造函数 `memoryview(object)`。其中，`object` 必须支持缓冲区协议
+
+> [!tip] 
+> 
+> `bytes` 和 `bytearry` 是内置支持缓冲区协议的对象
+> 
+
+`memoryview` 有 **元素** 的概念。所谓元素是指由原始 `object` 处理的原子内存单元。对于 `bytes` 和 `bytearry`，一个元素就是一个字节。但是，其他类型，例如 `array.array` 可能有更大的元素
+
+```python
+>>> v = memoryview(b'abcdef')
+>>> v[0]
+97
+>>> v[1]
+98
+>>> v[1:4]
+<memory at 0x000002B08581A740>
+>>> bytes(v[1:4])
+b'bcd'
+```

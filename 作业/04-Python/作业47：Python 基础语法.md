@@ -116,4 +116,3 @@ while height / 2 >= 0.01:
 
 print("总共弹起 " + str(count) + " 次; 全程移动了 " + str(total) + " 米")
 ```
-
