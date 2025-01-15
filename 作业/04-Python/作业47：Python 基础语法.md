@@ -116,3 +116,65 @@ while height / 2 >= 0.01:
 
 print("总共弹起 " + str(count) + " 次; 全程移动了 " + str(total) + " 米")
 ```
+
+## 判断一个正整数是否是素数
+
+> [!tip] 
+> 
+> 素数只有 $1$ 和本身两个因数，换句话说就是，如果一个数只能被 $1$ 和它本身整除，那么这个数就是素数
+> 
+
+```python
+# 判断一个正整数是否是素数
+
+number = int(input("Please enter a positive integer: "))
+
+for i in range(2, number):
+    if number % i == 0:
+        break
+else:
+    print(f"{number} is a prime number.")
+```
+
+## 寻找水仙花数
+
+> [!tip] 
+> 水仙花数也被称为超完全数字不变数、自恋数、自幂数、阿姆斯特朗数，它是一个 $3$ 位数，该数字每个位上数字的立方之和正好等于它本身，例如：$1^3 + 5^3+ 3^3=153$。
+
+```python
+# 寻找水仙花数
+
+for number in range(100, 1000):
+    highest = number // 100  # 最高位
+    middle = number // 10 % 10 # 中间位
+    lowest = number % 10  # 最低位
+
+    if highest ** 3 + middle ** 3 + lowest ** 3 == number:
+        print(f"{number} is a daffodil number.")
+```
+
+## 整数反转
+
+> [!tip] 
+> 
+> 将 $12345$ 变成 $54321$
+> 
+
+```python
+number = int(input("Please enter a integer: "))
+
+sign = -1 if number < 0 else 1
+
+number = abs(number)
+
+reversed_number = 0
+
+while number > 0:
+    reversed_number = reversed_number * 10 + number % 10
+    number //= 10
+
+reversed_number = reversed_number * sign
+
+print(f"{number} reverse {reversed_number}.")
+```
+
