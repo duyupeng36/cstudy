@@ -178,3 +178,60 @@ reversed_number = reversed_number * sign
 print(f"{number} reverse {reversed_number}.")
 ```
 
+## 求 10 万内素数的个数
+
+### 算法一
+
+针对一个数 `c`，遍历 `2` 至 `c-1` 判断是否有数 `i` 整除 `c`
+
+```python
+count = 0
+
+# 从 2 开始遍历到 100000
+for number in range(2, 100000):
+    # 判断 number 是否是素数
+    for i in range(2, number):
+        if number % i == 0:  # 检查 2 到 number-1 中是否由数能够整数 number
+            break  # 有一个数能整除 number，则 number 不是素数
+    else:
+        # for 的 else 子句。当 for 没有被 break 结束，才会执行该子句
+        count += 1
+```
+
+### 算法二
+
+针对一个数 `c`，`a * b = c, a < b`。如果 `a | c` 则 `b | c`。显然，`c` 关于 `sqrt(c)` 乘法对称。因此，只需要遍历 `2` 至 `sqrt(c)` 判断是否有数 `i` 整除 `c`
+
+```python
+import math
+count = 0
+
+# 从 2 开始遍历到 100000
+for number in range(2, 100000):
+    # 判断 number 是否是素数
+    for i in range(2, int(math.sqrt(number)) + 1):
+        if number % i == 0:  # 检查 2 到 sqrt(number) + 1 中是否由数能够整数 number
+            break  # 有一个数能整除 number，则 number 不是素数
+    else:
+        # for 的 else 子句。当 for 没有被 break 结束，才会执行该子句
+        count += 1
+```
+
+### 算法三
+
+除 $2$ 外的素数都是奇数并且一个奇数的因数也只能是奇数。因此，我们只需要遍历奇数即可
+
+```python
+import math
+count = 1
+
+# 从 3 开始遍历到 100000 中的所有奇数
+for number in range(3, 1000000, 2):
+    # 判断 number 是否是素数:奇数的因数也只能是奇数
+    for i in range(3, int(math.sqrt(number)) + 1, 2):
+        if number % i == 0:  # 检查 2 到 sqrt(number) + 1 中的奇数是否有数能够整数 number
+            break  # 有一个数能整除 number，则 number 不是素数
+    else:
+        # for 的 else 子句。当 for 没有被 break 结束，才会执行该子句
+        count += 1
+```
