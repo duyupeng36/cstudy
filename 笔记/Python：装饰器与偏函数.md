@@ -625,3 +625,36 @@ def add(a: int, b: int) -> int:
 
 print(add(1, 2))
 ```
+
+## 偏函数
+
+标准库 `functools` 提供了 `partial()` 的函数，它的签名如下
+
+```python
+import functools
+
+functools.partial(func, /, *args, **kwargs)
+
+# 它返回一个新的 partial 对象
+```
+
+`partial` 对象是一个可调用对象。当调用该对象时，其行为类似于 `func()` 附带位置参数(`args`)和关键字参数(`kwargs`)被调用。如果提供了额外的位置参数，就会被附加在 `args` 之后；如果提供了额外的关键字参数，也会被添加到 `kwargs` 中
+
+> [!tip] 
+> 
+> 换句话说，就是 `partial` 对象固定了函数`func` 的部分参数。相当于给 `func` 的部分参数提供了默认值，从而形成了一个新的函数  
+> 
+
+`functools.partial()` 被实现为一个类型。但是，它的本质等价于如下装饰器
+
+```python
+def partial(func, /, *args, **keywords):
+    def newfunc(*fargs, **fkeywords):
+        newkeywords = {**keywords, **fkeywords}
+        return func(*args, *fargs, **newkeywords)
+    newfunc.func = func  # 原函数
+    newfunc.args = args  # 固定的位置参数
+    newfunc.keywords = keywords  # 固定的关键字参数
+    return newfunc
+```
+
