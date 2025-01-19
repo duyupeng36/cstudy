@@ -209,7 +209,419 @@ add(4, 5)
 
 ### 补丁：伪装更彻底
 
+装饰者 `wapper` 不应该隐藏被装饰者 `wapped` 的属性。回看上述示例
+
+```python
+def logger(func):
+    def wapper(*args, **kwargs):
+        """记录函数参数"""
+
+        print(f'{func} was called by {args} and {kwargs}')
+        result = func(*args, **kwargs)
+        print("got result is %d" % result)
+    
+        return result
+    return wapper 
+
+@logger  
+def add(x, y):  
+	"""加法计算：计算 x 与 y 的和"""
+    return x + y
 
 
+add(4, 5)
+```
+
+函数对象中有两个属性 `__doc__` 和 `__name__` 分别表示文档字符串和函数名称。我们下面我们输出这个两个参数的值
+
+```python
+print(add.__doc__)
+print(add.__name__)
+```
+
+输出结果为
+
+```
+记录函数参数
+wapper
+```
+
+> [!tip] 
+> 
+> 查看函数对象的属性很容易发生函数是被修改过的。
+> 
+
+我们可以伪装的更彻底吗？也就是，**保留被装饰对象的重要属性**。也就是在返回 `wapper` 之前，使用 `func` 的属性替换掉 `wapper` 的属性即可
+
+```python
+def logger(func):
+    def wapper(*args, **kwargs):
+        
+        """记录函数参数"""
+
+        print(f'{func} was called by {args} and {kwargs}')
+        result = func(*args, **kwargs)
+        print("got result is %d" % result)
+    
+        return result
+    wapper.__name__ = func.__name__  # 记录函数名
+    wapper.__doc__ = func.__doc__  # 记录函数参数
+    return wapper 
+```
+
+显然，我不能做侵入式修改。将其抽离出来，形成一个 `copy_properties()` 函数
+
+```python
+def copy_properties(src, dest):
+    dest.__name__ = src.__name__  # 将 src 对象的名字赋值给 dest 对象
+    dest.__doc__ = src.__doc__  # 将 src 的文档字符串赋值给 dest 对象
+
+def logger(func):
+    def wapper(*args, **kwargs):
+        
+        """记录函数参数"""
+
+        print(f'{func} was called by {args} and {kwargs}')
+        result = func(*args, **kwargs)
+        print("got result is %d" % result)
+        return result
+    copy_properties(func, wapper)  # 拷贝 func 的属性给 wapper 对象
+    return wapper 
+```
+
+现在我们期望将 `copy_properties`  做成装饰器。也就是像下面的使用方式使用 `copy_properties()`
+
+```python hl:2,3
+def logger(func):
+	@copy_properties(func)
+    def wapper(*args, **kwargs):
+        """记录函数参数"""
+        print(f'{func} was called by {args} and {kwargs}')
+        result = func(*args, **kwargs)
+        print("got result is %d" % result)
+        return result
+    return wapper 
+```
+
+由于 `@copy_properties(func)` 表示将 `copy_properties()` 的返回值作为装饰器使用。也就是说，`copy_properties(func)` 需要返回一个可调用对象。假设返回 `_copy()` 函数，那么 `@copy_properties(func)` 等价于 `@_copy`。所以上述代码中高亮部分本质上就是 `wapper = copy_properties(func)(wapper)`
+
+通过上述分析，我们应该对 `copy_properties()` 定义为如下形式
+
+```python
+def copy_properties(src):
+    def _copy(dest):
+        dest.__name__ = src.__name__  # 将 src 对象的名字赋值给 dest 对象
+        dest.__doc__ = src.__doc__  # 将 src 的文档字符串赋值给 dest 对象
+        return dest  # 这里必须返回 dest。否则 _copy 返回 None
+    return _copy
+```
+
+> [!tip] 
+> 
+> `@copy_properties()` 称为含参装饰器。本质上就是 `copy_properites()` 返回一个可调用对象。这个可调用对象也要返回一个可调用对象
+> 
+
+#### `update_wrapper`  和 `wraps`
+
+属性更新 `functools.update_wrapper` 解决了 [[#补丁：伪装更彻底]] 中的问题。这是 Python 标准库中提供的一个函数，该函数的定义如下
+
+```python
+WRAPPER_ASSIGNMENTS = ('__module__', '__name__', '__qualname__', '__doc__',
+                       '__annotations__', '__type_params__')
+WRAPPER_UPDATES = ('__dict__',)
+def update_wrapper(wrapper,
+                   wrapped,
+                   assigned = WRAPPER_ASSIGNMENTS,
+                   updated = WRAPPER_UPDATES):
+
+    for attr in assigned:
+        try:
+	        # 反射：在面向对象中介绍
+            value = getattr(wrapped, attr)
+        except AttributeError:
+            pass
+        else:
+            setattr(wrapper, attr, value)
+    for attr in updated:
+        getattr(wrapper, attr).update(getattr(wrapped, attr, {}))
+    wrapper.__wrapped__ = wrapped
+    return wrapper
+```
+
+`update_wrapper()` 就类似于我们编写的 `copy_properites()`  的第一个版本。只需要在返回 `wapper` 之前调用该函数即可
+
+```python
+import functools
+
+def logger(func):
+    # @copy_properties(func)  # 等价于 @inner: wapper = dest <=> wapper = inner(dest)
+    def wapper(*args, **kwargs):
+        """记录函数参数"""
+
+        print(f'{func} was called by {args} and {kwargs}')
+        result = func(*args, **kwargs)
+        print("got result is %d" % result)
+        return result
+    # copy_properties(wapper, func)  
+    functools.update_wrapper(wapper, func)  # 更新属性
+    return wapper 
+
+@logger  # 将它下面的对象(函数对象) add 当作实参传递给 logger，并将 logger 返回的对象绑定到它下面的标识符
+def add(x, y):  # 等价于 add = wapper  <=> add = logger(add)
+	
+    """加法计算：计算 x 与 y 的和
+    """
+    return x + y
+```
+
+`functools` 模块提供了一个 `wraps()` 装饰器函数，本质上是调用属性复制函数 `update_wrapper()`。使用 **偏函数** 实现
+
+```python
+def wraps(wrapped,
+          assigned = WRAPPER_ASSIGNMENTS,
+          updated = WRAPPER_UPDATES):
+    return partial(update_wrapper, wrapped=wrapped,
+                   assigned=assigned, updated=updated)
+```
+
+> [!tip] 偏函数
+> 
+> 偏函数会返回一个固定了部分参数的函数
+> 
+
+`wraps()` 函数返回的函数是将 `update_wrapper()` 函数的最后 $3$ 个参数固定后的函数。使用 `wraps()` 就像使用 `copy_properites()` 的装饰器版本一样
+
+```python
+import functools
+
+def logger(func):
+    # @copy_properties(func)  # 等价于 @inner: wapper = dest <=> wapper = inner(dest)
+    @functools.wraps(func)  # wrapper = wraps(func)(wapper)
+    # wraps(func) 必须返回一个单参数函数
+    def wapper(*args, **kwargs):
+        """记录函数参数"""
+
+        print(f'{func} was called by {args} and {kwargs}')
+        result = func(*args, **kwargs)
+        print("got result is %d" % result)
+        return result
+    # copy_properties(wapper, func)  
+    # functools.update_wrapper(wapper, func) 
+    return wapper 
+
+@logger  # 将它下面的对象(函数对象) add 当作实参传递给 logger，并将 logger 返回的对象绑定到它下面的标识符
+def add(x, y):  # 等价于 add = wapper  <=> add = logger(add)
+	
+    """加法计算：计算 x 与 y 的和
+    """
+    return x + y
+```
+
+### 含参装饰器
+
+给 `logger()` 装饰器设置阈值，记录运行时间超过阈值的函数。这个阈值如何给定内？我们期望如下给定阈值
+
+```python
+@logger(10)  # add = logger(10)(add)
+def add(x, y):
+    """加法计算：计算 x 与 y 的和
+    """
+    time.sleep(3)
+    return x + y
+```
+
+因此，我们需要对 `logger` 进行如下柯里化
+
+```python
+def logger(duration=5):
+    def _logger(func):
+        @copy_properties(func)  # wapper = copy_properties(func)(wapper) ==> wapper = wapper
+        def wapper(*args, **kwargs):
+            """记录函数参数"""
+            start = time.time()
+            result = func(*args, **kwargs)
+            end = time.time()
+            if end - start > duration:
+                print(f"慢运行：{func.__name__} 函数运行时间：{end - start}s 超过{duration}s")
+            return result
+        return wapper 
+    return _logger
+
+@logger(1)  # add = logger(1)(add) ==> add = _logger(add) => add = wapper
+def add(x, y):
+    """加法计算：计算 x 与 y 的和
+    """
+    time.sleep(3)
+    return x + y
+```
+
+> [!tip] 到此，如果 `logger` 还需要参数 `logger(duration=5, name)` 不在需要进行柯里化了
+> - `logger()` 本身就是函数调用，如果需要参数，可以不在需要柯里化
+> - `@logger(1,a,b,c,d) ==> (@logger(1,a,b,c,d))(func)`。只要 `logger(1,a,b,c,d)` 的返回值为单参数函数，满足装饰器要求后，就没必要柯里化。
+
+例如，我们将慢运行的函数输出到不同地方。只需要将
+
+```python
+def logger(duration, output=lambda name, delta: print(f"{name} 函数运行时间：{delta}s")):
+    def _logger(func):
+        @copy_properties(func)  # wapper = copy_properties(func)(wapper) ==> wapper = wapper
+        # @functools.wraps(func)  # 复制函数属性
+        def wapper(*args, **kwargs):
+            """记录函数参数"""
+            start = time.time()
+            result = func(*args, **kwargs)
+            end = time.time()
+            if end - start > duration:
+                output(func.__name__, end - start)  # 这是另一个业务了
+            return result
+        return wapper 
+    return _logger
 
 
+def save_log(name, delta):
+    print(f"{name} 函数运行时间：{delta}s")
+
+@logger(2, output=save_log)  # add = logger(1)(add) ==> add = _logger(add) => add = wapper
+def add(x, y):
+    """加法计算：计算 x 与 y 的和
+    """
+    time.sleep(3)
+    return x + y
+```
+
+分析下面的代码
+
+```python
+import functools
+
+def logger(func):
+    @functools.wraps(func)
+    def wapper(*args, **kwargs):
+        """记录函数参数"""
+
+        print(f'{func} was called by {args} and {kwargs}')
+        result = func(*args, **kwargs)
+        print("got result is %d" % result)
+        return result
+    return wapper 
+
+@logger
+def add(x, y):
+	
+    """加法计算：计算 x 与 y 的和
+    """
+    return x + y
+
+@logger
+def minus(x, y):
+	"""减法计算：计算 x - y
+	"""
+	return x - y
+
+print(add.__name__, add.__doc__)
+print(minus.__name__, minus.__doc__)
+```
+
+> [!question] 思考下面的问题
+> - `add` 函数、`minus` 函数执行过吗?
+> 	- 没有执行，只是包装在了不同的 `wapper` 函数对象中
+> - `logger` 什么时候执行?  `logger` 执行过几次?
+> 	- 在 `add` 函数对象定义完成时和在 `minus` 函数定义完成时
+> 	- 执行了两次
+> - `wraps` 装饰器执行过几次?
+> 	- 执行过两次：每调用一次 `logger` 就会执行一次 `wapper()` 函数的定义，`wapper` 对象就会被 `wraps` 装饰一次
+> - `wrapper` 对象的 `__name__` 等属性被覆盖过几次?
+> 	- 不同 `wrapper` 对象的的 `__name__` 只会被 `wraps` 装饰的时候覆盖一次
+> - `add.__name__` 打印什么名称?
+> 	- 打印 `add`
+> - `minus.__name__` 打印什么名称?
+> 	- 打印 `minus`
+
+## 装饰器应用：参数类型检查
+
+[[Python：函数基础#函数注解]] 提示函数的使用者传递对应类型的参数。然而，注解仅仅只是其提示作用，如何才能现在函数使用者传递对应类型的参数呢？答案就是装饰器，下面是参数类型检查装饰器函数的框架
+
+```python
+def check(func):
+	"""参数检查装饰器
+	"""
+	def wrapper(*args, *kwargs):
+		# 获取函数 func 的类型注解
+		# 比对 wrapper 收集的参数是否符合 func 参数的注解
+		return func(*args, **kwargs)
+	return wrapper
+```
+
+### inspect 标准库
+
+现在遇见了第一个问题：如何获取函数 `func` 的注解？很容易想到使用 `func.__annotation__` 属性，然而该属性是一个字典。由于字典是无序的，无法与位置参数进行对应
+
+Python 提供了一个 [`inspect`](https://docs.python.org/zh-cn/3/library/inspect.html) 标准库，提供丰富的函数用于获取对象的信息。这里我们主要介绍 [`Signature`](https://docs.python.org/zh-cn/3/library/inspect.html#inspect.Signature "inspect.Signature")  对象
+
+[`Signature`](https://docs.python.org/zh-cn/3/library/inspect.html#inspect.Signature "inspect.Signature") 对象代表一个可调用对象的调用签名及其返回值标。 要获取一个 `Signature` 对象，可使用 `signature()` 函数。
+
+```python
+import inspect
+
+inspect.signature(callable, *, follow_wrapped=True, globals=None, locals=None, eval_str=False)
+# 返回 callable 的 Signature 对象
+```
+
+> [!tip] 
+> 
+> 参数 `callable` 可以是 Python 中的各类可调用对象，包括函数、类、`partial()` 对象等
+> 
+
+`Signature` 对象表示一个函数的调用 **签名** 及其 **返回值标注**。它的属性 `parameters` 是一个**有序映射**，存储了表示函数所接受的每个形参的 `Parameter` 对象。下表列出来 `Signature` 对象的部分属性
+
+| 属性                            | 描述                            |
+| :---------------------------- | ----------------------------- |
+| `Signature.empty`             | 特殊标记，表明函数的返回标注缺失              |
+| `Signature.parameters`        | 函数的形参名到对应 `Parameter` 对象的有序映射 |
+| `Signature.return_annotation` | 函数的返回标注                       |
+
+`Parameter` 对象表示可调用对象的参数，它是一个 **不可变对象**。其中有 $4$ 个我们需要关注的属性
+
+| 属性           | 描述                                                                                                                                                                                      |
+| :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`       | 参数名。这是一个字                                                                                                                                                                               |
+| `default`    | 参数的默认值。没有默认值则标记位 `emp                                                                                                                                                                   |
+| `annotation` |                                                                                                                                                                                         |
+| `kind`    参数类型<br>+ 仅位置参数：`POSITIONAL_ONLY`<br>+ 位置或关键字参数：`POSITIONAL_OR_KEYWORD`<br>+ 可变数量位置参数：`VAR_POSITIONAL`，即 `*args` <br>+ 仅关键字参数：`KEYWORD_ONLY`<br>+ 可变数量关键字参数：`VAR_KEYWORD`，即 `**kwargs` br>+  |
+
+### 参数类型检查装饰器实现
+
+目的是实现函数参数类型的检查。只有当函数被调用的时候，才会知道函数接收了哪些参数。因此，我们需要拦截函数的参数，然后获取函数的签名，再检查参数的类型是否与函数需要的类型匹配；如果参数的类型匹配成功则调用函数，否则提示用户参数类型错误
+
+```python
+import functools
+import inspect
+
+def check(func):
+    # 获取 func 的签名
+    signature = inspect.signature(func)
+    # 获取函数形成的有序字典
+    parameters = signature.parameters
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+
+        # 首先检查位置参数
+        for arg, param in zip(args, parameters.values()):
+            # 当前参数有标注但是获得的参数值的类型不是标注的类型
+            if param.kind is not param.empty and not isinstance(arg, param.annotation):
+                raise TypeError(f"{param.name} must be {param.annotation}, but got {type(arg)}")
+        # 然后检查关键字参数
+        for key, value in kwargs.items():
+            if parameters[key].kind is not parameters[key].empty and not isinstance(value, parameters[key].annotation):
+                raise TypeError(f"{key} must be {parameters[key].annotation}, but got {type(value)}")
+        # 参数检查通过，调用 func 并返回 func 的返回值
+        return func(*args, **kwargs)
+    return wrapper
+
+@check
+def add(a: int, b: int) -> int:
+    return a + b
+
+
+print(add(1, 2))
+```
