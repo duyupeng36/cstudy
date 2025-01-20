@@ -657,4 +657,3 @@ def partial(func, /, *args, **keywords):
     newfunc.keywords = keywords  # 固定的关键字参数
     return newfunc
 ```
-
