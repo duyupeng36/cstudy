@@ -1602,3 +1602,79 @@ _Z6mutplyii:
 
 注意 `_Z6mutplyii`，函数名有 `6` 个字符已经接收两个 `int` 类型的参数
 
+## 结构体和联合
+
+C++ 中的 `struct` 和 `union` 在语法形式上与 [[C 语言：结构体]] 没有任何差异，但是在语义上存在巨大差异
+
+> [!tip] 
+> 
+> C++ 中 `struct` 和 `union` 是类，而不仅仅是数据的集合。也就是说，C++ 中的 `struct` 和 `union` 可以为其定义成员函数
+> 
+
+ ```cpp
+ struct Point{
+	int x, y;
+	Point(int a, int b);
+ }
+
+Point p0; // 危险行为
+Point p1{}; // 默认构造
+```
+
+## 枚举类型
+
+**枚举类型** 用于存放用户指定的一组整数值。枚举类型的每一种取值各自对应一个名字，我们把这些值称为 **枚举值**
+
+C++ 中的 `enum` 类型与  [[C 语言：结构体#枚举]] 没有任何区别。枚举类型和枚举值位于同一作用域，不同枚举类型中不能使用相同的枚举名
+
+```cpp
+enum Traffic_light {red, yellow, green};  // 红绿灯
+enum Warning {green, yellow, orange, red};  // 火警等级
+// 这里会出现重复定义错误：yellow, red, green 被重复定义了
+// 其中，yellow 取值相同，red 和green 的取值不同
+```
+
+C++ 还提供了 `enum class`，它是限制了作用域的强枚举类型，**不会隐式转换为其他类型**
+
+```cpp
+enum class Tranffic_light{red, yello, green};
+enum class Warning {green, yellow, orange, red};
+
+Warning a1 = 7;               // 错误的，不存在 int 想 Warning 的类型转换
+int a2 = green;               // 错误，green 未定义的
+int a3 = Warning::green;      // 错误，不存在 Warning 向 int 类型的转换
+Warning a4 = Warning::green;  // ok
+    
+void f(Tranffic_light x)
+{
+	if(x == 2){/* .... */}             // 错误：2 不是 Tranffic_light 
+    if(x == red){/* .... */}           // 错误：red 未定义
+    if(x == Warning::red){/* ... */}    // 错误：x 不是一个 Warning
+    if(x == Tranffic_light::red) {/* ... */} // OK
+}
+```
+
+> [!tip] 
+> 
+> 两个 `enum` 枚举值不会相互冲突，它们位于各自的 `enum class` 的作用域中
+> 
+
+枚举常用一些整数类型表示，每一个枚举值是一个整数。用于表示枚举的类型称为枚举的 **基础类型** 且 **必须是整数类型**。默认使用 `int` 类型。可以显示指定
+
+```cpp
+enum class Warning : int {green, yellow, orange, red};
+// sizeof(Warning) == sizeof(int)
+```
+
+当然可以使用 `char` 类型代替 `int`
+
+```cpp
+enum class Warning : char {green, yellow, orange, red}; 
+// sizeof(Warning) == sizeof(char)
+```
+
+> [!tip] 
+> 
+> `enum class` 属于用户自定义类型，可以为它定义 `|` 和 `&` 等于运算符
+> 
+

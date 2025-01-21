@@ -69,7 +69,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "枚举",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -184,9 +184,10 @@
   },
   "active": "b596f38857eece1c",
   "lastOpenFiles": [
+    "笔记/C 语言：结构体.md",
+    "笔记/C++：与 C 的差异.md",
     "笔记/C 语言：声明.md",
     "README.md",
-    "笔记/C++：与 C 的差异.md",
     "笔记/Go 语言：基础语法.md",
     "笔记/Python：基础语法.md",
     "笔记/Python：目录.md",
@@ -218,7 +219,6 @@
     "assets/attachments/Pasted image 20250118173726.png",
     "作业/04-Python/作业49：函数基础.md",
     "assets/attachments/Pasted image 20250118150036.png",
-    "笔记/C 语言：函数.md",
     "assets/attachments/Pasted image 20250114092419.png",
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
     "作业/04-Python",
