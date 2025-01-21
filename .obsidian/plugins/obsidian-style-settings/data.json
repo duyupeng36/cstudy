@@ -53,5 +53,6 @@
   "Appearance-dark@@card-shadow-dark": "0px 0px 0px 1px var(--background-modifier-border)",
   "Appearance-dark@@background-activated-tab-header-dark": "none",
   "Appearance-dark@@shadow-activated-tab-header-dark": "none",
-  "Appearance-dark@@color-activated-tab-header-underline-dark": "var(--color-accent)"
+  "Appearance-dark@@color-activated-tab-header-underline-dark": "var(--color-accent)",
+  "Appearance-dark@@card-layout-open-dark": true
 }

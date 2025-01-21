@@ -934,4 +934,8 @@ int value = 1;
 Color color = static_cast<Color>(value); // Converts integer value to corresponding Color enumeration
 ```
 
+#### `const_cast`
+
+
+
 
