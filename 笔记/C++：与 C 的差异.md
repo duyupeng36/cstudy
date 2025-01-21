@@ -1174,7 +1174,431 @@ after modify: value is 10
 *pvalue2: 42
 ```
 
-## 函数重载
+## 函数
+
+C++ 函数声明与 [[C 语言：函数]] 相同，只是 C++ 额外提供了一些新特性
 
 
+### 后置返回类型
+
+在 C++ 中函数的返回类型可以放在函数的后面。使用 `auto` 关键字表示函数的类型放在参数列表后面。后置返回类型由符号 `->` 引导。如下所示，下面两种声明是等价的
+
+```cpp
+string to_string(int a);
+auto to_string(int a) -> string;
+```
+
+后置返回类型在 **函数模板** 声明中非常有用，因为器返回类型依赖于参数。如下函数模板的声明
+
+```cpp
+template<class T, class U>
+auto product(const vector<T> &x, const vector<U> & y) -> decltype(x * y);
+```
+
+
+### inline 函数
+
+在 [[C 语言：声明#内联函数]] 中我们介绍过 `inline` 函数了
+
+> [!tip] 
+> 
+> 所谓的 `inline` 函数，就是 **指示编译器把函数的每次调用都使用对应的机器指令替代**
+> 
+> + `inline` 函数会使得编译后的程序体积增大，但是省略函数栈帧的创建和销毁时间
+> 
+
+例如，下列 $n$ 的阶乘函数可以被定义为 `inline` 的
+
+```cpp
+inline int fac(int n) {
+	return (n < 2) ? 1: n * fac(n-1);
+}
+```
+
+`inline` 高速编译器应该尝试为 `fac()` 的调用生成内联代码，而非先为 `fac()` 函数构建代码再通过常规的调用机制调用它。一个较为智能的编译器会为 `fac(6)` 直接生成常量 $720$
+
+> [!tip] 内联函数面临许多复杂情况
+> 
+> + 内联函数之间相互递归调用
+> + 单个内联的递归函数
+> + 函数与输入无关
+> 
+> 很难确保内联函数的每一次调用都是真的内联的
+> 
+
+如果希望在编译时求值，最好把函数声明成 `constexpr`，并确保求值过程中用到所有的函数都是 `constexpr`
+
+> [!important] 
+> 
+> 如果内联函数的定义出现在多个编译单元中，通常是因为该内联函数被定义在头文件中
+> 
+
+### constexpr 函数
+
+通常情况下，函数无法在编译时求值，因此不能再常量表达式中被调用。但是通过将函数指定为 `constexpr`，就告知编译器当给定了常量表达式作为实参时，函数应该能被用在常量表达式中
+
+```cpp
+constexpr int fac(int n)
+{
+	return (n > 1) ? n * fac(n-1) : 1;
+}
+
+constexpr int f = fac(9);  // 必须在编译时求值
+```
+
+> [!tip] 
+> 
+> 函数必须足够简单才能在编译时求值
+> + `constexpr` 必须包含一条独立的 `return` 语句
+> + 没有循环
+> + 没有局部变量
+> + `constexpr` 不能有副作用
+> 
+> 也就是说：`constexpr` 函数是一个纯函数
+> + `constexpr` 函数允许递归和条件表达式。
+> 
+
+下列几个函数都是错误 `constexpr` 函数的示例
+
+```cpp
+int glob;
+
+constexpr void bad1(int a) // 错误：constexpr 函数必须要有返回值
+{
+	glob = a;  // 错误：constexpr 函数中不能有副作用
+}
+
+constexpr int bad2(int a)
+{
+	if (a >= 0) return a; else return -a; // 错误：constexpr 函数中不能有 if 语句
+}
+
+constexpr int bad3(int a)
+{
+	sum = 0;
+	for(int i = 0; i < a; i++) {  // 错误：constexpr 函数中不能有 for 循环
+		sum += fac(i);  // 错误：constexpr 函数中不能有副作用
+	}
+	return sum;
+}
+```
+
+### 默认参数
+
+一个通用的函数所需要的参数通常比处理简单情况所需的参数要多。在声明函数的时候 **可以给形式参数指定默认值**
+
+```cpp
+void f(int a = 10); // 注意，只能在声明时提供默认值
+```
+
+> [!tip] 
+> 
+> 默认参数在函数 **声明时执行类型检查**，在 **调用时求值**
+> 
+> 因此，**避免使用值可能发生变化的默认参数**，否则可能会引入对上下文的微妙依赖
+> 
+
+
+提供默认值的形式参数只能位于形参列表的最后
+
+```cpp
+int f(int, int = 0, char * = nullptr);
+
+int g(int = 0, int = 0, char *);  // 错误的
+int g(int = 0, int, char * = nullptr);  // 错误的
+```
+
+> [!attention] 
+> 
+> 注意 `* =` 之间的空格是必须的。运算符 `*=` 赋值运算符
+> 
+
+**同一作用域内** 的一些列声明语句中，默认参数 **不能重复** 或者 **不能改变**
+
+```cpp
+void f(int x = 7);
+void f(int = 7); // 错误：不允许重复默认参数
+void f(int 8); // 错误：不允许改变默认参数
+
+void g()
+{
+	void f(int x = 9); // OK: 该作用域内覆盖上层作用域的声明
+}
+```
+
+### 函数重载
+
+在 C 语言中，函数应该拥有不同的名字。有时候，这些函数在不同类型的对象上执行相同概念的任务，为它们取一个相同的名字是更好的选择。在 C++ 提供了 **函数重载** 机制用于实现为不同函数取一个相同名字的方法
+
+> [!tip] 重载
+> 
+> 给不同类型的同一种操作起相同的名字称为重载
+> 
+
+例如，我们要实现一个加法函数，它不仅能执行整数加法，还能执行浮点数加法，还可以执行这些类型之间的加法。在 C 语言中，我们必须为每种类型命名不同的函数
+
+```c
+int add_int(int a, int b) 
+{
+	return a + b;
+}
+
+double add_float(double a, double b)
+{
+	return a + b;
+}
+
+double add_int_float(int a, double b) 
+{
+	return (double)a + b;
+}
+
+double add_float_int(double a, int b) 
+{
+	return a + (double)b;
+}
+```
+
+在 C++ 中，我们可以使用同一个名字
+
+```cpp
+int add(int a, int b)
+{
+	return a + b;
+}
+
+double add(double a, double b) 
+{
+	return a + b;
+}
+
+double add(int a, double b)
+{
+	return (double)a + b;
+}
+
+double add(double a, int b)
+{
+	return a + (double)b;
+}
+```
+
+对于这些约定俗成的名字的函数来说，重载函数的便利性非常明显。如果一个名字具有明显的语义，重载函数的便利性就更强
+
+>[!tip] 过上述分析，函数重载必须要求 **名字相同** 且 **参数列表不同**。无关返回类型
+>
+>参数列表不同包括：**参数类型不同** 和 **参数数量不同**。如果名字相同参数列表也相同则为重复定义
+>
+>重载不考虑返回类型可以确保对运算法或者函数调用的解析独立于上下文
+>
+
+> [!important] 
+> 
+> 重载发生在一组重载函数集的成员内部，也就是说，**重载函数应该位于同一个作用域内**。不同的非名字空间作用域中的函数不会重载
+> 
+> 基类和派生类属于两个不同的名字空间，因此基类和派生类中的同名函数不会发生重载
+> 
+
+```cpp
+void f(int);
+
+void g() 
+{
+	void f(double);  // 不会与第一行的 f() 重载，因为不在同一个作用域
+	f(4);  // 显然调用的 f(double)
+}
+```
+
+如果希望实现跨类作用域或者名字空间作用域的重载需要使用 `using` 声明或 `using` 指示
+
+> [!tip] 
+> 
+> ADL 也会导致跨名字空间重载
+> 
+
+#### 自动重载解析
+
+程序中存在多个同名的函数。当调用函数时，如何确定调用哪一个呢？**函数的调用由编译器决定**，依据实参类型与作用域中的函数的哪个函数的形式参数类型最匹配。
+
+> [!tip] 
+> 
+> 编译根据 **实参类型** 与作用域中的函数的 **形参类型** 进行 **最佳匹配**
+> 
+
+```cpp
+
+void f() 
+{
+	add(1, 2);     // 调用 add(int, int)
+	add(1.1, 1.2); // 调用 add(double, double)
+	add(1.2, 3);   // 调用 add(double, int)
+	add(2, 1.2);   // 调用 add(int, double)
+}
+```
+
+C++ 为了更合理确定调用哪个函数，定义了如下顺序的评判标准
+
+> [!tip] **精确匹配** 的优先调用
+> 
+> 实参类型 **无需类型转换** 或者 **仅需简单的类型转换** 就可以与函数形参类型匹配
+> 
+> 简单类型转换包括：数组名转换为指针、函数名转换为函数指针、非 `cosnt` 转换为 `const`
+> 
+
+> [!tip] **执行提升后匹配** 的次优先调用
+> 
+> 整数提升或者 `float` 转换为 `double`
+> 
+
+> [!tip] **执行标准类型转换后匹配** 的次次优先调用
+> 
+> 标准类型转换示例如下
+> 
+> + `int` 转换为 `unsigned int`
+> + `int` 转换为 `double`
+> + `double` 转换为 `int`
+> + `double` 转换为 `long double`
+> + `T*` 转换为 `void *`
+> + `Derived*` 转换为 `Base *` 
+> 
+
+> [!tip] **执行用户自定义类型转换后匹配** 的优先级更低
+> 
+> 比如 `double` 转换为 `complex<double>` 
+> 
+
+> [!tip] **不定长参数** 的优先级最低
+
+
+根据上述优先级规则，如果某次函数调用可以匹配的最高优先级上发现了不止一个可以的函数，则本次调用因产生二义性而失败。这些复杂的解析规则主要是考虑到 C/C++ 的内置数值类型规则而制定
+
+```cpp
+void print(int);
+void print(const char *);
+void print(double);
+void print(long);
+void print(char);
+
+void f(char c, int i, short s, float f)
+{
+	print(c);  // 精确匹配 print(char).因为 c 的类型是 char,有对应的函数版本
+	print(i);  // 精确匹配 print(int)
+	print(s);  // 提升匹配 print(int).因为 s 的类型是 short，没有对应的函数版本，但是进行整数提升后匹配到 print(int)
+	print(f);  // 提升匹配 print(double).因为 f 的类型是 float，没有对应的函数版本，但是将 float 提升为 double 后匹配到 print(double)
+	
+	print('a');  // 精确匹配 print(char)
+	print(49);   // 精确匹配 print(int)
+	print(0);    // 精确匹配 print(int)
+	print("a");  // 精确匹配 print(const char *)
+	print(nullptr); // 标准类型转换后匹配到 print(const char *)
+} 
+```
+
+
+> [!important] 
+> 
+> 重载解析与函数声明顺序无关
+> 
+
+#### 多实参解析
+
+当重载函数包含两个或多个参数时，自动重载解析规则将应用于每个参数，并且选出该参数的最佳匹配函数。如果某个函数是 **其中一个参数的最佳匹配**，同时在 **其他参数上也是更优先** 的匹配或者至少 **不弱于** 别的函数，则该函数就是最终确定的最佳匹配函数
+
+```cpp
+int pow(int, int);
+double pow(double, double);
+complex pow(double, complex);
+complex pow(complex, int);
+complex pow(complex, complex);
+
+void k(complex z) 
+{
+	int i = pow(2, 2);         // 精确匹配 pow(int, int)
+	double d = pow(2.0, 2.0);  // 精确匹配 pow(double, double)
+	complex z2 = pow(2, z);    // 调用 pow(double, complex)
+	complex z3 = pow(z, 2);    // 精确匹配 pow(complex, int)
+	complex z4 = pow(z, z);    // 精确匹配 pow(complex, complex)
+	
+	double d = pow(2.0, 2);   // 匹配到 pow(int, int) 和 pow(double, double)，会产生二义性，调用失败
+}
+```
+
+#### 手动重载解析
+
+**当某个函数的重载版本过少或者过多都可能导致二义性**。应该尽量把一组重载函数当成整体，考察其对于函数的语义来说是否有意义。很多时候，可以通过增加一个函数版本来解决二义性问题
+
+```cpp
+void f1(char);
+void f1(long);
+
+void f2(char *);
+void f2(int *);
+
+void k(int i)
+{
+	f1(i);  // 二义性：f1(char) 和 f1(long) 都可能被选中
+	f2(0);  // 二义性：f2(char *) 和 f2(int *) 都可能被选中
+}
+```
+
+当然可以利用显示类型转换解析特定的调用
+
+```cpp
+f2(static_cast<int *>(0)); 
+```
+
+### 名字修改
+
+**名字修改**（也称为名称修饰）是编译器使用的一种技术，用于对有关其名称中标识符的范围、类型、链接或其他标识信息（函数名称、变量名称等）的其他信息进行编码。**名字修改** 的主要目的是支持函数重载，这允许名称相同但参数列表不同的多个函数在单个程序中共存。
+
+在 C++ 中，编译器根据每个函数和变量的作用域和类型为它们 **生成一个破坏性的名称**。破坏性的名称通常由 **原始名称**、**参数类型** 和 **其他信息** 连接而成，通常使用前缀或后缀。例如，我们由如下函数
+
+```cpp
+int add(int a, int b)
+{
+    return a + b;
+}
+```
+
+`g++` 编译器生成的汇编代码如下
+
+```
+_Z3addii:
+	pushq	%rbp	
+	movq	%rsp, %rbp
+	movl	%edi, -4(%rbp)
+	movl	%esi, -8(%rbp)
+	movl	-4(%rbp), %edx
+	movl	-8(%rbp), %eax
+	addl	%edx, %eax
+	popq	%rbp
+	ret
+```
+
+名字 `_Z3addii`，它编码了 **名字的字符数** 和 **参数信息**：函数名有 `3` 个字符以及接收两个 `int` 类型的参数
+
+再看另一个示例
+
+```cpp
+int mutply(int a, int b)
+{
+    return a * b;
+}
+```
+
+它的 `g++ -S` 编译出的汇编代码如下
+
+```cpp
+_Z6mutplyii:
+	pushq	%rbp	
+	movq	%rsp, %rbp
+	movl	%edi, -4(%rbp)
+	movl	%esi, -8(%rbp)
+	movl	-4(%rbp), %eax
+	imull	-8(%rbp), %eax
+	popq	%rbp
+	ret
+```
+
+注意 `_Z6mutplyii`，函数名有 `6` 个字符已经接收两个 `int` 类型的参数
 
