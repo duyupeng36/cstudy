@@ -1116,12 +1116,62 @@ int main() {
 
 	int * pvalue = const_cast<int *>(&value);
 	std::cout << "value: " << value << std::endl;
-	
+	std::cout << "befor modify: *pvalue is " << *pvalue << std::endl;
 	modify(pvalue);
-	std::cout << "*pvalue: " << *pvalue << std::endl;
+	std::cout << "after modify: *pvalue is " << *pvalue << std::endl; 
 	assert(pvalue == &value);
-    std::cout << "value: " << value << std::endl;
+    std::cout << "after modify: value is " << value << std::endl;
 }
+```
+
+运行结果为
+
+```
+value: 10
+befor modify: *pvalue is 10
+after modify: *pvalue is 42
+after modify: value is 10
+```
+
+> [!attention] 
+> 
+> 函数 `modify(pvalue)` 的确是修改了 `value` 的值。为什么最后一行输出的还是 $10$？
+> 
+> 对于 `g++` 编译器来说，`value` 的值的确是被修改了。由于 `value` 是只读的，因此在 `modify()` 后续使用 `value`，`g++` 编译器直接使用的是 `value` 初始化的字面值 
+> 
+
+```cpp
+#include <cassert>
+#include <iostream>
+
+void modify(int * pvalue) {
+    *pvalue =42;
+}
+
+int main() {
+	const int value = 10;
+
+	int * pvalue = const_cast<int *>(&value);
+	std::cout << "value: " << value << std::endl;
+	std::cout << "befor modify: *pvalue is " << *pvalue << std::endl;
+	modify(pvalue);
+	std::cout << "after modify: *pvalue is " << *pvalue << std::endl; 
+	assert(pvalue == &value);
+    std::cout << "after modify: value is " << value << std::endl;
+	
+    int *pvalue2 = const_cast<int *>(&value);
+    std::cout << "*pvalue2: " << *pvalue2 << std::endl;
+}
+```
+
+输出结果为
+
+```
+value: 10
+befor modify: *pvalue is 10
+after modify: *pvalue is 42
+after modify: value is 10
+*pvalue2: 42
 ```
 
 ## 函数重载
