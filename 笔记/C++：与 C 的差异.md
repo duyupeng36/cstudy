@@ -1678,3 +1678,102 @@ enum class Warning : char {green, yellow, orange, red};
 > `enum class` 属于用户自定义类型，可以为它定义 `|` 和 `&` 等于运算符
 > 
 
+## 异常处理
+
+**异常是程序在执行期间产生的问题**。C++ 异常是指在 **程序运行时发生的特殊情况**，比如尝试除以零的操作
+
+异常的概念可以帮助我们将信息从检测到错误的地方转递到处理该错误的地方。如果函数无法处理某个问题，则 **抛出** 异常，并寄希望与函数的调用者能直接或间接的处理该问题。如果函数希望处理某个问题，可以 **捕获** 相应的异常
+
+主调用函数想要处理某些失败情形，可以把这些可能产生异常的表达式置于 `try` 语句块内，并在 `catch` 语句块内处理对应的失败情形
+
+```cpp
+void taskmaster()
+{
+	try {
+		// 可能产生异常的表达式
+	}
+	catch(/* 异常类型 */) {
+		// 处理对应类型的错误
+	}
+}
+```
+
+下面是异常处理的完整示例
+
+
+```cpp
+#include <iostream>
+using namespace std;
+
+double division(double x, double y)
+{
+	if (y == 0)
+	{
+		throw "Division by zero";
+	}
+	return x / y;
+}
+
+int main()
+{
+	double x = 10;
+	double y = 0;
+	double result;
+	try {
+		result = division(x, y);
+	}
+	catch (const char * message) {
+		cout << "call division() error: " << message << endl;
+		return 1;
+	}
+	cout << "call division() result: " << result;
+	return 0;
+}
+```
+
+> [!attention] 
+> 
+> 注意：`catch(Type message)` 捕捉的是 `Type` 类型的消息，只要是 `Type` 类型的消息都会被捕获，并将捕捉到的消息赋值给 `message`
+> 
+
+### 标准异常
+
+C++ 在库下提供了一组标准的异常类 `<stdexcept>`，这些类可以用作更具体的错误处理的异常类型。其中一些类包括：
+
+| 异常类型                 | 描述             |
+| :------------------- | :------------- |
+| `std::exception`     | 所有异常类的基类       |
+| `std::logic_error`   | 表示程序可以静态检测的错误  |
+| `std::runtime_error` | 表示程序执行过程中发生的错误 |
+
+```cpp
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+double division(double x, double y)
+{
+	if (y == 0)
+	{
+		throw runtime_error("Division by zero condition!");
+	}
+	return x / y;
+}
+
+int main()
+{
+	double x = 10;
+	double y = 0;
+	double result;
+	try {
+		result = division(x, y);
+	}
+	catch (runtime_error &e) {
+		cout << "call division() error: " << e.what() << endl;
+		return 1;
+	}
+	cout << "call division() result: " << result;
+	return 0;
+}
+```

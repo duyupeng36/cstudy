@@ -69,7 +69,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "枚举",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -90,8 +90,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -184,10 +183,14 @@
   },
   "active": "b596f38857eece1c",
   "lastOpenFiles": [
-    "笔记/C 语言：结构体.md",
-    "笔记/C++：与 C 的差异.md",
-    "笔记/C 语言：声明.md",
+    "笔记/进程概念.md",
+    "笔记/虚拟内存.md",
+    "笔记/访问信息.md",
     "README.md",
+    "笔记/C++：与 C 的差异.md",
+    "笔记/C 语言：错误处理.md",
+    "笔记/C 语言：结构体.md",
+    "笔记/C 语言：声明.md",
     "笔记/Go 语言：基础语法.md",
     "笔记/Python：基础语法.md",
     "笔记/Python：目录.md",
@@ -204,7 +207,6 @@
     "assets/attachments/Pasted image 20250120172113.png",
     "assets/attachments/Pasted image 20250120171629.png",
     "assets/attachments/Pasted image 20250120171025.png",
-    "笔记/虚拟内存.md",
     "笔记/内存管理.md",
     "笔记/Python：函数高级.md",
     "笔记/Python：函数基础.md",
@@ -213,11 +215,8 @@
     "作业/02-Linux 系统编程/作业22：内存分配.md",
     "作业/02-Linux 系统编程/作业26：虚拟内存.md",
     "笔记/Go 语言：环境搭建.md",
-    "作业/04-Python/作业50：函数高级.md",
-    "笔记/过程.md",
     "assets/attachments/Pasted image 20250118181508.png",
     "assets/attachments/Pasted image 20250118173726.png",
-    "作业/04-Python/作业49：函数基础.md",
     "assets/attachments/Pasted image 20250118150036.png",
     "assets/attachments/Pasted image 20250114092419.png",
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
