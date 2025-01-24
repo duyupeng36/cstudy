@@ -99,6 +99,8 @@ complex &complex::operator/=(complex z) {
 > **定义在类内部的函数默认是内联的**
 > 
 
+^8ffe8c
+
 **无需实参** 就可以调用的构造函数称为 **默认构造函数**。`complex()` 是 `complex` 类的默认构造函数
 
 > [!important] 
