@@ -1088,6 +1088,76 @@ void Tree<T>::g(Tree::Node * p) {
 
 ## 具体类
 
+程序中会经常使用大量较小的抽象，例如，整数、浮点数、复数、指针等。每个程序都使用若干这种小的抽象，其中一些简单的具体类型经常被大量使用。
 
+C++ 直接支持一部分抽象作为内置类型。但是，大多数抽象并不支持，C++ 语言也很难做到这一点。而且，一个通用的编程语言也无法遇见所有应用的细节需求。因此，语言必须为用户提供定义小的具体类型的机制。这种类型称为 **具体类型** 或者 **具体类**
 
+> [!tip] 
+> 
+> 如果一个 **类的表示是其定义的一部分**，我们就称它是 **具体** 的，或者称它是一个**具体类**。在定义中明确类的表示方法令我们能
+> 
+> + 将对象置于栈、静态分配的内存以及其他对象中
+> + 拷贝和移动对象
+> + 直接引用具名对象
+> 
 
+这令具体类易于推断，编译器也容易为之生成优化的代码。因此，我们更倾向于对频繁使用且性能攸关的小类型使用具体类。例如，复数、智能指针、容器
+
+很好地支持这种用户自定义类型地定义和使用是 C++ 早期就明确的目标。总的来说，简单和平凡要比复杂和精致重要得多
+
+```cpp
+#include <string>
+
+using namespace std;
+
+namespace Chrono
+{
+    enum class Month:unsigned char {
+       illegal = 0, jan = 1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
+    };
+    
+    class Date
+    {
+    public:
+        class Bad_date { }; // 异常类
+
+        explicit Date(int = {}, Month = {}, int = {}); // {} 表示默认值
+
+        // 非修改性函数，用于查询 date
+        int day() const;
+        Month month() const;
+        int year() const;
+
+        string string_rep() const; // 返回字符串表示
+        void char_rep(char s[], int max) const; // 返回字符串表示
+
+        // 修改性函数，用于修改 date
+        Date& add_year(int n); // 增加 n 年
+        Date& add_month(int n); // 增加 n 月
+        Date& add_day(int n); // 增加 n 天
+    private:
+        bool is_valid(); // 检查 date 是否合法
+        int d;  // day
+        Month m; // month
+        int y; // year
+    };
+    bool is_date(int d, Month m, int y); // 检查 date 是否合法
+    bool is_leapyear(int y); // 检查 y 是否为闰年
+	
+	// 运算符重载
+    bool operator==(const Date& a, const Date& b);
+    bool operator!=(const Date& a, const Date& b);
+
+    const Date& default_date(); // 返回默认 date
+    ostream& operator<<(ostream& os, const Date& d);
+    istream& operator>>(istream& is, Date& dd);
+} // namespace Chrono
+```
+
+上述这组操作是一个典型的用户自定义类型
++ 一个构造函数指出此类型的对象/变量如何初始化；
++ 一组允许用户检查 `Date` 的函数。这些函数标记为 `const`，表面它们不会修改调用它的对象/变量的状态
++ 一组允许用户无须了解表示细节也无须摆弄复杂语法即可修改 `Date` 的函数
++ 隐式定义操作，允许 `Date` 自由拷贝
++ 类 `Bad_date` 用来报告错误，抛出异常
++ 一组有用辅助函数，不是类成员，不能直接访问 `Date` 的表现形式，但是我们认为它们与名字空间 `Chrono` 的使用是相关的
