@@ -83,7 +83,7 @@ class  Name [: 继承方式 基类,...]
 	
 	// 表现形式
 	数据类型 变量名;
-}
+};  // 注意，此处必须要有分号
 ```
 
 例如，一个类 `X` 的定义如下
@@ -903,9 +903,185 @@ Date& Date::addYears(int yy) {
 
 ### static 成员
 
+为 `Date` 设定默认值的确非常方便，但是会带来潜在问题。因为 `Date` 类会依赖全局变量 `today`。这样 `Date` 类只能用于定义和正确使用 `today` 的上下文中。
+
+> [!attention] 
+> 
+> 这就限制一个类只有在最初编写它的上下文才有用。尝试使用这种上下文依赖的类会给用户带来很多意料之外的不快，代码维护也变得很混乱
+> 
+
+幸运的是，我们可以是使用 `static` 成员从而获得这种便利性其实不需要承担使用公开访问的全局变量的负担。
 
 
+> [!tip] `static` 成员：属于类但不属于类的任何对象
+> 
+> 是类的一部分但不是某个类对象的一部分的成员，静态(`static`)成员
+> +  **static 变量**： 只有唯一副本，而不是像普通非 `static` 成员那样每个对象都有其副本
+> + **static 函数**： 需要访问类成员但又不需要通过特定对象调用的函数
+> 
+
+下面是重新设计的版本，它保留了 `Date` 默认构造函数的语义，又没有依赖全局变量
+
+```cpp
+#ifndef DATE_H
+#define DATE_H
+
+class Date {
+public:
+	// ...
+    static void setDefault(int year, int month, int day);  // 静态成员函数
+private:
+    int __year;   // 年
+    int __month;  // 月
+    int __day;    // 日
+
+    static Date default_date;  // 静态数据成员
+    // ...
+};
+
+#endif //DATE_H
+```
+
+使用 `default_date` 的 `Date` 构造函数如下
+
+```cpp
+Date::Date(int dd, int mm, int yy)
+{
+    __day = dd ? dd : default_date.__day;
+    __month = mm ? mm : default_date.__month;
+    __year = yy ? yy : default_date.__year;
+    // 检查 Date 是否合法
+}
+```
+
+使用 `set_default()`，在恰当的时候改变默认值。可以x像引用任何其他成员一样引用 `static` 成员。此外，不必提及任何对象即可引用 `static` 成员，方法使用 `类名::`
+
+```cpp
+void f()
+{
+	Date::set_default(4, 5, 1945);
+}
+```
+
+**如果使用了 static 函数或数据成员，就必须在某处定义它们**。在 `static` 成员的定义中不要重复关键字 `static`
+
+```cpp
+Date Date::default_date{16, 12, 1770}; // Date::default_date 的定义
+
+void Date::set_default(int dd, int mm, int yy) { //  Date::set_default 的定义
+    default_date = {dd, mm, yy};
+}
+```
+
+> [!attention] 
+> 
+> 注意，写在 `class` 作用域内仅仅是声明，不会为其分配内存空间
+> 
+
+注意，`Date{}` 表示 `Date::default_date` 的值。因此，我们不需要一个独立的函数来读取默认值。而且，目标类型为 `Date` 无疑时，更简单的 `{}` 就足够了
+
+下面是关于 `static` 数据成员与 `static` 成员函数的基本使用方法
+
+```cpp
+#include <iostream>
+using namespace std;
+class Date
+{
+private:
+    int d, m, y;
+    static Date default_date;  // 静态成员，属于类但不属于类对象中
+
+public:
+    Date(int = 0, int = 0, int = 0);  // 构造函数
+
+    // 非修改性函数，用于查询 Date
+    int year() const {return y;}
+    int month() const {return m;}
+    int day() const {return d;}
+
+    static void set_default(int dd, int mm, int yy);  // 静态成函数员
+};
 
 
+Date::Date(int dd, int mm, int yy) {
+    d = dd ? dd : default_date.day();
+    m = mm ? mm : default_date.month();
+    y = yy ? yy : default_date.year();
+}
+
+// 注意，在定义静态函数时，不需要重复关键字 static
+void Date::set_default(int dd, int mm, int yy) {
+    default_date = {dd, mm, yy};
+}
 
 
+Date Date::default_date {16, 12, 1770};  // 使用前需要先定义
+
+int main()
+{
+    Date::set_default(4, 5, 1945);  // 修改默认值
+    Date date;
+    cout << date.day() << '/' << date.month() << '/' << date.year() << endl;
+}
+```
+
+
+### 成员类型
+
+> [!tip] 
+> 
+> 类型和类型别名也可以作为类的成员
+> 
+
+```cpp
+template <typename T>
+class Tree {
+    using value_type = T;
+    enum Policy {rb, splay, treeps};
+    class Node 
+    {
+        value_type value;
+        Node* left;
+        Node* right;
+    public:
+        void f(Tree *);
+    };
+    Node * top;
+public:
+    void g(const T&);
+};
+```
+
+> [!tip] 成员类
+> 
+> 常称为嵌套类，**可以引用其所属类的类型和 `static` 成员**
+> 
+> 注意：当给定所属类的一个对象时，只能引用非 `static` 成员
+> 
+
+**嵌套类可以访问其所属类的成员**，甚至是 `privite` 成员，与成员函数类似。但是，它 **没有当前类对象的概念**
+
+```cpp
+template <typename T>
+void Tree<T>::Node::f(Tree * p) {
+    top = right; // 错误：未指定类型为 Tree 的对象
+    p->top = right; //
+    value_type v = left->value; // 正确：value_type 不予某个对象关联
+}
+```
+
+相反，一个类没有任何特殊权限能访问其嵌入类的成员
+
+```cpp
+template <typename T>
+void Tree<T>::g(Tree::Node * p) {
+    value_type val = right->value; // 错误: 没有 Tree::Node 类型的对象
+    value_type v = p->right->value; // 错误: Node::right 是私有的
+    p->f(this); // 正确：this 的类型是 Tree<T> *
+}
+```
+
+> [!tip] 
+> 
+> **成员类更多是提供了一种符号表示上的便利**，而非一种重要的语言特性
+> 
