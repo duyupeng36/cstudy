@@ -44,11 +44,11 @@
 
 ![[Pasted image 20250123184417.png]]
 
-## 类基础
+## 类定义
 
-**C++ 中类是创建新类型的工具**，创建出的类型可以像内置类型一样方便的使用。**派生类** 和模板允许我们 **表达类之间的关系** 并利用这些关系
+**C++ 中类是创建新类型的工具**，创建出的类型可以像内置类型一样方便的使用。**派生类** 和 **模板** 允许我们表达类之间的关系并利用这些关系
 
-> [!tip] 类型表达了一种概念
+> [!tip] 类型表达了一种抽象的概念
 > 
 > C++ 的内置类型 `float` 和 运算符 `+, -, *, /` 一起提供了数学概念 **实数** 的近似表示
 > 
@@ -60,17 +60,10 @@
 > 在程序中使用与概念匹配的类型，可以使程序更容易理解，更容易分析，也更容易被修改
 > 
 
-定义一个新类型的基本思路：将实现细节与正确使用它的必要属性分离
-
-> [!tip] 
-> 
-> 换句话说就是，将类型 **对象的数据存储布局** 与 **访问数据的函数的完整列表** 分开
-> 
-
-下面是定义一个类的完整语法形式
+下面是类定义的法形式。关键字 `class` 用于定义一个类
 
 ```cpp
-class  Name [: 继承方式 基类,...]
+class Name [: 继承方式 基类,...]
 {
 访问控制限定符:
 	// 构造函数的定义
@@ -86,1078 +79,819 @@ class  Name [: 继承方式 基类,...]
 };  // 注意，此处必须要有分号
 ```
 
-例如，一个类 `X` 的定义如下
+> [!tip] 
+> 
+> C++ 中类有两部分组成：**数据成员** 和 **成员函数**，在某些资料中统称为成员
+> + 数据成员在某些语言中称为 **属性**
+> + 成员函数在某些语言中称为 **方法**
+> 
+
+与 `struct` 一样，可以先声明后定义
 
 ```cpp
-class X
-{
-private:  // 类的实现细节，是私有的
-    int m; 
-public:   // 用户接口是公有的
-    X(int i = 0) : m{i} {}; // 构造函数，初始化数据成员 m
+class Name;  // 声明 Name 是一个类
 
-    int mf(int i)
-    {
-        int old = m;
-        m = i; // 将数据成员 m 设置为新值
-        return old; // 返回旧值
+// 在合适的位置可以定义类
+class Name {};
+```
+
+例如，如下代码定义了一个类 `Person`
+
+```cpp title:person.cpp
+#include <iostream>
+using namespace std;
+
+class Person {
+
+	char *_name; // 指针数据成员
+    int _age;    // 普通数据成员
+
+	// 成员函数，也称为方法
+    void show() {
+		cout << "name: " << _name << ", age: " << _age << endl;
+    }
+};
+```
+
+### 访问控制
+
+现在，我们有一个类 `Person`，我们就可以定义 `Person` 类的对象，并访问对象的成员
+
+```cpp title:person.cpp
+int main() {
+    Person p;
+    p.show();
+    return 0;
+}
+```
+
+使用 `g++` 命令编译 `person.cpp` 文件，`g++` 提示 `p.show()` 不能访问
+
+```shell
+➜  cppfiles g++ person.cpp -o person     
+person.cpp: In function ‘int main()’:
+person.cpp:17:11: 错误：‘void Person::show()’ is private within this context
+   17 |     p.show();
+      |     ~~~~~~^~
+person.cpp:10:10: 附注：declared private here
+   10 |     void show() {
+      |          ^~~~
+```
+
+这是因为 C++ 中的类成员被限制访问的。C++ 的类提供了 $3$ 种访问控制：**私有的(private)** **公有的(public)** 和 **被保护的(protected)**
+
+> [!tip] private：默认的访问控制，禁止成员在类外访问
+> 
+> `class` 关键字限制定义在其中的成员是**私有的(private)**。对于类私有成员，目前来说只能在类定义中访问，离开类定义将无法访问
+> 
+
+> [!tip] public：公开的，允许成员在类外被访问
+> 
+> 在类外，可以通过对象直接访问
+> 
+
+> [!tip] protected：被保护的，仅类内和派生类内可访问
+> 
+> `protected` 访问控制在派生类中会详细介绍，这里忽略
+> 
+
+为了让成员函数在类外可访问，我们需要使用 `public` 规定成员的访问属性
+
+```cpp title:person.cpp
+#include <iostream>
+
+using namespace std;
+
+class Person {
+
+    char *_name;
+    int _age;
+public:
+    void show() {
+		cout << "name: " << _name << ", age: " << _age << endl;
     }
 };
 
-X var{7}; // 一个 X 类型的变量，初始化为 7
-
-int user(X var, X* ptr)
-{
-    int x = var.mf(7); // 使用 var.mf() 成员函数
-    int y = ptr->mf(9); // 使用 ptr->mf() 成员函数
-    int z = var.m; // 错误：不能访问私有成员
+int main() {
+    Person p;
+    p.show();
+    return 0;
 }
 ```
 
-### 成员函数
+编译允许的结果如下
 
-考虑用 `struct` 实现日期的概念：定义 `Date` 的表示方式和操纵这种类型变量的一组函数
+```shell
+➜  cppfiles g++ person.cpp -o person
+➜  cppfiles ./person    
+name: , age: -1301635008
+```
 
-```cpp
-struct Date
-{
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
+### class 和 struct 对比
+
+在 C++ 中，`struct` 本质也是 `class`，与 `class` 的唯一差异就是成员的默认访问控制不同。
+
+> [!tip] `struct` 的默认访问控制为  `public`
+> 
+> 在 C++ 中，`struct` 是成员的默认访问控制为 `public` 的类
+> 
+
+```cpp title:person_struct.cpp
+#include <iostream>
+
+using namespace std;
+
+struct Person {
+
+    char *_name;
+    int _age;
+    void show() {
+	    cout << "name: " << _name << ", age: " << _age << endl;
+    }
 };
 
-void init_date(Date& d, int, int, int); // 初始化日期
-void addDays(Date& d, int n);           // 增加 n 天
-void addMonths(Date& d, int n);         // 增加 n 月
-void addYears(Date& d, int n);          // 增加 n 年
+int main() {
+    Person p;
+    p.show();
+    return 0;
+}
 ```
 
-> [!tip] 
+编译并运行的结果如下
+
+```shell
+➜  cppfiles g++ person_struct.cpp -o person_struct    
+➜  cppfiles ./person_struct 
+name: , age: -307584960
+```
+
+### 成员函数的定义
+
+在 `Person` 类定义的示例中，成员函数 `show()` 是定义在类中。通常，我们 **应该将成员函数的定义从类定义中分离出来**。这样做的可以 **降低类定义的复杂性**
+
+> [!tip] 降低类定义的复杂性
 > 
-> 数据类型 `Date`  和这些函数之间并没有显示关联
+> 降低类定义的复杂性。一个类中的成员函数通常会很多，如果成员函数的定义也写在类中，会导致代码复杂
 > 
 
-我们可以通过将函数声明为成员来建立这种关联
+```cpp title:person.cpp
+#include <iostream>
 
-```cpp
-struct Date
-{
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
-    void init(int, int, int);  // 初始化日期
-    void addDays(int n);           // 增加 n 天
-    void addMonths(int n);           // 增加 n 月
-    void addYears(int n);           // 增加 n 年
+using namespace std;
+
+class Person {
+
+    char *_name;
+    int _age;
+
+public:
+    void show();  // 显示对象的信息
+};
+
+// 在类定义外合适的为主定义成员函数
+// 注意，定义成员函数时，需要通过显示限定的方式说明该函数属于哪个类
+void Person::show(){
+    cout << "name: " << _name << ", age: " << _age << endl;
+}
+
+int main() {
+    Person p;
+    p.show();
+    return 0;
+}
+```
+
+当我们将成员函数的定义移到类外时，**不应该在头文件中定义这些成员函数**。这是因为在多文件编程中，可能导致重复定义的问题
+
+> [!attention] 
+> 
+> 当头文件在多个文件中被包含时。虽然单个文件可以编译通过，但是在链接时会因为同一个名字可以找到多个实现，从而导致重复定义的问题
+> 
+
+当将成员函数从类定义中移出到类外定义时，成员函数的定义一般会放置实现文件中，而不是放在头文件中。
+
+```cpp title:person.hpp
+#ifndef PERSON_HPP
+#define PERSON_HPP
+
+class Person {
+
+    char *_name;
+    int _age;
+
+public:
+    void show();
+};
+#endif // PERSON_HPP
+```
+
+```cpp title:person.cpp
+#include <iostream>
+using namespace std;
+
+#include "person.hpp"
+
+// 在类定义外合适的为主定义成员函数
+// 注意，定义成员函数时，需要通过显示限定的方式说明该函数属于哪个类
+void Person::show(){
+    cout << "name: " << _name << ", age: " << _age << endl;
+}
+```
+
+## 对象的创建
+
+通过 `Person` 类创建的对象在调用 `show()` 时输出的 `name` 和 `age` 非常奇怪，这是因为没有对数据成员 `name` 和 `age`  进行初始化
+
+由于 `name` 和 `age` 的访问控制为 `private`，因此需要提供一个初始化成员函数，通过调用该函数达到初始化 `name` 和 `age` 的目的
+
+```cpp title:person.hpp
+class Person {
+
+    char *_name;
+    int _age;
+
+public:
+    void init(const char *name, int age);  // 初始化成员函数
+    void show();
 };
 ```
 
-**声明(定义)于类定义内的函数 称为 _成员函数_**，对恰当类型的特定变量使用成员访问语法才能调用这种函数
+```cpp title:person.cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
 
-> [!tip] 
-> 
-> 结构体也是一种类
-> 
+#include "person.hpp"
 
-```cpp
-Date birthday; 
-void f()
-{
-    Date today;
 
-    today.init(2007, 12, 24);// 初始化日期为 2007 年 12 月 24 日
-    birthday.init(1963, 5, 19);// 初始化日期为 1963 年 5 月 19 日
-
-    Date tomorrow = today; // 将 tomorrow 初始化为 today
-    tomorrow.addDay(1);       // 增加 1 天
-    // ...
+void Person::init(const char *name, int age){
+    _name = new char[strlen(name) + 1];
+    strcpy(_name, name);
+    _age = age;
 }
 ```
 
-由于不同的结构可能有同名的成员函数，在定义成员函数时必须指定结构名(类名)
+在使用 `Person` 类的对象之前，我们应该首先调用 `init()` 成员函数
 
-```cpp
-void Date::init(int yy, int mm, int dd)
-{
-    __year = yy;
-    __month = mm;
-    __day = dd;
+```cpp title:person.cpp
+int main() {
+    Person p;
+    p.init("zhangsan", 20);  // 调用 init 成员函数
+    p.show();
+    return 0;
 }
 ```
 
-在成员函数中，不必显示引用对象即可以使用成员的名字。名字所引用的是调用该函数的对象的成员。例如，当 `today` 调用 `Date::init()` 时，`__month = mm;` 是对 `today.__month` 赋值
+编译 `person.cpp` 并运行的结果如下
 
-> [!tip] 
+```shell
+➜  cppfiles g++ person.cpp -o person
+➜  cppfiles ./person
+name: zhangsan, age: 20
+```
+
+> [!question] 
 > 
 > **类的成员函数知道哪个对象调用它**。它是怎么知道的呢？其原因放在后面介绍
 > 
 
-### 默认拷贝
-
-**默认情况下，对象是可以拷贝的**。特别是，一个类对象可以用同类的另一个对象的副本进行初始化
-
-```cpp
-Date d1 = birthday; // 使用 birthday 的副本初始化 d1
-Date d2{birthday};  // 使用 birthday 的副本初始化 d2
-```
-
-> [!tip] 
-> 
-> 默认情况下，**一个类对象的副本是逐成员拷贝得到**。如果类 `X` 的默认拷贝行为不是我们希望的，可以提供更恰当的行为
-> 
-
-类似的，类对象默认也是通过赋值操作拷贝
-
-```cpp
-void f(Date &d)
-{
-	d = birthday;
-}
-```
-
-> [!attention] 
-> 
-> **默认拷贝语义是逐成员复制**。如果对于类 `X` 是不正确的选择，用户可以定义一个恰当的赋值运算符
-> 
-
-### 访问控制
-
-前面我们提到的 `Date` 声明提供了一组处理 `Date` 对象的函数，但并未指定是否只有这些函数依赖于 `Date` 的表现形式以及是否只有它们直接访问类 `Date` 对象。这种约束可以通过用 `class` 关键字替代 `struc` 来表达
-
-```cpp
-class Date
-{
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
-    
-public:
-    void init(int, int, int); // 初始化日期
-    void addDays(int n);           // 增加 n 天
-    void addMonths(int n);         // 增加 n 月
-    void addYears(int n);          // 增加 n 年
-};
-```
-
-> [!tip]
-> 
-> 标签 `public` 将类的主体分为两部分：第一部分中的名字是 **类私有的**(`private`)，它们只能被类中的成员函数使用。第二部中的名字是 **公开的**(`public`)，构成类对象的公共接口
-> 
-
-> [!attention] 
-> 
-> `struct` 是一个成员默认为 `public` 的 `class`，成员函数的声明和使用是一样的
-> 
-
-```cpp
-void Date::init(int yy, int mm, int dd)
-{
-    __year = yy;
-    __month = mm;
-    __day = dd;
-}
-
-void Date::addDays(int n)
-{
-    __day += n;
-}
-```
-
-> [!warning] 
-> 
-> 但是，**非成员函数禁止使用私有成员**
-> 
-
-```cpp
-void timewarp(Date& d)
-{
-    d.__year -= 200; // 错误: 试图访问类 Date 私有的成员
-}
-```
-
-现在 `init()` 就非常重要了，因为数据设定为私有迫使我们提供一组初始化成员的方法
-
-```cpp
-Date dx;
-
-dx.__month = 3;  // 错误： 试图访问 Date 的私有成员
-dx.init(2011, 3, 25); // 正确
-```
-
-> [!important] 限制一组显示声明的函数才能访问数据结构可以带来多方面的好处
-> + 任何导致对象保存非法数据的错误都必然是由成员函数中的代码引起的
-> + 如果我们改变了一个类的表示方式，就只能修改成员函数来利用新的表示方式。用户代码依赖于公共接口，因此，无效重写
-> + 聚焦于设计一个好的接口能产生更好的代码，因为我们可以对调试投入更多的思考和时间
-> 
-
-**私有数据的包含依赖于对类成员名的使用限制**。因此，通过地址操作和显示类型转换可以绕过私有保护。**C++ 只能防止意外而无法防止故意规避**。只有硬件才能完美防止对通用语言的恶意使用，而在实际系统中其实很难实现
-
-```cpp
-Date dx;
-Date * pd = &dx;
-int *pi = reinterpret_cast<int*>(pd);  // 将 dx 的指针转换为 int *
-*pi = 2023; // 试图修改 dx 的年份
-*(pi + 1) = 12; // 试图修改 dx 的月份
-*(pi + 2) = 7; // 试图修改 dx 的日期
-dx.print(); // 2023-12-7
-```
-
 ### 构造函数
 
-> [!warning] 
+使用 `init()` 这样的函数为类对象提供初始化功能不优雅也容易出错
+
+> [!attention] 
 > 
-> 使用 `init()` 这样的函数为类对象提供初始化功能不优雅也容易出错
-> 
-> 这种方式没有规定一个对象必须进行初始，程序员 **可能忘记初始化**，或者 **初始化两次**(初始化两次往往会带来灾难性后果) 
+> + 我们可能忘记调用 `init()`
+> + 或者调用两次 `init()`。这会导致对象被初始化两次，往往会带来灾难性后果
 > 
 
-一种更好的方法是允许程序员声明一个函数，它显示表明自己是专门完成对象初始化任务的。这种函数的本质是 **构造一个给定类型对象的值**，因此被称为 **构造函数**。**它最显著特征就是与类具有相同的名字**
+更好的方式就是允许我们定义一个成员函数，该成员函数是专门完成对象初始化任务的。这种函数的本质是 **构造一个给定类型对象的值**，因此被称为 **构造函数**
 
-> [!tip] 构造函数：初始化一个给定类型对象的值
+> [!tip] 构造函数
 > 
-> 构造函数的显著特征是与类具有相同的名字
+> 专门完成对象的初始化任务。它最显著特征就是 **与类具有相同的名字** 并且 **没有返回类型**；此外，与普通成员函数并无区别
 > 
 
-```cpp
-class Date
-{
+```cpp title:person.hpp
+class Person {
+
+    char *_name;
+    int _age;
+
 public:
-    // void init(int, int, int); // 初始化日期：容易出错
-    Date(int, int, int); // 构造函数
-    // ....
-
-private:
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
+    Person(const char *name, int age) {
+        _name = new char[strlen(name) + 1];
+        strcpy(_name, name);
+        _age = age;
+    }
+    void show();
 };
 ```
 
-> [!tip] 
-> 
-> **如果一个类有构造函数，其所有对象都会通过调用构造函数完成初始化**。如果构造函数需要参数，在初始化就要提供这些参数
-> 
+在创建对象时，就需要提供对应的初始化值，从而完成对象的创建
 
-```cpp
-Date today = Date(2023, 12, 7); // 使用 Date 的构造函数初始化 today
-Date xmas(2023, 12, 25); // 简写形式
+```cpp title:person.cpp
+int main() {
+    Person p{"张三", 20};
+    p.show();
+    return 0;
+}
+```
+ 
+编译 `person.cpp` 并运行的结构如下
 
-Date birthday; // 错误：缺少初始化器
-Date realease1_0(2023, 12);  // 错误：漏掉第三个参数
+```shell
+➜  cppfiles g++ person.cpp -o person
+➜  cppfiles ./person                
+name: 张三, age: 20
 ```
 
-构造函数定义了类的初始化方式，我们可以使用花括号 `{}` 初始化器
-
-```cpp
-Date today = Date{2023, 12, 7}; // 使用 Date 的构造函数初始化 today
-
-Date xmas {2023, 12, 25}; // 简写形式
-
-Date realease1_0{2023, 12};  // 错误：漏掉第三个参数
-```
-
-> [!tip] 构造函数可以重载
+> [!important] 
 > 
-> 通过提供多个构造函数，可以为某些类型的对象提供多种不同的初始化方法
+> 构造函数会在对象创建时自动调用
+> + **全局对象**：程序启动之后 `main()` 函数调用之前，会自动调用构造函数
+> + **静态对象**：程序控制到达静态对象的定义位置时，会自动调用构造函数，并且只会调用一次
+> + **局部对象**：程序控制到达局部对象的定义位置时，自动调用构造函数
 > 
 
+请注意：即使我们不定义构造函数，编译器也会为自动为我们添加一个构造函数，称为**默认构造函数**
+
+> [!tip] 默认构造函数
+> 
+> 默认构造函数是 **由编译器自动生成的无参构造函数**。默认构造函数不会初始化对象的数据成员
+> 
+> 当我们提供了构造函数之后，编译器就不再插入默认构造函数
+> 
+
 ```cpp
-class Date
-{
+class Person {
+
+    char *_name;
+    int _age;
+
 public:
-    
-    Date(int, int, int); // 构造函数：年 - 月 - 日
-    Date(int, int);      // 构造函数：日 - 月 - 当前年
-    Date(int);           // 构造函数：日 - 当前月 - 当前年
-    Date();              // 构造函数：当前日期
-    Date(const char *);  // 构造函数：字符串表示的日期
-    // ....
-
-private:
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
+    Person() {}  // 编译器生成的默认构造函数，其实默认构造函数什么也不会做
+    void show();
 };
 ```
 
-构造函数的重载解析规则与普通函数的重载解析规则相同，只要构造函数的参数类型明显不同，编译器就能选择正确的版本使用
+> [!tip] 构造函数是可以重载的
+> 
+> 通过重载构造函数，可以为类提供多重初始化对象的方式。从而提高对象创建的灵活性
+> 
+
+假设我们的 `Person` 类中还有一个成员 `_phone` 用于存储电话号码，由于数据成员 `_phone` 并不是必选的。因此，可以为 `_phone` 提供初始值，也可以不提供。通过重载构造函数，可以很清晰的表达这个思想
 
 ```cpp
-Date today {4}; // 4 日，当前月，当前年： 调用 Date::Date(int)
-Date july4 {"July 4, 1983"}; // 1983年7月4日: 调用 Date::Date(const char*)
-Date guy{5, 11};  // 5 日，11月，当前年: 调用 Date::Date(int, int)
-Date now; // 默认初始化为今天: 调用 Date::Date()
-Date start{}; // 默认初始化为今天: 调用 Date::Date()
-```
+class Person {
 
-`Date` 的前 $4$ 个构造函数是相关联的，只是参数的数量不同。通过 默认参数可以有效减少这种相关联的函数
+    char *_name;              // 姓名
+    int _age;                 // 年龄
+    unsigned short _phone[11];  // 电话号码
 
-```cpp
-class Date
-{
 public:
-    
-    Date(int = 0, int = 0, int = 0); // 构造函数：年 - 月 - 日
-    // Date(int, int);      // 构造函数：日 - 月 - 当前年
-    // Date(int);           // 构造函数：日 - 当前月 - 当前年
-    // Date();              // 构造函数：当前日期
-    Date(const char *);  // 构造函数：字符串表示的日期
-    
-    // ...
-
-private:
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
+	// 不提供成员 _phone 的初始值
+    Person(const char *name, int age) {
+        _name = new char[strlen(name) + 1];
+        strcpy(_name, name);
+        _age = age;
+        for (int i = 0; i < sizeof(_phone); i++) {
+            _phone[i] = 0;
+        }
+    }
+    // 提供成员 _phone 的初始值
+    Person(const char *name, int age, const unsigned short *phone) {
+        _name = new char[strlen(name) + 1];
+        strcpy(_name, name);
+        _age = age;
+        for (int i = 0; i < sizeof(_phone); i++) {
+            _phone[i] = phone[i];
+        }
+    }
+    void show();
 };
-
-Date :: Date(int dd, int mm, int yy)
-{
-    __day = dd ? dd : today.__day; // 如果 dd 为 0，使用 today.d
-    __month = mm ? mm : today.__day; // 如果 mm 为 0，使用 today.m
-    __year = yy ? yy : today.__day; // 如果 yy 为 0，使用 today.y
-
-	// 检测 Date 是否合法
-} 
 ```
 
-### explicit 构造函数
+观察上面代码中的两个构造函数，它们视乎是相关联的。通过使用 **默认参数** 可以消除这这种关联情形
 
-默认情况下，用单一参数调用一个构造函数，其行为是从参数类型到类自身的隐式类型转换。对于像 **复数** 这样的隐式类型转换会非常有用；忽略虚部，就会得到实数轴上的一个复数，这是符合数学定义的
+> [!tip] 使用默认参数消除关联的构造函数，从而减少构造函数的数量
+> 
+> C++ 的函数支持默认参数，通过默认参数可以使用更少的实参调用函数。因此，使用默认参数的构造函数可以匹配多重调用，从而减少构造函数的数量
+> 
 
-```cpp
-complex<double> x {1};  // complex<double>(1.0, 0.0)
+```cpp title:person.hpp
+class Person {
+
+    char *_name;              // 姓名
+    int _age;                 // 年龄
+    unsigned short _phone[11];  // 电话号码
+
+public:
+
+    Person(const char *name, int age, const unsigned short *phone=nullptr) {
+        _name = new char[strlen(name) + 1];
+        strcpy(_name, name);
+        _age = age;
+        
+        // 如果 phone 为空，则将 _phone 数组清零
+        if(!phone) {
+            memset(_phone, 0, sizeof(_phone));
+            return;
+        }
+        // 否则，将 phone 数组的内容拷贝到 _phone 数组
+        memcpy(_phone, phone, sizeof(_phone));
+    }
+
+    void show();
+};
 ```
 
-> [!tip]
-> 
-> 对于多数的其他类型，这种隐式类型转换往往是混乱和错误的根源
-> 
+```cpp title:person.cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
 
-比如，下列代码使用了我们定义的 `Date` 类，第 $7$ 行和第 $8$ 行可读性非常差，因为数值 $15$ 和 `Date` 之间并无明显清晰的逻辑关联
+#include "person.hpp"
 
-```cpp hl:7,8
-void my_fct(Date d);
+void Person::show(){
+    cout << "name: " << _name 
+    << ", age: " << _age << ", phone: ";
 
-void f()
-{
-	Date d{15};  // d 变为 {15, today.m, today.y}
-	// ...
-	my_fct(15); // 混乱的
-	d = 15;     // 混乱的
+    for(int i = 0; i < sizeof(_phone)/sizeof(_phone[0]); i++) {
+        cout << _phone[i];
+    }
+    cout << endl;
+}
+
+
+int main() {
+    Person p{"张三", 20};
+    p.show();
+    Person p2{"李四", 21, (unsigned short []){1,3,5,2,1,6,6,9,7,2,1}};
+    p2.show();
+    return 0;
 }
 ```
 
-幸运的是，**C++ 支持我们指明构造函数不能作为隐式类型转换**。如果构造函数的声明带有关键字 `explicit`，则它只能用于初始化和显示类型转换
+编译运行 `person.cpp` 的结果为
 
-> [!tip] 
-> 
-> 关键字 `explicit` 清楚的说明了构造函数仅仅用于构造对象。即，被限定为 `explicit` 的构造函数只能用于初始化和显示类型转换
-> 
-
-```cpp hl:16
-class Date
-{
-public:
-    
-    explicit Date(int = 0, int = 0, int = 0); // 构造函数：年 - 月 - 日
-    explicit Date(const char *);  // 构造函数：字符串表示的日期
-    // ...
-
-private:
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
-};
-
-Date d1{15}; // 正确：直接初始化
-Date d2 = Date{15}; // 正确：拷贝初始化
-Date d3 = {15}; // 错误：不允许隐式类型转换
-Date d4 = 15; // 错误：不允许隐式类型转换
-
-void f()
-{
-    my_fct(15); // 错误：不允许隐式类型转换
-    my_fct({15}); // 错误：不允许隐式类型转换
-    my_fct(Date{15}); // 正确：显示类型转换
-}
+```shell
+➜  cppfiles g++ -g person.cpp -o person
+➜  cppfiles ./person
+name: 张三, age: 20, phone: 00000000000
+name: 李四, age: 21, phone: 13521669721
 ```
-
-上面代码中的第 $16$ 行使用等号(`=`) 的方式初始化可以看做 **拷贝初始化**
-
-> [!tip] 拷贝初始化
-> 
-> 初始化器的副本被放入待初始化的对象中
-> 
-> 注意：如果初始化器是一个右值，这种拷贝可能会被编译器优化掉，而采用移动的方式进行初始化
-> 
-
-> [!tip] 直接初始化：省略拷贝初始化中的 `=`
-> 
-> 省略 `=` 会将初始化变为 **显示初始化**，也称 **直接初始化**
-> 
-
-默认情况下，应该始终将单参构造函数声明为 `explicit`。除非有很好的理由，否则的话就应该按默认方式
-
-> [!hint] 
-> 
-> 如果定义隐式类型转换，最好注明原因，否则代码维护者可能怀疑你疏忽了或则不懂这一原则
-> 
-
-请注意：如果一个构造函数声明为 `explicit` 且定义在类外，则定义构造函数是不需要重复 `explicit`
-
-```cpp
-class Date {
-	// ... 表现形式
-public:
-	explicit Date(int dd);
-};
-
-Date::Date(int dd) {/* ... */} // 正确的
-explicit Date:Date(int dd) {/* ... */} // 错误
-```
-
-> [!tip] 
-> 
-> `explicit` 也可以用于无参或多参构造函数，只是大多数 `explicit` 起重要作用的都是接受单一参数的构造函数
-> 
 
 ### 类内初始化器
 
-当使用多个构造函数时，成员初始化可以是重复的
+类 `Person` 的构造函数 `Person()` 中是对数据成员的赋值而不是初始化。在 C++ 中，对类对象的初始化是使用 **初始化列表** 完成的
 
-```cpp
-class Date
-{
+> [!tip] 初始化列表
+> 
+> 位于构造函数的参数列表之后，函数体之前。用冒号(`:`) 开始，如果需要初始化多个数据成员使用逗号(`,`)分隔
+> 
+> 初始值采用 `{}` 或者 `()` 形式给出
+> 
+
+```cpp title:person.hpp
+class Person {
+
+    char *_name;              // 姓名
+    int _age;                 // 年龄
+    unsigned short _phone[11];  // 电话号码
+
 public:
-    
-    Date(int = 0, int = 0, int = 0); // 构造函数：年 - 月 - 日
-    Date(int, int);      // 构造函数：日 - 月 - 当前年
-    Date(int);           // 构造函数：日 - 当前月 - 当前年
-    Date();              // 构造函数：默认 Date: today
-    Date(const char *);  // 构造函数：字符串表示的日期
-    // ...
 
-private:
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
+    Person(const char *name, int age, const unsigned short *phone=nullptr)
+    : _name{new char[strlen(name) + 1]}, _age{age}, _phone{0}
+     {
+        
+        strcpy(_name, name);
+        
+        // 如果 phone 为空，则将 _phone 数组清零
+        if(!phone) {
+            memset(_phone, 0, sizeof(_phone));
+            return;
+        }
+        // 否则，将 phone 数组的内容拷贝到 _phone 数组
+        memcpy(_phone, phone, sizeof(_phone));
+    }
+    void show();
 };
 ```
 
-通过引入默认参数，可以减少构造函数的数量来解决重复初始化的问题。另一种方法就 **为数据成员添加初始化器**
+由于构造函数可以重载，这个初始化列表可能需要多次书写。因此，我们可以使用 **类内初始化器**
 
-```cpp
-class Date
-{
+```cpp title:person.hpp
+class Person {
+
+    char *_name {nullptr};              // 姓名
+    int _age {0};                 // 年龄
+    unsigned short _phone[11]{0};  // 电话号码
+
 public:
-    
-    Date(int = 0, int = 0, int = 0); // 构造函数：年 - 月 - 日
-    Date(int, int);      // 构造函数：日 - 月 - 当前年
-    Date(int);           // 构造函数：日 - 当前月 - 当前年
-    Date();              // 构造函数：默认 Date: today
-    Date(const char *);  // 构造函数：字符串表示的日期
-    // ...
 
-private:
-    int __year{today.__year};  // 年：类内初始化器
-    int __month{today.__month};  // 月
-    int __day{today.__day};  // 日
+    Person(const char *name, int age, const unsigned short *phone=nullptr);
+    void show();
 };
 ```
 
-> [!tip] 类内初始化器
-> 
-> 在类内部直接给成员变量添加的初始化器
-> 
+现在，类 `Person` 对象的每个数据成员都有初始值了。当然，也可以在构造函数中自定的初始化列表
 
-通过类内初始化器，现在每个构造函数都已经初始化了类的表现形式。当然，构造函数也可以携带 **初始化列表**，从而完成对类数据成员的初始化
-
-> [!tip] 构造函数初始化列表
-> 
-> 构造函数的初始化列表位于构造函数的形式参数列表之后，函数体之前。用冒号(`:`)开始，如果有多个数据成员，则用逗号分隔
-> 
-
-```cpp
-Date :: Date(int dd, int mm, int yy): d{dd} // 类内初始化器
+```cpp title:person.cpp
+Person::Person(const char *name, int age, const unsigned short *phone) 
+:_name{new char[strlen(name)+1]}, _age{age}
 {
-   // 检测 Date 是否合法
-} 
+
+    strcpy(_name, name);
+    
+    // 如果 phone 为空，则将 _phone 数组清零
+    if(!phone) {
+        memset(_phone, 0, sizeof(_phone));
+        return;
+    }
+    // 否则，将 phone 数组的内容拷贝到 _phone 数组
+    memcpy(_phone, phone, sizeof(_phone));
+}
 ```
 
 这段代码等价于
 
 ```cpp
-Date :: Date(int dd, int mm, int yy): d{dd}, m{today.m}, y{today.y}
+Person::Person(const char *name, int age, const unsigned short *phone) 
+:_name{new char[strlen(name)+1]}, _age{age}, _phone{0}
 {
-   // 检测 Date 是否合法
-} 
-```
 
-### 类内函数定义
-
-如果一个函数不仅在类中声明，还在内中定义，那么该函数被当做内联函数^[[[C++：与 C 的差异#inline 函数]]]
-
-> [!tip] 
-> 
-> 只有那些很小并且不经常修改的函数才适合在类中定义
-> 
-
-类中定义的函数默认被当做内联函数处理。这样可以在多个编译单元中使用 `#inlcude` 重复包含类内定义的成员函数，无论在哪里使用 `#include`，其含义都是保持一致的
-
-> [!important] 
-> 
-> 类成员可以访问同类的其他成员，不管成员在哪里定义。所以，**函数和数据成员的访问不依赖与声明的顺序**
-> 
-> 这种风格常用来 **保持类定义更为简单易读**。它还 **实现了类接口和类实现在文本上的分离**
-> 
-
-```cpp
-// 在类中定义函数
-class Date
-{
-public:
-	//....
-    void addMonths(int n) {__month += n;};  // 在类中定义
-
-private:
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
-};
-
-// 在类外定义函数
-class Date
-{
-public:
-	//....
-    void addMonths(int n);         // 增加 n 月
-
-private:
-    int __year;  // 年
-    int __month;  // 月
-    int __day;  // 日
-};
-
-inline void Date::addMonths(int n)
-{
-	__month += n; 
+    strcpy(_name, name);
+    
+    // 如果 phone 为空，则将 _phone 数组清零
+    if(!phone) {
+        memset(_phone, 0, sizeof(_phone));
+        return;
+    }
+    // 否则，将 phone 数组的内容拷贝到 _phone 数组
+    memcpy(_phone, phone, sizeof(_phone));
 }
 ```
 
-### 可变性
+### 对象占用的内存空间
 
-一个名字既可以是一个保存 **不可变值** 的对象，也可以是一个保存 **可变值** 的对象
+C++ 中 `class` 与 `struct` 本质上是一样的。因此一个类对象占用的空间取决于数据成员的大小及其声明顺序和内存对齐
 
-> [!tip] 不可变值
+> [!tip] 
 > 
-> 某些变量被 `const` 限制为只读，称为 `const` 变量
+> 数据成员的大小参考 [[C 语言：基本概念#基本类型]]
 > 
-
-系统地使用不可变对象有利于产生更容易理解的代码，有利于尽早发现错误，而且有时会提高性能
-
-> [!tip]
-> 
-> 不可变性在多线程编程中是一个非常有用的特性
+> 内存对齐参考 [[C 语言：结构体#内存对齐]]
 > 
 
-为了使不可变性不局限于内置类型的简单常量定义，必须能定义可操作用户自定义 `const` 对象的函数。对于独立的函数而言，这意味着函数可接受 `const T&` 参数。而对类而言，这意味着我们必须定义能操作 `const` 对象的成员函数
+类 `Person` 的尺寸由数据成员 `_name` `_age` 和 `_phone` 以及对齐方式确定
 
-#### 常量成员函数
+```cpp
+class Person {
 
-到目前为止，我们所定义的 `Date` 提供了一些能为 `Date` 赋值的函数。不幸的是，我们没有提供检查 `Date` 值的方法。通过增加读取天、月和年
-
-```cpp hl:6,9,12
-class Date {
-    int __year;   // 年
-    int __month;  // 月
-    int __day;    // 日
-public:
-    int year() const {
-        return __year;
-    }
-    int month() const {
-        return __month;
-    }
-    int day() const {
-        return __day;
-    }
-    
-    // 增加 y 年
-    void addYears(int y) {
-        __year += y;
-    }
+    char *_name {nullptr};              // 姓名
+    int _age {0};                 // 年龄
+    unsigned short _phone[11]{0};  // 电话号码
     // ...
-};
+}; 
 ```
 
-在上述代码高亮部分的函数声明中，参数列表后的 `const` 指明这些函数不会修改 `Date` 的状态
++ 成员 `_name` 是一个指针，在 $64$ 位平台上占 $8$ 字节；该成员会放在地址为 $8$ 的倍数的位置
++ 成员 `_age` 是 `int` 类型，在 $64$ 位平台上占 $4$ 字节；该成员会放在地址为 $4$ 的倍数的位置
++ 成员 `_phone` 是 `short` 类型的数组，一个 `short` 在 $64$ 位平台上占 $2$ 字节；该成员会放在地址为 $2$ 的倍数的位置
 
-> [!tip] 编译器试图检查修改 `Date` 对象的代码
-> 
-> 编译器会试图捕获违反此承诺的代码
-> 
+由于 `Person` 类最大对齐位置是 $8$，因此 `Person` 对象会放在地址为 $8$ 的倍数的位置。下图展示了 `Person` 对象的内存布局
 
-```cpp
-int Date::year() const 
-{
-    return ++y; // 错误：试图在 const 函数中改变成员值
+![[Pasted image 20250127004946.png]]
+
+因此 `Person` 类的对象占用 $40$ 字节。下面的代码验证了该结果是否正确
+
+```cpp title:person.cpp
+int main() {
+    Person p{"张三", 20};
+    p.show();
+    cout << "sizeof(p): " << sizeof(p) << endl;
+    return 0;
 }
 ```
 
-> [!tip] 
-> 
-> `const` 成员函数的定义在类外时，必须使用 `cosnt` 后缀。因为  `const` 是常量成员函数类型的一部分
-> 
+编译运行的结果为
 
-```cpp
-int Date::year() //  // 错误：遗漏了 cosnt 声明后缀
-{
-    return y;
-}
+```shell
+➜  cppfiles g++ -g person.cpp -o person
+➜  cppfiles ./person
+name: 李四, age: 21, phone: 13521669721
+sizeof(p): 40
 ```
 
-`const` 和非 `const` 对象都可以调用 `cosnt` 成员函数。非 `const` 成员函数只能被非 `const` 对象调用
-
-```cpp
-void f(Date& d, const Date & cd)
-{
-    int i = d.year();  // OK
-    d.addDays(10); // OK
-    
-    int j = cd.day(); // OK
-    cd.addYears(1); // 错误：不能改变 cont Date 对象的值
-}
-```
-
-#### 逻辑常量性
-
-> [!tip] **逻辑常量性**：`const` 成员函数修改了用户不能直接观察的某些细节
+> [!question] 空对象占用多少字节呢？
 > 
-> 一个成员函数逻辑上是 `const`，但它仍需要改变成员的值。换句话说就是，对一个用户而言，函数看起来不会改变其对象的状态，但它更新了用户不能直接观察的某些细节
+> 没有任何数据成员的类的对象占用 $1$ 字节的内存空间。这个一个字节中的数据是没有任何用处的数据，只是为了实现对类对象的引用。
+> 
+> 如果对象不占用的任何空间，该对象的引用将无法创建
 > 
 
-例如，类 `Date` 可能有一个返回字符串表示的函数。构造这个字符串表示非常耗时，因此，保存一个拷贝，在反复要求获取字符串表示时可以简单的返回此拷贝，除非 `Date` 的值已经被改变。
+```cpp title:test.cpp
 
-```cpp
-#include <string>
-
-using namespace std;
-
-class Date
-{
-public:
-	// ...
-    string date2str() const; // 字符表示的 Date
-    
-private:
-	// ...
-    bool cache_valid;
-    string cache;
-    string _date2str(); // 计算并填入缓存
-};
-```
-
-从用户角度来看，`date2str` 并未改变其 `Date` 的状态，因此它显示应该是一个 `const` 成员函数。然而，有时候必须改变成员 `cache` 和 `cache_valid`，这种设计才能起作用
-
-#### mutable
-
-我们可以将一个类成员定义为 `nutable`，表示即使在 `const` 对象中，也可以修改此成员
-
-```cpp
-class Date
-{
-public:
-	// ...
-    string date2str() const;  // 字符串时间
-
-private:
-	// ...
-    mutable bool ccache_valid;  // 可变成员:即使在 const 中，也可以被修改
-    mutable string cache;  // 可变成员
-    string _strdate(); // 计算并填入可变的缓存
-};
-```
-
-现在可以定义 `date2str()` 
-
-```cpp
-string Date::date2str() const {
-    if(!cache_valid)
-    {
-        _data2str();
-        cache_valid = true;
-    }
-    return cache;
-}
-```
-
-> [!tip]
-> 
-> `date2str()` 即可用于 `const` 对象，也可用于非 `const` 对象 
->  
-
-#### 间接访问实现可变性
-
-对于小对象的表现形式只有一小部分允许改变的情形，将成员声明为 `mutable` 是最合适的。但是，通常更好的方式是 **将需要改变的数据存分在一个独立的对象** 中，**间接访问它们**
-
-```cpp
-
-struct cache {
-	bool valid;
-	string rep;
-};
-
-class Date {
-public:
-	// ...
-	string date2str() const
-
-private:
-	cache * c;
-	void compute_cache_value() const;
-	// ....
-};
-
-string Date::date2str() const {
-    if(!c->valid)
-    {
-        compute_cache_value();  // 计算并填入缓存
-        c->valid = true;
-    }
-    return c->rep;
-}
-```
-
-> [!tip] 
-> 
-> 支持缓存的编程技术可以推广到各种形式的懒惰求值
-> 
-
-注意，`const` 不能应用到通过指针或在引用访问的对象。编译器不能将这种指针或引用与其他指针或引用区分开来。即，**成员指针没有任何与其他指针不同的特殊语义**
-
-### 自引用
-
-我们定义的状态更新函数 `addYears(), addMonths(), addDays()` 是不返回值的。对于这样一组的更新函数，一种通常很有用的技术是令它们返回已更新对象的引用，这样这些操作可以串联起来
-
-```cpp
-void f(Date &d)
-{
-	//...
-	d.addYears(1).addMonths(1).addDays(1);
-	//...
-}
-```
-
-为了实现这种链式调用，必须将每个函数都声明为返回一个 `Date` 引用
-
-```cpp
-class Date
-{
-public:
-    //...
-    Date& addDays(int n);           // 增加 n 天
-    Date& addMonths(int n);         // 增加 n 月
-    Date& addYears(int n);          // 增加 n 年
-    //...
-};
-```
-
-非 `static` 成员函数都知道哪个对象调用它，并能显示引用这个对象
-
-```cpp
-Date& Date::addYears(int yy) {
-    if(__day == 29 && __month == 2 && !leapyear(y+yy))  // 小心 2 月 29
-    {
-        __day = 1;
-        __month = 3;
-    }
-    __year += yy;
-    return  *this;
-}
-```
-
-> [!tip] `this` 指针
-> 
-> `this` 是一个指针，指向调用该成员函数的对象
-> 
-> 在类 `X` 的非 `const` 成员函数中，`this` 的类型是 `X *`。`this` 是一个右值，无法获得 `this` 的地址，或给 `this` 赋值
-> 
-> 在类 `X` 的 `const` 成员函数中，`this` 的类型是 `const X *`，防止意外修改对象的状态
-> 
-
-`this` 的使用大多数是隐式的。每当我们引用类内的一个非 `static` 成员时，都依赖于一次 `this` 的隐式使用来获得恰当对象的该成员。例如，成员函数 `addYears` 可以如下定义
-
-```cpp
-```cpp
-Date& Date::addYears(int yy) {
-    if(this->__day == 29 && this->__month == 2 && !leapyear(this->__year + yy))  // 小心 2 月 29
-    {
-        this->__day = 1;
-        this->__month = 3;
-    }
-    this->__year += yy;
-    return  *this;
-}
-```
-
-### static 成员
-
-为 `Date` 设定默认值的确非常方便，但是会带来潜在问题。因为 `Date` 类会依赖全局变量 `today`。这样 `Date` 类只能用于定义和正确使用 `today` 的上下文中。
-
-> [!attention] 
-> 
-> 这就限制一个类只有在最初编写它的上下文才有用。尝试使用这种上下文依赖的类会给用户带来很多意料之外的不快，代码维护也变得很混乱
-> 
-
-幸运的是，我们可以是使用 `static` 成员从而获得这种便利性其实不需要承担使用公开访问的全局变量的负担。
-
-
-> [!tip] `static` 成员：属于类但不属于类的任何对象
-> 
-> 是类的一部分但不是某个类对象的一部分的成员，静态(`static`)成员
-> +  **static 变量**： 只有唯一副本，而不是像普通非 `static` 成员那样每个对象都有其副本
-> + **static 函数**： 需要访问类成员但又不需要通过特定对象调用的函数
-> 
-
-下面是重新设计的版本，它保留了 `Date` 默认构造函数的语义，又没有依赖全局变量
-
-```cpp
-#ifndef DATE_H
-#define DATE_H
-
-class Date {
-public:
-	// ...
-    static void setDefault(int year, int month, int day);  // 静态成员函数
-private:
-    int __year;   // 年
-    int __month;  // 月
-    int __day;    // 日
-
-    static Date default_date;  // 静态数据成员
-    // ...
-};
-
-#endif //DATE_H
-```
-
-使用 `default_date` 的 `Date` 构造函数如下
-
-```cpp
-Date::Date(int dd, int mm, int yy)
-{
-    __day = dd ? dd : default_date.__day;
-    __month = mm ? mm : default_date.__month;
-    __year = yy ? yy : default_date.__year;
-    // 检查 Date 是否合法
-}
-```
-
-使用 `set_default()`，在恰当的时候改变默认值。可以x像引用任何其他成员一样引用 `static` 成员。此外，不必提及任何对象即可引用 `static` 成员，方法使用 `类名::`
-
-```cpp
-void f()
-{
-	Date::set_default(4, 5, 1945);
-}
-```
-
-**如果使用了 static 函数或数据成员，就必须在某处定义它们**。在 `static` 成员的定义中不要重复关键字 `static`
-
-```cpp
-Date Date::default_date{16, 12, 1770}; // Date::default_date 的定义
-
-void Date::set_default(int dd, int mm, int yy) { //  Date::set_default 的定义
-    default_date = {dd, mm, yy};
-}
-```
-
-> [!attention] 
-> 
-> 注意，写在 `class` 作用域内仅仅是声明，不会为其分配内存空间
-> 
-
-注意，`Date{}` 表示 `Date::default_date` 的值。因此，我们不需要一个独立的函数来读取默认值。而且，目标类型为 `Date` 无疑时，更简单的 `{}` 就足够了
-
-下面是关于 `static` 数据成员与 `static` 成员函数的基本使用方法
-
-```cpp
 #include <iostream>
 using namespace std;
-class Date
-{
-private:
-    int d, m, y;
-    static Date default_date;  // 静态成员，属于类但不属于类对象中
+
+
+class A {};
+
+int main() {
+    cout << "sizeof(A): " << sizeof(A) << endl;
+    return 0;
+}
+```
+
+这段代码的输出结果为
+
+```shell
+➜  cppfiles g++ test.cpp -o test       
+➜  cppfiles ./test  
+sizeof(A): 1
+```
+
+## 对象的销毁
+
+我们定义的 `Person` 类有一个指针成员，并且在构造函数中为指针成员申请了内存。当 `Person` 类的对象不再使用时，申请的内存应该需要被释放。然而，我们并没有执行任何 `delete` 语句
+
+> [!tip]
+> 
+> 一个类的对象如果持有堆空间，当对象不能被访问时就应该释放对象持有的堆空间，否则就会造成 **资源泄漏**
+> 
+
+### valgrind 工具箱
+
+`valgrind` 是一种开源工具集，它提供了一系列用于调试和分析程序的工具。其中最为常用和强大的工具就是 **memcheck**。它是 valgrind 中的一个内存错误检查器，它能够对 C/C++ 程序进行内存泄漏检测、非法内存访问检测等工作。
+
+```shell
+sudo pacman -Syu valgrind
+```
+
+安装完成后，我们使用 `memcheck` 工具检查我们的 `Person` 类对象在销毁时是否有残留的未释放的内存
+
+```shell
+valgrind --tool=memcheck ./person
+```
+
+如果想要更详细的泄漏情况，如造成泄漏的代码定位，编译时加上 `-g`
+
+```shell
+valgrind --tool=memcheck --leak-check=full ./person
+```
+
+如果需要查看静态区的情况，还需要
+
+```shell
+valgrind --tool=memcheck --leak-check=full --show-reachable=yes ./person
+```
+
+> [!tip] 但是这么长的指令使用起来不方便，每查一次就得输入一次
+> 
+> 为了解决这个问题，我们可以在 `.zshrc` 或者 `.profile` 中添加别名
+> 
+>  ```shell
+> alias memcheck='valgrind --tool=memcheck --leak-check=full --show-reachable=yes'
+> ```
+> 
+
+下面我们使用 `memcheck` 工具查看 `Person` 类是否发生内存泄漏
+
+```shell hl:12,13,25-30
+➜  cppfiles memcheck ./person 
+==58917== Memcheck, a memory error detector
+==58917== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==58917== Using Valgrind-3.24.0 and LibVEX; rerun with -h for copyright info
+==58917== Command: ./person
+==58917== 
+name: 张三, age: 20, phone: 00000000000
+name: 李四, age: 21, phone: 13521669721
+sizeof(p): 40
+==58917== 
+==58917== HEAP SUMMARY:
+==58917==     in use at exit: 14 bytes in 2 blocks
+==58917==   total heap usage: 4 allocs, 2 frees, 74,766 bytes allocated
+==58917== 
+==58917== 7 bytes in 1 blocks are definitely lost in loss record 1 of 2
+==58917==    at 0x4846613: operator new[](unsigned long) (vg_replace_malloc.c:729)
+==58917==    by 0x109208: Person::Person(char const*, int, unsigned short const*) (in /home/dyp/文档/cppfiles/person)
+==58917==    by 0x109388: main (in /home/dyp/文档/cppfiles/person)
+==58917== 
+==58917== 7 bytes in 1 blocks are definitely lost in loss record 2 of 2
+==58917==    at 0x4846613: operator new[](unsigned long) (vg_replace_malloc.c:729)
+==58917==    by 0x109208: Person::Person(char const*, int, unsigned short const*) (in /home/dyp/文档/cppfiles/person)
+==58917==    by 0x1093F5: main (in /home/dyp/文档/cppfiles/person)
+==58917== 
+==58917== LEAK SUMMARY:
+==58917==    definitely lost: 14 bytes in 2 blocks
+==58917==    indirectly lost: 0 bytes in 0 blocks
+==58917==      possibly lost: 0 bytes in 0 blocks
+==58917==    still reachable: 0 bytes in 0 blocks
+==58917==         suppressed: 0 bytes in 0 blocks
+==58917== 
+==58917== For lists of detected and suppressed errors, rerun with: -s
+==58917== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+```
+
+> [!tip] 
+> 
+> 由于 `Person` 类的对象没有释放其持有的堆空间，造成内存泄漏
+> 
+
+那么如何进行妥善的内存回收呢？这需要交给 **析构函数** 来完成。
+
+### 析构函数
+
+构造函数初始化对象。它创建供成员函数进行操作的环境。创建环境时需要获取资源，如文件、锁、内存等，这些资源在使用后必须释放
+
+为了确保类的对象释放这些资源，需要一个可以 **自动触发的函数**，**保证在对象销毁时被调用**，这样的函数称为类的 **析构函数**。析构函数与类的构造函数做相反的操作，因此析构函数的名字就是取反符号(`~`)后面跟上类名即可。
+
+> [!tip] 
+> 
+> 析构函数与构造函数做的事情时相反的。析构函数名就是取反符号(`~`)后面紧跟类名
+> 
+
+以 `Person` 类为例，在对象初始化时在堆空间中申请了内存。因此，当对象不再被访问时，就应该自动调用析构函数释放内存
+
+```cpp title:person.hpp
+class Person {
+
+    char *_name {nullptr};              // 姓名
+    int _age {0};                 // 年龄
+    unsigned short _phone[11]{0};  // 电话号码
 
 public:
-    Date(int = 0, int = 0, int = 0);  // 构造函数
-
-    // 非修改性函数，用于查询 Date
-    int year() const {return y;}
-    int month() const {return m;}
-    int day() const {return d;}
-
-    static void set_default(int dd, int mm, int yy);  // 静态成函数员
-};
-
-
-Date::Date(int dd, int mm, int yy) {
-    d = dd ? dd : default_date.day();
-    m = mm ? mm : default_date.month();
-    y = yy ? yy : default_date.year();
-}
-
-// 注意，在定义静态函数时，不需要重复关键字 static
-void Date::set_default(int dd, int mm, int yy) {
-    default_date = {dd, mm, yy};
-}
-
-
-Date Date::default_date {16, 12, 1770};  // 使用前需要先定义
-
-int main()
-{
-    Date::set_default(4, 5, 1945);  // 修改默认值
-    Date date;
-    cout << date.day() << '/' << date.month() << '/' << date.year() << endl;
-}
-```
-
-
-### 成员类型
-
-> [!tip] 
-> 
-> 类型和类型别名也可以作为类的成员
-> 
-
-```cpp
-template <typename T>
-class Tree {
-    using value_type = T;
-    enum Policy {rb, splay, treeps};
-    class Node 
-    {
-        value_type value;
-        Node* left;
-        Node* right;
-    public:
-        void f(Tree *);
-    };
-    Node * top;
-public:
-    void g(const T&);
+    // 构造函数
+    Person(const char *name, int age, const unsigned short *phone=nullptr);
+    // 析构函数
+    ~Person();
+    void show();
 };
 ```
 
-> [!tip] 成员类
-> 
-> 常称为嵌套类，**可以引用其所属类的类型和 `static` 成员**
-> 
-> 注意：当给定所属类的一个对象时，只能引用非 `static` 成员
-> 
-
-**嵌套类可以访问其所属类的成员**，甚至是 `privite` 成员，与成员函数类似。但是，它 **没有当前类对象的概念**
-
-```cpp
-template <typename T>
-void Tree<T>::Node::f(Tree * p) {
-    top = right; // 错误：未指定类型为 Tree 的对象
-    p->top = right; //
-    value_type v = left->value; // 正确：value_type 不予某个对象关联
+```cpp title:person.cpp
+Person::~Person() {
+    if (_name) {
+        delete [] _name; 
+    }   
 }
 ```
 
-相反，一个类没有任何特殊权限能访问其嵌入类的成员
+现在，我们再一次使用 `memcheck` 工具检查 `person` 对象是否有内存泄漏
 
-```cpp
-template <typename T>
-void Tree<T>::g(Tree::Node * p) {
-    value_type val = right->value; // 错误: 没有 Tree::Node 类型的对象
-    value_type v = p->right->value; // 错误: Node::right 是私有的
-    p->f(this); // 正确：this 的类型是 Tree<T> *
-}
+```shell
+➜  cppfiles memcheck ./person
+==62315== Memcheck, a memory error detector
+==62315== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==62315== Using Valgrind-3.24.0 and LibVEX; rerun with -h for copyright info
+==62315== Command: ./person
+==62315== 
+name: 张三, age: 20, phone: 00000000000
+name: 李四, age: 21, phone: 13521669721
+==62315== 
+==62315== HEAP SUMMARY:
+==62315==     in use at exit: 0 bytes in 0 blocks
+==62315==   total heap usage: 4 allocs, 4 frees, 74,766 bytes allocated
+==62315== 
+==62315== All heap blocks were freed -- no leaks are possible
+==62315== 
+==62315== For lists of detected and suppressed errors, rerun with: -s
+==62315== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
 
-> [!tip] 
-> 
-> **成员类更多是提供了一种符号表示上的便利**，而非一种重要的语言特性
-> 
+显然，在使用析构函数之后，对象持有的堆空间中的内存就被释放了，所以就没有内存泄漏了
 
-## 具体类
+### 构造和析构函数的调用时机
 
-程序中会经常使用大量较小的抽象，例如，整数、浮点数、复数、指针等。每个程序都使用若干这种小的抽象，其中一些简单的具体类型经常被大量使用。
 
-C++ 直接支持一部分抽象作为内置类型。但是，大多数抽象并不支持，C++ 语言也很难做到这一点。而且，一个通用的编程语言也无法遇见所有应用的细节需求。因此，语言必须为用户提供定义小的具体类型的机制。这种类型称为 **具体类型** 或者 **具体类**
-
-> [!tip] 
+> [!tip] 全局对象
 > 
-> 如果一个 **类的表示是其定义的一部分**，我们就称它是 **具体** 的，或者称它是一个**具体类**。在定义中明确类的表示方法令我们能
+> 程序开始运行时，在 `main()` 函数被调用前就会调用全局对象的构造函数
 > 
-> + 将对象置于栈、静态分配的内存以及其他对象中
-> + 拷贝和移动对象
-> + 直接引用具名对象
+> 在程序结束运行时，自动调用全局对象的析构函数
 > 
 
-这令具体类易于推断，编译器也容易为之生成优化的代码。因此，我们更倾向于对频繁使用且性能攸关的小类型使用具体类。例如，复数、智能指针、容器
+> [!tip] 局部对象
+> 
+> 程序控制到达局部对象的定义处时，自动调用构造函数
+> 
+> 程序的控制离开局部对象的作用域时，自动调用析构函数
+> 
 
-很好地支持这种用户自定义类型地定义和使用是 C++ 早期就明确的目标。总的来说，简单和平凡要比复杂和精致重要得多
+> [!tip] static 静态对象
+> 
+> 程序控制到达 static 静态对象的定义位置时，自动调用构造函数
+> 
+> 程序结束运行时，自动调用所有的 static 静态对象的析构函数
+> 
 
-```cpp
-#include <string>
+> [!tip] 堆空间中的对象
+> 
+> 程序的控制从 `new` 返回时自动调用构造函数
+> 
+> 程序控制执行到 `delete` 时自动调用析构函数
+> 
 
-using namespace std;
-
-namespace Chrono
-{
-    enum class Month:unsigned char {
-       illegal = 0, jan = 1, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec
-    };
-    
-    class Date
-    {
-    public:
-        class Bad_date { }; // 异常类
-
-        explicit Date(int = {}, Month = {}, int = {}); // {} 表示默认值
-
-        // 非修改性函数，用于查询 date
-        int day() const;
-        Month month() const;
-        int year() const;
-
-        string string_rep() const; // 返回字符串表示
-        void char_rep(char s[], int max) const; // 返回字符串表示
-
-        // 修改性函数，用于修改 date
-        Date& add_year(int n); // 增加 n 年
-        Date& add_month(int n); // 增加 n 月
-        Date& add_day(int n); // 增加 n 天
-    private:
-        bool is_valid(); // 检查 date 是否合法
-        int d;  // day
-        Month m; // month
-        int y; // year
-    };
-    bool is_date(int d, Month m, int y); // 检查 date 是否合法
-    bool is_leapyear(int y); // 检查 y 是否为闰年
-	
-	// 运算符重载
-    bool operator==(const Date& a, const Date& b);
-    bool operator!=(const Date& a, const Date& b);
-
-    const Date& default_date(); // 返回默认 date
-    ostream& operator<<(ostream& os, const Date& d);
-    istream& operator>>(istream& is, Date& dd);
-} // namespace Chrono
-```
-
-上述这组操作是一个典型的用户自定义类型
-+ 一个构造函数指出此类型的对象/变量如何初始化；
-+ 一组允许用户检查 `Date` 的函数。这些函数标记为 `const`，表面它们不会修改调用它的对象/变量的状态
-+ 一组允许用户无须了解表示细节也无须摆弄复杂语法即可修改 `Date` 的函数
-+ 隐式定义操作，允许 `Date` 自由拷贝
-+ 类 `Bad_date` 用来报告错误，抛出异常
-+ 一组有用辅助函数，不是类成员，不能直接访问 `Date` 的表现形式，但是我们认为它们与名字空间 `Chrono` 的使用是相关的
