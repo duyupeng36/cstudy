@@ -187,6 +187,13 @@ int main() {
 name: , age: -1301635008
 ```
 
+> [!attention] 
+> 
+> 私有成员的保护依赖于对类成员名的使用限制。通过地址或显示类型转换可以绕过 `private` 的保护
+> 
+> C++ 只能防止意外而无法防止故意规避。只有硬件才能完美防止语言的恶意使用，而实际系统中很难实现
+> 
+
 ### class 和 struct 对比
 
 在 C++ 中，`struct` 本质也是 `class`，与 `class` 的唯一差异就是成员的默认访问控制不同。
@@ -1106,12 +1113,312 @@ Point::Point(int ix, int iy): _ix{ix}, _iy{ix} {}
 
 C++ 还支持 `const` 成员函数，用于表示该函数的调用不会修改对象的任何数据成员。编译器会捕捉 `const` 成员函数体中视图修改数据成员的操作
 
-```cpp
+我们在 [[#类定义]] 中定义的 `Person` 类中有一个成员函数 `show()`，它不会修改任何数据成员，也不应该修改任何数据成员。因此，我们可以将其声明为 `const` 成员函数
 
+```cpp title:person.hpp
+class Person {
+
+    char *_name {nullptr};              // 姓名
+    int _age {0};                 // 年龄
+    unsigned short _phone[11]{0};  // 电话号码
+
+public:
+	// ...
+    void show() const;  // const 成员函数
+};
 ```
 
+> [!tip] 
+> 
+> 在定义时，`const` 关键字必须跟随。因为 `cosnt` 是函数类型的一部分，而不是声明
+> 
 
+```cpp title:person.cpp
+void Person::show() const {  // 这个 cosnt 不能丢失，否则会出现编译错误
+    cout << "name: " << _name 
+    << ", age: " << _age << ", phone: ";
 
+    for(int i = 0; i < sizeof(_phone)/sizeof(_phone[0]); i++) {
+        cout << _phone[i];
+    }
+    cout << endl;
+}
+```
 
+> [!tip] 
+> 
+> `const` 成员函数可以被 `const` 对象和非 `const` 对象调用。然而，普通成员函数只能被非 `const` 对象调用
+> 
 
+### mutable 数据成员
 
+某些成员函数在逻辑上是 `const`，但它仍然需要修改成员的值。即对一个用户而言，成员函数看起来不会改变对象的状态，但是它更新了用户不能直接观察的某些细节
+
+> [!tip] 逻辑常量性
+> 
+> 某些 `const` 成员函数会在背后修改一些用户不能直接观察的细节，这通常被称为 **逻辑常量性**
+> 
+
+例如，类 `Date` 可能会有一个返回字符串表示的函数。由于构造字符串通常是非常耗时的，因此，在对象中保存一个拷贝，在反复要求字符串表示时可以简单的返回此拷贝即可(除非 `Date` 的值已经被修改)
+
+```cpp
+#include <string>
+class Date {
+public:
+    explicit Date(int y=0, int m=0, int d=0);
+
+    // 获取 Date 的字符串表示
+    std::string toString() const;
+private:
+    int year;   // 年
+    int month;  // 月
+    int day;    // 日
+    
+    bool isCached;
+    std::string cache;
+    void computeCache() const;
+};
+
+Date::Date(int y, int m, int d) : year{y}, month{m}, day{d} {}
+
+std::string Date::toString() const {
+    if (!isCached) {
+        computeCache();
+    }
+    return cache;
+}
+
+void Date::computeCache() const {
+    cache = std::to_string(year) + "-" + std::to_string(month) + "-" + std::to_string(day);
+    isCached = true;
+}
+```
+
+> [!warning] 
+> 
+> 上述代码中的第 $27 \sim 30$ 用于计算 `Date` 的字符串表示。由于 `computeCache()` 在 `const` 成员函数中被调用，它不应该修改普通的数据成员
+> 
+
+为了让 `const` 成员函数可以修改数据成员，只需要将数据成员指定为 `mutalbe`(可变的)
+
+```cpp hl:13,14
+#include <string>
+class Date {
+public:
+    explicit Date(int y=0, int m=0, int d=0);
+
+    // 获取 Date 的字符串表示
+    std::string toString() const;
+private:
+    int year;   // 年
+    int month;  // 月
+    int day;    // 日
+    
+    mutable bool isCached;      // mutable 成员
+    mutable std::string cache;  // mutable 成员
+    void computeCache() const;
+};
+```
+
+> [!tip] 
+> 
+> `mutable` 成员即使实在 `const` 对象中也是可以被修改的
+> 
+
+`mutable` 成员只适用于小对象的表现形式的一小部分。对于更复杂的情形，一般是将需要改变的数据放在一个独立对象中，然后间接访问它们
+
+```cpp hl:3-6,27-32,34-37
+#include <string>
+
+struct cache {
+    bool isCached;
+    std::string cache;
+};
+
+class Date {
+public:
+    explicit Date(int y=0, int m=0, int d=0);
+
+    // 获取 Date 的字符串表示
+    std::string toString() const;
+private:
+    int year;   // 年
+    int month;  // 月
+    int day;    // 日
+    
+    cache *c;
+    void computeCache() const;
+};
+
+Date::Date(int y, int m, int d) : year{y}, month{m}, day{d}, c{new cache} {
+    c->isCached = false;
+}
+
+std::string Date::toString() const {
+    if (!c->isCached) {
+        computeCache();
+    }
+    return c->cache;
+}
+
+void Date::computeCache() const {
+    c->cache = std::to_string(year) + "-" + std::to_string(month) + "-" + std::to_string(day);
+    c->isCached = true;
+}
+```
+
+> [!tip] 
+> 
+> 这种支持缓存的编程技术可以推广到各种形式的懒惰求值中
+> 
+
+### 成员类型
+
+类型和类型别名也可以作为类成员。例如，假设我们正在实现 [[树与二叉树#二叉树]] 。我们可以将 `Node` 类作为 `Tree` 类的成员类
+
+```cpp
+
+template <typename T>
+class Tree {
+    using value_type = T;            // 成员别名
+    enum Policy {rb, splay, treeps}; // 成员枚举
+    class Node {
+        Node *right;
+        Node *left;
+        value_type value;  // 可访问所属类的类型或类型别名
+    public:
+        void f(Tree *t);
+    };
+    Node *root;
+public:
+    void g(const T &);
+	// ...
+};
+```
+
+**成员类** 也称为 **嵌套类**，可以引用其所属类的类型和 `static` 成员
+
+> [!attention] 
+> 
+> 当给定所属类的一个对象时，只能引用非 `static` 成员
+> 
+
+嵌套类可以访问其所属类的成员，甚至是 `private` 成员，但是它没有当前类对象的概念
+
+```cpp
+template <typename T>
+void Tree<T>::Node::f(Tree *t) {
+    // 这里没有 this 指针指向 Tree 类型的对象
+    root = right;     // 错误：没有指定类型为 Tree 的对象
+    
+    p->root = right;  // 正确
+    value_type v = left->value; // 正确：value_type 不与某个对象关联
+}
+```
+
+> [!tip] 
+> 
+> 嵌套类可以访问其所属类的所有成员，但是它没有所属类的对象的概念
+> 
+
+一个类没有任何特殊权限可以访问其嵌入类的私有成员
+
+```cpp
+template <typename T>
+void Tree<T>::g(Tree::Node *p) {
+    value_type val = right->value;    // 错误：没有 Tree::Node 类型的对象
+    value_type val = p->right->value; // 错误：Node::right 是私有的
+    p->f(this);                       // 正确
+}
+```
+
+> [!attention] 
+> 
+> 一个类没有权限访问其嵌入类的私有成员
+> 
+
+## 自引用
+
+继续 `Date` 类的设计。下面我们为 `Date` 类定义几个修改对象状态的成员函数
+
+```cpp
+class Date {
+public:
+	//...
+    // 增加 n 年
+    void addYear(int n);
+    // 增加 n 月
+    void addMonth(int n);
+    // 增加 n 日
+    void addDay(int n);
+private:
+    int _year;   // 年
+    int _month;  // 月
+    int _day;    // 日
+    //...
+};
+```
+
+成员函数 `addYear()` `addMonth()` 和 `addDay()` 一组相关的更新函数，一种很游泳的技术就是返回已更新对象的引用，这样就可以实现 **链式调用**
+
+```cpp
+void f(Date &d)
+{
+	d.addYear(1).addMonth(2).addDay(10);  // 链式调用
+}
+```
+
+因此，我们需要修改这 $3$ 个函数的定义，让它们返回调用对象的引用
+
+```cpp
+class Date {
+public:
+	//...
+    // 增加 n 年
+    Date& addYear(int n);
+    // 增加 n 月
+    Date& addMonth(int n);
+    // 增加 n 日
+    Date& addDay(int n);
+private:
+    int _year;   // 年
+    int _month;  // 月
+    int _day;    // 日
+    //...
+};
+```
+
+每个非 `static` 成员函数都知道是那个对象调用的它，并且能够显式引用这个对象。
+
+```cpp
+Date& Date::addYear(int n) {
+    _year += n;
+    if(_day == 29 && _month == 2 && !isLeapYear()) {  // 增加 n 年后，如果是闰年，2 月 29 日变为 3 月 1 日
+        _day = 1;
+        _month = 3;
+    }
+    c->isCached = false;
+    return *this;
+}
+```
+
+> [!tip] `this` 指针
+> 
+> `this` 指针是编译器帮我们传递到成员函数内部的调用该函数的对象的指针。`this` 是一个指针常量，其类型就是 `T * const this`，**不能被修改**
+> 
+> 在成员函数中，可以直接引用数据成员，因为编译器会自动帮我们通过 `this` 找到对应对象的数据成员
+> 
+
+每次通过对象调用成员函数，编译器都会将对象的指针传递给成员函数，这就是成员函数知道是谁调用它的原因
+
+> [!attention] 
+> 
+> 编译器将 `this` 指针作为成员函数的第一个参数传入的
+> 
+
+> [!tip] `this` 的生命周期
+> 
+> 由于 `this` 是由编译器传递的参数，因此 `this` 只在调用成员函数时才会存在，函数返回时就自动销毁了
+> 
+> 也就说是，`this` 指针的生命周期与对象的生命周期无关。`this` 指针本身只在成员函数执行期间存在，但它指向的对象可能在成员函数执行前就已经存在，并且在成员函数执行后继续存在
+> 
