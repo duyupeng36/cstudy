@@ -895,3 +895,190 @@ name: 李四, age: 21, phone: 13521669721
 > 程序控制执行到 `delete` 时自动调用析构函数
 > 
 
+## 特殊成员
+
+### explicit 构造函数
+
+默认情况下，用单一参数调用一个构造函数，其行为类似从参数的类型到类自身类型的类型转换。这种类型转换有时非常有用，比如，我们在 [[C++：抽象机制概览]] 中接触的 `complex` 类
+
+```cpp
+complex<double> d{1};  // 默认
+```
+
+> [!tip] 
+> 
+> 对于复数类型，忽略虚部可以得到实数轴上的一个复数。这是符合数据定义的
+> 
+
+在大多数情况下，这种默认转换可能是混乱和错误的主要根源。假设我们定义了如下类 `Date` 用于表示日期的概念
+
+```cpp
+class Date {
+public:
+    Date(int y=0, int m=0, int d=0);
+private:
+    int year;   // 年
+    int month;  // 月
+    int day;    // 日
+};
+```
+
+构造函数 `Date()` 可以接受 $0$ 至 $3$ 个参数，当使用一个参数调用构造函数 `Date()` 时会默认进行类型转换
+
+```cpp
+void fact(Date d);
+
+void f() 
+{
+	Date d{15};  // d 的值为 {15, 0, 0}
+	// ...
+	fact(15);   // 含义不清，可能造成混乱
+	d = 15;     // 含义不清，可能造成混乱
+}
+```
+
+> [!tip] 
+> 
+> 上述代码中第 $7$ 行和第 $8$ 行含义不清，究其原因就是 $15$ 与 `Date` 类没有明显的清晰的逻辑关系
+> 
+
+幸运的是，我们可以 **指明构造函数不能作为隐式类型转换**。如果构造函数的声明带有关键字 `explicit`，则它只能用于初始化和显式类型转化
+
+> [!tip] 
+> 
+> `explicit` 表示明确这个构造函数只能用于初始化和显式类型转换
+> 
+
+```cpp
+class Date {
+public:
+    explicit Date(int y=0, int m=0, int d=0);  // 明确只能用于初始化和显式类型转换
+private:
+    int year;   // 年
+    int month;  // 月
+    int day;    // 日
+};
+```
+
+下面是使用类 `Date` 的示例，正确和错误的使用方式均给出了注释
+
+```cpp
+Date d1{15};        // 正确：直接初始化
+Date d2 = Date{15}; // 正确：拷贝初始化
+Date d3 = {15};     // 错误：不允许隐式类型转换
+Date d4 = 15;       // 错误：不允许隐式类型转换
+
+void f()
+{
+    my_fct(15);       // 错误：不允许隐式类型转换
+    my_fct({15});     // 错误：不允许隐式类型转换
+    my_fct(Date{15}); // 正确：显式类型转换
+}
+```
+
+> [!tip] **直接初始化** 和 **拷贝初始化**
+> 
+> 使用 `=` 进行初始化可看做 **拷贝初始化**。初始化器的副本会被放入待初始化的对象。对于不使用 `=` 的初始化称为 **直接初始化**
+> 
+> 请注意：在拷贝初始化中，如果初始化器是一个右值，拷贝操作可能会被编译器优化为移动操作
+> 
+
+> [!important] 
+> 
+> 默认情况下，请将单参数的构造函数声明为 `explicilt`。除非有很好的理由，否则必须采用默认的方式。
+> 
+> 谨记：如果定义隐式类型转换构造函数，请在注释中注明原因。
+> 
+
+### static 成员
+
+现在继续关注 `Date` 类的设计。我们希望在构造 `Date` 对象的时候可以获取默认值，我们可以设置一个全局静态变量用于保存 `Date` 的默认值
+
+```cpp
+static  Date default_date{1970, 01, 01};
+
+Date::Date(const int y, const int m, const int d): year{y}, month{m}, day {d}
+{
+    year = y ? y : default_date.year;
+    month = m ? m : default_date.month;
+    day = d ? d : default_date.day;
+}
+```
+
+> [!attention] 
+> 
+> 由于 `Date` 依赖于全局变量，因此 `Date` 只能用于定义和正确使用 `default_date` 的上下文
+> 
+
+幸运的是，我们可以通过 **静态成员** 获得这种便利性其实不需要承担使用公开访问的全局变量的负担。
+
+> [!tip] 静态成员：属于类但不属于类对象的成员称为静态成员
+>
+> C++ 静态成员包括：**静态数据成员** 和 **静态成员函数**
+> 
+> **静态数据成员**： 只有唯一副本，而不是像普通数据成员那样每个对象都有其副本
+> 
+> **静态成员函数**： 需要访问类成员但又不需要通过特定对象调用的函数
+>
+
+将 `default_date` 设计为 `Date` 的静态成员，并提供 `set_default()` 静态成员用于修改 `default_date` 的值
+
+```cpp
+class Date {  
+public:  
+    explicit Date(int y=0, int m=0, int d=0);  
+  
+    static void set_default(int y, int m, int d);  // 静态成员函数  
+private:  
+    int year;   // 年  
+    int month;  // 月  
+    int day;    // 日  
+    static  Date default_date;  // 仅仅只是声明  
+};
+```
+
+使用 `default_date` 可以定义如下 `Date()` 构造函数
+
+```cpp
+Date::Date(const int y, const int m, const int d): year{y}, month{m}, day {d}
+{
+    year = y ? y : default_date.year;
+    month = m ? m : default_date.month;
+    day = d ? d : default_date.day;
+}
+
+```
+
+在合适的时候使用 `Date::set_default()` 修改默认值。注意，引用 `static` 成员，需要通过 `类名::`，而不是具体的对象
+
+```cpp
+void f() {
+	Date::set_default(2025, 1, 29);
+}
+```
+
+> [!attention] 请注意
+> 
+> **在类内部的静态成员仅仅只是声明**，需要在某处定义它们。在定义时不在需要指定 `static` 关键字
+> 
+
+```cpp
+Date Date::default_date{1970, 1, 1};
+
+void Date::set_default(int y, int m, int d) {
+    default_date = Date{y, m, d};
+}
+```
+
+### const 成员
+
+
+
+
+
+## 可变性
+
+
+
+
+
