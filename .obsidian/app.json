@@ -19,5 +19,6 @@
   },
   "showIndentGuide": true,
   "propertiesInDocument": "hidden",
-  "livePreview": true
+  "livePreview": true,
+  "vimMode": true
 }
