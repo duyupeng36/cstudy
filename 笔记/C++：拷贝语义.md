@@ -114,9 +114,20 @@ void f() {
 > 
 > 在 [[C++：与 C 的差异#引用]] 中我们介绍过 `const` 引用可以绑定临时变量
 > 
-> 
 > `const` 还可以限制拷贝构造函数中修改参数的值
 > 
+
+```
+➜  cppfiles g++ -std=c++11 -fno-elide-constructors  main.cpp person.cpp -I.
+main.cpp: In function ‘int main()’:
+main.cpp:14:17: 错误：cannot bind non-const lvalue reference of type ‘Person&’ to an rvalue of type ‘Person’
+   14 |     Person p3 = Person{"李四", 30, (const unsigned short[]){1, 3, 5, 7, 9, 0, 2, 4, 6, 8, 0}};  // 调用普通构造函数，然后调用拷贝构造函数
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from main.cpp:5:
+person.hpp:13:20: 附注：  初始化‘Person::Person(Person&)’的实参 1
+   13 |     Person(Person &p);
+      |            ~~~~~~~~^
+```
 
 ## 拷贝赋值运算符
 
