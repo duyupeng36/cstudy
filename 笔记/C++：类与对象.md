@@ -1168,6 +1168,84 @@ void Person::show() const {  // 这个 cosnt 不能丢失，否则会出现编�
 > `const` 成员函数可以被 `const` 对象和非 `const` 对象调用。然而，普通成员函数只能被非 `const` 对象调用
 > 
 
+```cpp
+#include "person.hpp"
+
+int main() {
+    const Person p1{"张三", 20, (const unsigned short[]){1, 3, 5, 7, 9, 0, 2, 4, 6, 8, 0}};
+    p1.show();  // const 对象
+    
+    Person p2 = p1;
+    p2.show();  // 非 const 对象
+}
+```
+
+> [!summary] 
+> 
+> 如果一个成员函数中确定不会修改数据成员，就把它定义为 `const` 成员函数
+> 
+
+注意同名的成员函数的 `const` 版本和非 `const` 版本是重载关系。哪怕他们具有相同的参数列表，也是重载关系。因为编译器在参数列表中添加了一个参数.
+
+> [!tip] 
+> 
+> `const` 版本的成员函数编译器会将 `const T *const this` 放在参数列表的第一个位置
+> 
+> 非 `const` 版本的成员函数编译会将 `T *const this` 放在参数列表的第一个位置
+> 
+
+例如，类 `X` 的 `print()` 成员函数
+
+```cpp
+class X {
+public:
+	void print() const;  // void print(const X * const this)
+	void print();        // void print(X *const this)
+}
+```
+
+`const` 成员函数中不允许修改数据成员，`const` 数据成员初始化后不允许修改，其效果是否相同？
+
+> [!attention] 
+> 
+> 在 `const` 成员函数中，`this` 指针的类型是 `const T * const this`，也就是说 `this` 指针指向的对象的值不能修改
+> 
+> 如果数据成员包含一个普通的指针成员，在 `const` 成员函数中，可以修改指针指向对象的值，但是不能修改指针成员的指向 
+> 
+
+```cpp
+class B {
+    int *p;
+public:
+    B(int i) : p(new int{i}) {}
+    void f() const {
+        *p = 10;        // OK：由于成员 p 的值没有被修改，只是修改了 *p 的值 
+        delete p;
+        p = new int{20};  // 错误: 修改了 const B * this 中的成员的值，意味着修改了常量对象的值
+    }
+};
+```
+
+> [!attention] 
+> 
+> 在非 `const` 成员函数中，`this` 指针的类型是 `T *const this`，也就是说 `this` 指针指向对象的值可以修改
+> 
+> 如果数据成员包含一个指针成员是 `const` 成员，在非 `const` 成员函数中，可以修改指针的指向，但是不能修改指针指向的对象
+> 
+
+```cpp
+class C {
+    const int *q;
+public:
+    C(int i) : q{new int{i}}{}
+
+    void g() {
+        *q = 10; // 错误：修改了 const 对象
+        delete q;
+        q = new int{10};  // 正确： *q 是 const 的，但是 q 不是 const 的 
+    }
+};
+```
 ### mutable 数据成员
 
 某些成员函数在逻辑上是 `const`，但它仍然需要修改成员的值。即对一个用户而言，成员函数看起来不会改变对象的状态，但是它更新了用户不能直接观察的某些细节

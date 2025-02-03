@@ -20,5 +20,5 @@
   "showIndentGuide": true,
   "propertiesInDocument": "hidden",
   "livePreview": true,
-  "vimMode": true
+  "vimMode": false
 }
