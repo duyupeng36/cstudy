@@ -395,8 +395,246 @@ int main() {
 }
 ```
 
+### 定制 operator new() 实现单例模式
 
-### 局部静态变量实现单例模式
+当我们将对象创建在堆空间时，一定会调用 `operator new()` 运算符函数。因此，我们可以在 `operator new()` 中拦截对象的创建
+
+同拦截对象创建的过程，我们可以让构造函数是 `public`，这样每次获取实例时都可以创建提供不同的初始值或者不修改已有的对象的值
+
+```cpp
+#include <iostream>
+#include <pthread.h>
+#include <mutex>
+
+
+using namespace std;
+
+class Singleton {
+
+public:
+
+    void show() {
+        printf("thread[%ld] Singleton instance at %p, a: %d, b: %d\n", pthread_self(), this, a, b);
+    }
+
+public:
+    // 普通构造函数: explicit 防止隐式转换
+    explicit Singleton(int a=0, int b=0):a{a}, b{b} {};
+
+    // 定制 operator new 函数
+    void * operator new(size_t size) {
+        // 先检查是否已经存在实例，如果存在则直接返回
+        if(instance == nullptr) {
+            // 如果不存在实例，则调用::operator new(size)分配内存
+            // 在分配内存之前，应该加锁，防止多线程下出现问题
+            mtx.lock();  // 加锁
+            // 再次检查是否已经存在实例，因为在等待锁的过程中，可能其他线程已经创建了实例
+            if(instance == nullptr)
+            {
+                instance = (Singleton *)::operator new(size);
+            }
+            mtx.unlock(); // 解锁
+        }
+        return instance;
+    }
+
+    // 定制 operator delete 函数: 防止外部调用 delete 删除实例
+    void operator delete(void *p) {
+       throw std::runtime_error("Do not delete Singleton instance");
+    }
+
+public:
+    static void destroy() {
+        // 释放实例内存
+        if (instance) {
+            // 在释放内存之前，应该加锁，防止多线程下出现问题
+            mtx.lock();  // 加锁
+            // 再次检查是否已经存在实例，因为在等待锁的过程中，可能其他线程已经释放了实例
+            if(instance) {
+                // 调用::operator delete(instance)释放内存
+                // 因为 operator delete 函数限制，所以外部无法调用 delete 删除实例
+                ::operator delete(instance);
+                instance = nullptr;
+            }
+            mtx.unlock(); // 解锁
+        }
+    }
+
+private:
+
+    ~Singleton() =default; // 生成默认析构函数，但是是私有的，外部无法调用。因此，无法创建栈对象
+
+    // 禁止拷贝构造函数和拷贝赋值操作符
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+    // 禁止移动构造函数和移动赋值操作符
+    Singleton(Singleton&&) = delete;
+    Singleton& operator=(Singleton&&) = delete;
+
+private:
+    static Singleton* instance;  // 声明类的静态成员：指向类的唯一实例
+    static std::mutex mtx;       // 声明类的静态成员：互斥锁
+
+private:
+    int a {0};
+    int b {0};
+};
+
+Singleton* Singleton::instance = nullptr; // 定义类的静态成员
+std::mutex Singleton::mtx;                // 定义类的静态成员
+
+void * routine(void *arg) {
+    Singleton *instance = new Singleton{10, 20};
+    instance->show();
+    return nullptr;
+}
+
+#ifndef THREAD_NUM
+#define THREAD_NUM 100
+#endif
+
+int main() {
+
+    setvbuf(stdout, nullptr, _IONBF, 0);
+
+    pthread_t tids[THREAD_NUM];
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_create(&tids[i], nullptr, routine, nullptr);
+    }
+
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_join(tids[i], nullptr);
+    }
+
+    Singleton::destroy();  // 释放实例内存
+    return 0;
+}
+```
+
+> [!attention] 
+> 
+> 注意：`operator new()` 和 `operator delete()` 可能因为编译器或 CPU 对指令的重新排序导致线程不安全的情况
+> 
+
+为了解决因为指令重新排序导致线程不安全的问题，C++ 提供了 `std::atomic` 确保线程安全
+
+```cpp
+#include <iostream>
+#include <pthread.h>
+#include <mutex>
+#include <atomic>
+
+
+using namespace std;
+
+class Singleton {
+
+public:
+
+    void show() {
+        printf("thread[%ld] Singleton instance at %p, a: %d, b: %d\n", pthread_self(), this, a, b);
+    }
+
+public:
+    // 普通构造函数: explicit 防止隐式转换
+    explicit Singleton(int a=0, int b=0):a{a}, b{b} {};
+
+    // 定制 operator new 函数
+    void * operator new(size_t size) {
+        // 先检查是否已经存在实例，如果存在则直接返回
+        Singleton *tmp = instance.load(std::memory_order_acquire);  // 从内存中读取 instance 的值
+        if(tmp == nullptr) {
+            // 如果不存在实例，则调用::operator new(size)分配内存
+            // 在分配内存之前，应该加锁，防止多线程下出现问题
+            mtx.lock();  // 加锁
+            // 再次检查是否已经存在实例，因为在等待锁的过程中，可能其他线程已经创建了实例
+            tmp = instance.load(std::memory_order_acquire);  // 从内存中读取 instance 的值
+            if(tmp == nullptr)
+            {
+                tmp = static_cast<Singleton*>(::operator new(size)); // 分配内存
+                instance.store(tmp, std::memory_order_release);  // 将实例指针存入内存
+            }
+            mtx.unlock(); // 解锁
+        }
+        return tmp;
+    }
+
+    // 定制 operator delete 函数: 防止外部调用 delete 删除实例
+    void operator delete(void *p) {
+       throw std::runtime_error("Do not delete Singleton instance");
+    }
+
+public:
+    static void destroy() {
+        // 释放实例内存
+        Singleton *tmp = instance.load(std::memory_order_acquire);  // 从内存中读取 instance 的值
+        if (tmp) {
+            // 在释放内存之前，应该加锁，防止多线程下出现问题
+            mtx.lock();  // 加锁
+            // 再次检查是否已经存在实例，因为在等待锁的过程中，可能其他线程已经释放了实例
+            tmp = instance.load(std::memory_order_acquire);  // 从内存中读取 instance 的值
+            if(tmp) {
+                // 调用::operator delete(instance)释放内存
+                // 因为 operator delete 函数限制，所以外部无法调用 delete 删除实例
+                ::operator delete(tmp);
+                instance.store(nullptr, std::memory_order_release);  // 将实例指针存入内存
+            }
+            mtx.unlock(); // 解锁
+        }
+    }
+
+private:
+
+    ~Singleton() =default; // 生成默认析构函数，但是是私有的，外部无法调用。因此，无法创建栈对象
+
+    // 禁止拷贝构造函数和拷贝赋值操作符
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+    // 禁止移动构造函数和移动赋值操作符
+    Singleton(Singleton&&) = delete;
+    Singleton& operator=(Singleton&&) = delete;
+
+private:
+    static std::atomic<Singleton*> instance;  // 声明类的静态成员：指向类的唯一实例
+    static std::mutex mtx;       // 声明类的静态成员：互斥锁
+
+private:
+    int a {0};
+    int b {0};
+};
+
+std::atomic<Singleton*> Singleton::instance{nullptr}; // 定义类的静态成员
+std::mutex Singleton::mtx;                // 定义类的静态成员
+
+void * routine(void *arg) {
+    Singleton *instance = new Singleton{10, 20};
+    instance->show();
+    return nullptr;
+}
+
+#ifndef THREAD_NUM
+#define THREAD_NUM 100
+#endif
+
+int main() {
+
+    setvbuf(stdout, nullptr, _IONBF, 0);
+
+    pthread_t tids[THREAD_NUM];
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_create(&tids[i], nullptr, routine, nullptr);
+    }
+
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_join(tids[i], nullptr);
+    }
+
+    Singleton::destroy();  // 释放实例内存
+    return 0;
+}
+```
+
+### **局部静态对象实现单例模式**
 
 > [!tip] C++11 标准之后，使用局部静态变量实现单例模式是线程安全的
 > 
@@ -528,3 +766,155 @@ int main() {
 }
 ```
 
+## 总结
+
+我们介绍了多种单例模式的实现方法。其中最推荐使用的还是 **局部静态对象** 和 `std::call_once` 的方式实现单例模式
+
+> [!tip] 局部静态对象
+> 
+> C++11 标准之后，局部静态对象的初始化天然是线程安全的。只会有一个线程初始化局部静态对象，其他线程会等待该线程初始化完成后才会继续执行
+> 
+
+```cpp
+#include <iostream>
+#include <pthread.h>
+#include <mutex>
+
+
+using namespace std;
+
+class Singleton {
+public:
+    static Singleton& getInstance() {
+        static Singleton instance;  // 局部静态变量，线程安全
+        return instance;  // 返回引用避免复制
+    }
+private:
+    Singleton() = default;  // 生成默认构造函数，但是是私有的，外部无法调用
+    // 禁止拷贝构造函数和拷贝赋值操作符
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+    // 禁止移动构造函数和移动赋值操作符
+    Singleton(Singleton&&) = delete;
+    Singleton& operator=(Singleton&&) = delete;
+};
+
+
+void * routine(void *arg) {
+    Singleton& instance = Singleton::getInstance();
+    printf("thread[%ld] get instance at %p\n", pthread_self(), &instance);
+    return nullptr;
+}
+
+#ifndef THREAD_NUM
+#define THREAD_NUM 100
+#endif
+
+
+int main() {
+
+    setvbuf(stdout, nullptr, _IONBF, 0);
+
+    pthread_t tids[THREAD_NUM];
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_create(&tids[i], nullptr, routine, nullptr);
+    }
+
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_join(tids[i], nullptr);
+    }
+    return 0;
+}
+```
+
+> [!tip] 局部静态对象只适合小对象：可以存储在数据区域的对象。为了存储较大的对象，需要在堆空间上申请内存
+> 
+> 在堆上分配内存，就需要确保堆内存可以被访问，因此需要使用一个指针记录堆对象的地址
+> 
+> `std::call_once` 可以确保只有一个线程调用 `new` 运算符
+> 
+
+```cpp
+#include <iostream>
+#include <pthread.h>
+#include <mutex>
+
+
+using namespace std;
+
+class Singleton {
+
+public:
+    void show() {
+        printf("thread[%ld] Singleton instance at %p, a: %d, b: %d\n", pthread_self(), this, a, b);
+    }
+
+public:
+    static Singleton* getInstance() {
+	    // call_once 确保了 new Singleton 只会执行一次
+        std::call_once(flag, []() {
+            instance = new Singleton{10, 20};
+        });
+        return instance;  // 返回指针避免复制
+    }
+
+    // 确保在程序结束时才调用该函数销毁单例
+    static void destroy() {
+        if(instance != nullptr) {
+            delete instance;
+            instance = nullptr;
+        }
+    }
+
+private:
+    Singleton():a{0}, b{0} {};  // 生成默认构造函数，但是是私有的，外部无法调用
+    Singleton(int a, int b) : a(a), b(b) {}  // 生成有参构造函数，但是是私有的，外部无法调用    
+
+    ~Singleton() =default; // 生成默认析构函数
+
+    // 禁止拷贝构造函数和拷贝赋值操作符
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+    // 禁止移动构造函数和移动赋值操作符
+    Singleton(Singleton&&) = delete;
+    Singleton& operator=(Singleton&&) = delete;
+
+private:
+    static Singleton* instance;  // 声明类的静态成员：指向类的唯一实例
+    static std::once_flag flag;  // 声明类的静态成员：保证线程安全
+private:
+    int a;
+    int b;
+};
+
+Singleton* Singleton::instance = nullptr;  // 类的仅仅是声明，在类外部定义
+std::once_flag Singleton::flag;  // 类的仅仅是声明，在类外部定义
+
+void * routine(void *arg) {
+    Singleton * instance = Singleton::getInstance();
+    instance->show();
+    return nullptr;
+}
+
+#ifndef THREAD_NUM
+#define THREAD_NUM 100
+#endif
+
+int main() {
+
+    setvbuf(stdout, nullptr, _IONBF, 0);
+
+    pthread_t tids[THREAD_NUM];
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_create(&tids[i], nullptr, routine, nullptr);
+    }
+
+    for (int i = 0; i < THREAD_NUM; i++) {
+        pthread_join(tids[i], nullptr);
+    }
+
+    // 程序结束时销毁单例
+    Singleton::destroy();
+    return 0;
+}
+```
