@@ -186,38 +186,38 @@ C++中，`std::vector`（向量）是一个动态数组容器，能存放任意�
 
 无参构造，仅指明 vector 存放元素的种类，没有存放元素；
 
-``` c++
+```cpp
 vector <int> numbers;
 ```
 
 传入一个参数，指明vector存放元素的种类和数量，参数是存放元素的数量，每个元素的值为该类型对应的默认值；
 
-``` c++
+```cpp
 vector<long> numbers2(10); //存放10个0
 ```
 
 传入两个参数，第一个参数为vetor存放元素的数量，第二个参数为每个元素的值（相同）；
 
-``` c++
+```cpp
 vector<long> numbers2(10，20); //存放10个20
 ```
 
 通过列表初始化vector，直接指明存放的所有元素的值
 
-``` c++
+```cpp
 vector<int> number3{1,2,3,4,5,6,7};
 ```
 
 迭代器方式初始化 vector，传入两个迭代器作为参数，第一个为首迭代器，第二个为尾后迭代器；
 
-``` c++
+```cpp
 vector<int> number3{1,2,3,4,5,6,7};
 vector<int> number4(number3.begin(),number3.end() - 3);//推测一下，number4中存了哪些元素
 ```
 
 ### vector 的成员函数
 
-```C++
+```cpp
 iterator begin();  // 返回首位迭代器
 iterator end();    // 返回尾后迭代器
 
