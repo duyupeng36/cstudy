@@ -22,37 +22,8 @@
               "icon": "lucide-file",
               "title": "README"
             }
-          },
-          {
-            "id": "093ada202ab1b5ea",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "笔记/C++：特殊成员运算符.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "C++：特殊成员运算符"
-            }
-          },
-          {
-            "id": "76b63b988769f28a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "笔记/C++：构造与清理.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "C++：构造与清理"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -171,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/C++：特殊成员运算符.md",
+                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "C++：特殊成员运算符 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -199,18 +170,20 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "093ada202ab1b5ea",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
-    "笔记/C++：构造与清理.md",
-    "README.md",
     "笔记/C++：特殊成员运算符.md",
+    "笔记/Python：函数基础.md",
+    "README.md",
+    "笔记/Python：装饰器与偏函数.md",
+    "笔记/C++：构造与清理.md",
+    "笔记/Python：函数高级.md",
     "笔记/C++：类与对象.md",
     "笔记/C++：友元与运算符重载.md",
     "笔记/C++：IO 流.md",
     "笔记/Makefile.md",
     "笔记/C++：抽象机制概览.md",
     "笔记/C++：拷贝语义.md",
-    "笔记/Python：装饰器与偏函数.md",
     "笔记/Python：使用 Python 解释器.md",
     "作业/04-C++/作业50：IO 流.md",
     "笔记/C 语言：标准 IO 流.md",
@@ -231,10 +204,8 @@
     "笔记/C++：生成默认操作.md",
     "笔记/线性表.md",
     "笔记/栈和队列.md",
-    "笔记/Python：函数高级.md",
     "笔记/C++：单例模式.md",
     "作业/04-C++/作业48：类和对象 拷贝.md",
-    "笔记/C++：深入探究对象创建.md",
     "assets/attachments/Pasted image 20250202182153.png",
     "assets/attachments/Pasted image 20250202145201.png",
     "作业/04-C++",
