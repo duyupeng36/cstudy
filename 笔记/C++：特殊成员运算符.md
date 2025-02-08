@@ -271,12 +271,6 @@ std::istream &operator>>(std::istream &is, Vector &v) {
 }
 ```
 
-## 解引用运算符 `->` 和 `*` 重载
-
-
-
-
-
 ## 函数调用运算符 `()` 重载
 
 函数调用可以看作一个二元运算符: `expression(expression-list)`，它的左侧运算对象是 `expression` 右侧运算符对象是 `expression-list`。调用运算符 `()` 可以像其他运算符一样被重载
@@ -309,5 +303,401 @@ void f(Action act)
 > 行为类似函数的对象称为 **类函数对象**，或者简单称为 **函数对象**
 > 
 
-函数对象使得我们可以接受某些特殊操作为参数。在很多情况下，**函数对象必须保存执行其操作需要的数据**
+函数对象使得我们可以接受某些特殊操作为参数。在很多情况下，**函数对象必须保存执行其操作需要的数据**。例如，我们定义一个含有 `operator()()` 的类，它负责把一个预存的值加到它的参数上
+
+```cpp
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+class Add 
+{
+    int val;
+public:
+    Add(int v): val{v} {}
+
+    void operator()(int &v) const{
+        v += val;
+    }
+};
+
+
+int main()
+{
+    int a = 0;
+    Add add{10};  // 创建一个对象 add
+    add(a);       // 将对象当做函数是使用
+    cout << a << endl;
+}
+```
+
+如果希望为一个容器中的每个元素都加上一个固定的值。我们可以定义如下函数
+
+```cpp
+void for_each(int *start, int *end, Add & add) {
+    while (start != end)
+    {
+        add(*start++);
+    }   
+}
+```
+
+`for_each()` 函数的第 $3$ 个参数需要一个 `Add` 类对象的引用。从 `start` 到 `end` 依次遍历，并对每个元素都调用 `Add` 类的对象 。如下示例
+
+```cpp
+int main()
+{
+    int a = 0;
+    Add add{10};
+
+    int data[10]{1,2,3,4,5,6,7,8,9, 10};
+
+    for_each(data, data + 10, add);
+    for(int *p =data; p != data + 10; p++) {
+        cout << *p << ' ';
+    }
+    cout << endl;
+}
+```
+
+## 解引用运算符 `->` 和 `*` 重载
+
+解引用运算符 `->` 也称为箭头运算符，该运算符是用于通过指针获取类的成员。解引用运算符 `*` 用于获取指针所指向的对象
+
+例如
+
+```cpp
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+struct Person
+{
+    string name;
+    int age;
+};
+
+int main()
+{
+    Person *p = new Person{"dyp", 20};
+    cout << p->name << " " << p->age << endl;
+    Person person = *p;  // 发生一次复制
+    cout << person.name << " " << person.age << endl;
+}
+```
+
+上述代码使用了一个 **裸指针** 用于管理分配在堆空间中的对象。在 C++中，这通常不是一个很好的用法，因为我们可能会忘记释放堆空间的内存，从而导致内存泄漏
+
+> [!tip] 
+> 
+> 使用裸指针操作堆空间的对象 **非常容易导致内存泄漏**。我们希望有这么一种指针类型，在我们不需要使用它指向的堆空间时自动释放堆内存
+> 
+
+显然，我们需要使用一个资源管理器来管理堆内存。并且让它表现出与指针一样的特性，我们需要重载 `->` 和 `*` 运算符。假设我们定义了一个类 `Ptr` 用于表示指针的概念
+
+```cpp
+template <class T>
+class Ptr
+{
+
+public:
+    Ptr(T *ptr) : _ptr{ptr} {}
+    ~Ptr()
+    {
+        cout << "~Ptr()" << endl;
+        if (_ptr)
+        {
+            delete _ptr;
+            _ptr = nullptr;
+        }
+    }
+
+public:
+    // 运算符重载
+    T *operator->()
+    {
+        return _ptr;
+    }
+    T &operator*()
+    {
+        return *_ptr;
+    }
+
+private:
+    T *_ptr;
+};
+```
+
+类 `Ptr` 的对象可以用于访问类 `T` 的成员，其用法与指针非常相似。例如
+
+```cpp
+void f(Ptr<Person> p)
+{
+    cout << p->name << " " << p->age << endl;
+    // p->name 等价于 (p.operator->())->name
+    cout << (*p).name << " " << (*p).age << endl;
+    // (*p).name 等价于 (p.operator*()).name
+}
+```
+
+下图展示了函数 `f()` 栈帧的内存图
+
+![[Pasted image 20250208091530.png]]
+
+通过 `Ptr` 类的对象访问 `Person` 类的对象的成员，需要让 `Ptr` 类的对象通过某种方法返回 `Person` 类对象的指针。
+
+> [!tip] 
+> 
+> 对象 `p` 到指针 `p.operator->()` 的转换与其所指的成员 `name` 和 `age` 没有任何关系。这正是 `operator->()` 是一元后置运算符的意义
+> 
+> 注意：这里并没有引入任何新的语法，所以 `->` 之后依旧需要一个成员的名字
+> 
+
+> [!tip] 重载 `->` 的目的就是为了实现 **智能指针**
+> 
+> 所谓的智能指针就是 **行为与指针类似的对象**，并且当用其访问对象时执行某些操作。其核心思想就是 **通过对象的生命周期管理资源**
+> 
+> 上面定义的 `Ptr` 类就一种智能指针，但是它还存在一些严重的 `bug`，请忽视它
+> 
+
+对于普通的指针来说，使用 `->` 和使用 `*` 以及 `[]` 行为类似。已知在类 `Y` 中 `->` `*` 和 `[]` 均有其默认含义。假设 `p` 的类型是 `Y*`，则有
+
+```
+p->m 等价于 (*p).m 等价于 p[0].m;
+```
+
+> [!tip] 
+> 
+> 对于用户自定义类型，这个规则是无效的，如果需要自定义类对象满足上述规则，则需要自行重载上述运算符从而实现相同的效果
+> 
+
+> [!attention] 
+> 
+> 请注意：运算符 `->` 必须是 **非 static 成员函数**。并且，返回值类型必须是 **指针** 或者 **类的对象**，我们需要把 `->` 作用于它们
+> 
+> `->` 和 `.` 非常相似，但是我们不能重载点运算符(`.`)
+> 
+
+## 自增运算符 `++` 和自减运算符 `--` 重载
+
+继续上述 `Ptr` 类的实现。指针支持使用 `++` 和 `--` 运算符将指针指向下一个位置，现在我们的 `Ptr` 模拟的指针还不能做到这一点。下面我们通过重载 `++` 和 `--` 实现这个操作
+
+> [!tip] 前置 `++` 和 `--`
+> 
+> 当 `++` 和 `--` 运算符作为前置运算符时，返回的是修改后的对象的值
+> 
+> 为了让 **类指针对象** 模拟内置指针类型的行为，应该让 `operator++()` 和 `operator--()` 返回对象自身的引用。例如，在我们定义的 `Ptr` 类中，让 `operator++()` 和 `operator--()` 返回 `Ptr &`
+> 
+> ```cpp
+> Ptr & operator++();
+> Ptr & operator--()
+> ```
+> 
+
+> [!tip] 后置 `++` 和 `--`
+> 
+> 当 `++` 和 `--` 运算符作为后置运算符时，返回的是修改之前的对象的值
+> 
+> 通用，为了模拟内置指针类型的行为，应该让 `operator++()` 和 `operator--()` 返回一个新对象。为了区分前置和后缀运算符函数，C++ 规则必须为后置的运算符函数提供一个额外的 `int` 类型的参数，这个参数仅仅只是占位，为了函数重载的正确进行
+> 
+> ```cpp
+> Ptr operator++(int);
+> Ptr operator--(int)
+> ```
+> 
+
+下面代码展示了为 `Ptr` 类实现 `operator++()` 和 `operator++(int)` 成员函数。由于指针可以作为函数参数也可以被复制，因此我们需要定义 `Ptr` 的拷贝操作，通过使用引用计数控制是否释放 `Ptr` 管理的对象
+
+```cpp hl:26
+template <class T>
+class Ptr
+{
+
+public:
+    // 管理的是单个对象
+    Ptr(T *ptr) : _ptr{ptr}, _data{nullptr}, _size{0}, _reference{new size_t{1}} {}
+    // 管理对象数组
+    Ptr(T *data, size_t size) : _ptr{data}, _data{data}, _size{size}, _reference{new size_t{1}} {}
+
+    // 拷贝构造
+    Ptr(const Ptr &p) : _ptr{p._ptr}, _data{p._data}, _size{p._size}, _reference{p._reference}
+    {
+        ++*p._reference; // 让引用计数 +1
+    }
+
+    // 拷贝赋值
+    Ptr &operator=(const Ptr &rhs)
+    {
+        if (this == &rhs)
+        {
+            return *this;
+        }
+
+        // 引用计数+1;
+        ++*rhs._reference;
+
+        // 调用 this 的析构函数，让 this 的引用计数减少 1
+        this->~Ptr();
+
+        // 拷贝
+        this->_ptr = rhs._ptr;
+        this->_data = rhs._data;
+        this->_size = rhs._size;
+        this->_reference = rhs._reference;
+
+        return *this;
+    }
+
+    ~Ptr()
+    {
+        --*_reference;
+        // 引用计数未减少到 0，此时还有对象才有这些资源
+        if (*_reference)
+        {
+            return;
+        }
+        cout << "~Ptr()" << endl;
+        // 如果管理的是单个对象：_ptr 指向对象并且_data 为 nullptr 并且 _size 为 0
+        if (_ptr && !_data && !_size)
+        {
+            cout << "管理单个对象，释放对象" << endl;
+            delete _ptr;
+            _ptr = nullptr;
+        }
+        else if (_data && _size)
+        {
+            cout << "管理是数组，释放数组" << endl;
+            delete[] _data;
+            _data = nullptr;
+            _size = 0;
+        }
+		// 释放 _referenc 指向的对象
+        if(_reference)
+        {
+            delete _reference;
+            _reference = nullptr;
+        }
+    }
+
+public:
+    // 运算符重载
+    T *operator->()
+    {
+        return _ptr;
+    }
+
+    T &operator*()
+    {
+        return *_ptr;
+    }
+
+    Ptr &operator++() // 前置 ++
+    {
+        // 管理的数组
+        if (_data && _size)
+        {
+            // 如果超出范围
+            if (_ptr == _data + _size)
+            {
+                throw std::out_of_range("Outside the array range");
+            }
+            ++_ptr;
+        }
+        else
+        {
+            throw std::runtime_error("The pointer does not point to an element in the array.");
+        }
+        return *this;
+    }
+
+    Ptr operator++(int) // 后置 ++
+    {
+        Ptr tmp{*this}; // 调用拷贝构造，创建一个副本
+        // 管理数组
+        if (_data && _size)
+        {
+            // 超出范围
+            if (_ptr == _data + _size)
+            {
+                throw std::out_of_range("Outside the array range");
+            }
+            ++_ptr;
+        }
+        else
+        {
+            // 单个对象
+            throw std::runtime_error("The pointer does not point to an element in the array.");
+        }
+        return tmp;
+    }
+
+private:
+    T *_ptr;      // 指向当前指针指向的数组元素
+    T *_data;     // 指向数组
+    size_t _size; // 表示元素个数
+
+    size_t *_reference; // 引用计数：被所有对象共享
+};
+```
+
+> [!tip] 
+> 
+> 新版的 `Ptr` 类通过引用计数的方式让多个 `Ptr` 对象持有相同的资源。每当发生一次拷贝时，就让引用计数 `+1`。每当发生一次析构时，就让引用计数 `-1`。只有当引用计数减少到 $0$ 时，才让对象持有的资源被销毁
+
+> [!tip] 
+> 
+> 这里在拷贝赋值运算符中我们调用了当前对象的析构函数。因为，检查当前对象是否是最后一个持有资源的对象本身就是析构函数做的事情
+> 
+
+下面的示例中演示了新版 `Ptr` 类的使用。通过使用 `Ptr` 对象管理资源，可以保证
+
+```cpp
+void f(Ptr<int> p) {
+    for(int i = 0; i < 10; i++) {
+        cout << *p++ << ' ';
+    }
+    cout << endl;
+}
+
+int main()
+{
+    Ptr<int> arr{new int[10]{10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, 10}; 
+    f(arr);  // 发生一次拷贝
+
+    return 0;
+}
+```
+
+## 分配和释放堆内存
+
+在 [[C++：单例模式]] 中介绍过重载 `operator new()` 函数用于拦截对象的内存分配过程。下面我们详细介绍运算符 `new` 和 `delete` 
+
+运算符 `new` 通过调用 `operator new()` 分配内存。相应的，运算符 `delete` 通过调用 `operator delete()` 释放内存。用户可以重定义全局的 `operator new()` 和 `operator delete()`，也可以为特定的类型定义 `operator new()` 和 `operator delete()`
+
+> [!warning] 
+> 
+> 警告，不建议改写全局的 `operator new()` 和 `operator delete()`
+> 
+
+更好的做法是为特定的类型提供这些操作。其中，这个特定的类可以作为很多派生类的基类
+
+```cpp
+class Employee
+{
+public:
+	// ...
+	void* operator new(size_t);
+	void operator delete(void *, size_t);
+
+	void* operator new[](size_t);
+	void operator delete[](void *, size_t);
+}
+```
+
+> [!tip] 
+> 
+> `operator new()` 和 `operator delete[]()` 是隐式 `static` 成员函数。因此，它们无法使用 `this` 指针
+> 
 
