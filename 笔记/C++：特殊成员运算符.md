@@ -701,3 +701,68 @@ public:
 > `operator new()` 和 `operator delete[]()` 是隐式 `static` 成员函数。因此，它们无法使用 `this` 指针
 > 
 
+## 成员指针
+
+**成员指针** 是一种类似偏移量的语言构造，允许程序员使用运算符 `->*` 和 `.*` 间接引用类成员
+
+> [!tip] 
+> 
+> 运算符 `->*` 和 `.*` 是最特殊也是最少使用的 C++ 运算符
+> + 运算符 `->` 用于访问一个类成员，例如 `m * p -> m`
+> + 运算符 `->*` 用于访问一个类成员，其名字保存在成员指针中，例如 `ptom::p->*ptom`
+> 
+> 运算符 `->` 和 `->*` 均允许我们通过函数传递来的成员名访问类成员。在两者情况下，`p` 都必须是指向恰当类的对象的指针
+> 
+
+> [!attention] 
+> 
+> 成员指针不能赋予 `void*` 或任何其他普通指针。空指针 `nullptr` 可赋予成员指针，表示无成员
+> 
+
+```cpp hl:23-24,27-28,31-32
+#include <string>
+#include <iostream>
+using namespace std;
+
+class Person 
+{
+public:
+    string name;
+    int age;
+
+    void print() {
+        cout << "name: " << name << endl;
+        cout << "age: " << age << endl;
+    }
+};
+
+
+int main() {
+    Person p {"杜宇鹏", 29};
+
+    Person * pp = &p;
+
+    string Person:: * pname = &Person::name;  // 数据成员指针
+    void (Person:: *pfun)() = &Person::print; // 成员函数指针
+
+    // 通过对象
+    cout << p.*pname << endl;
+    (p.*pfun)();
+
+    // 通过对象的指针
+    cout << pp->*pname << endl;
+    (pp->*pfun)();
+}
+```
+
+> [!tip] 
+> 
+> 初始化成员指针的时候，必须要使用 `&类名::成员名`
+> 
+
+>[!important] 成员指针的意义
+>
+>+ **回调函数**：将成员函数指针作为参数传递给其他函数，使其他函数能够在特定条件下调用该成员函数
+>+ **事件处理**：将成员函数指针存储事件处理程序中，以便在特定事件发生时调用相应的成员函数
+>+ **多态性**：通过将成员函数指针存储在基类指针中，可以实现多态性，在运行时能够去调用相应的成员函数。
+>
