@@ -1405,9 +1405,10 @@ public:
 template <typename T>
 void Tree<T>::Node::f(Tree *t) {
     // 这里没有 this 指针指向 Tree 类型的对象
+    // 此时的 this 指向的是 Tree::Node 类型的对象
     root = right;     // 错误：没有指定类型为 Tree 的对象
     
-    p->root = right;  // 正确
+    t->root = right;  // 正确
     value_type v = left->value; // 正确：value_type 不与某个对象关联
 }
 ```
