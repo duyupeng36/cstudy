@@ -9,11 +9,16 @@
 
 我们期望单例对象能够在程序结束时自动释放掉。显然，需要另一个静态对象保存单例对象的指针，当该静态对象被销毁时就调用析构函数，从而释放掉单例对象
 
-如下图所示，使用 `AutoRealse` 类的对象管理单例对象的生命周期。这里，我们让 `AutoRealse` 类的对象存储在静态存储区，这样当程序结束时，`AutoRealse` 对象就会被销毁，我们定义 `AutoRealse` 的析构函数区释放单例对象
+如下图所示，使用 `AutoRelease` 类的对象管理单例对象的生命周期。这里，我们让 `AutoRelease` 类的对象存储在静态存储区，这样当程序结束时，`AutoRelease` 对象就会被销毁，我们定义 `AutoRelease` 的析构函数区释放单例对象
 
 ![[Pasted image 20250209130343.png]]
 
-下面的代码展示了 `AutoRealse` 的实现方式。由于 `AutoRealse` 只是用于释放单例对象，因此，我们让 `AutoRealse` 成为为 `Singleton` 的嵌套类
+下面的代码展示了 `AutoRelease` 的实现方式。由于 `AutoRelease` 只是用于释放单例对象，因此，我们让 `AutoRelease` 成为为 `Singleton` 的嵌套类
+
+> [!tip] 
+> 
+> 使用嵌套类的好处就是嵌套类可以直接访问外部类的所有成员
+> 
 
 ```cpp hl:38-50,54,62
 #include <iostream>
@@ -44,7 +49,7 @@ private:
     Singleton():a{0}, b{0} {};  // 生成默认构造函数，但是是私有的，外部无法调用
     Singleton(int a, int b) : a(a), b(b) {}  // 生成有参构造函数，但是是私有的，外部无法调用    
 
-    ~Singleton() =default; // 生成默认析构函数
+    ~Singleton() =default; // 生成默认析构函数。如果单例对象持有资源，需要自定义析构函数
 
     // 禁止拷贝构造函数和拷贝赋值操作符
     Singleton(const Singleton&) = delete;
@@ -54,14 +59,14 @@ private:
     Singleton& operator=(Singleton&&) = delete;
 
 private:
-    class AutoRealse
+    class AutoRelease
     {
     public:
-        ~AutoRealse() {
+        ~AutoRelease() {
             // instacne 访问的外部类的静态成员
             if(instance) {
                 cout << "~AutoRealse()" << endl;
-                delete instance;  
+                delete instance; // 先调用单例对象的析构函数，然后调用 operator delete 删除对象占用的内存 
                 instance = nullptr;
             }
         }
@@ -69,7 +74,7 @@ private:
 
 private:
     static Singleton* instance;  // 声明类的静态成员：指向类的唯一实例
-    static AutoRealse ar;        // 声明类的静态成员
+    static AutoRelease ar;        // 声明类的静态成员
     static std::once_flag flag;  // 声明类的静态成员：保证线程安全
 private:
     int a;
@@ -77,7 +82,7 @@ private:
 };
 
 Singleton* Singleton::instance = nullptr;  // 在类外部定义
-Singleton::AutoRealse Singleton::ar;       // 在类外部定义
+Singleton::AutoRelease Singleton::ar;       // 在类外部定义
 std::once_flag Singleton::flag;            //在类外部定义
 
 void * routine(void *arg) {
