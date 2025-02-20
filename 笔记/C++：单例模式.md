@@ -145,7 +145,7 @@ int main() {
 
 下面的代码就是使用互斥锁实现线程同步
 
-```cpp
+```cpp hl:16
 #include <iostream>
 #include <pthread.h>
 #include <mutex>
@@ -162,6 +162,9 @@ public:
             if(instance == nullptr)
             {
                 instance = new Singleton;
+                // 第一步：创建内存空间
+                // 第二步：初始化内存空间
+                // 第三步：将内存空间的地址赋值给 instance
             }
             pthread_mutex_unlock(&mutex);
         }
@@ -212,15 +215,22 @@ int main() {
 
 > [!attention] 
 > 
-> 由于引入了锁机制，会降低程序运行的性能
+> 由于引入了锁机制，会降低程序运行的性能。此外，还存在一个问题，上述代码第 $16$ 行(高亮部分)，这个行代码可能会分为 $3$ 个步骤
+> + 创建内存
+> + 初始化内存
+> + 将内存地址赋值给 `instance`
+> 
+> 由于编译器的优化，可能会导致初始化内存最后被执行，此时其他线程可能会得到一个未初始化的对象
 > 
 
-C++11 标准提供了 `std::call_once()` 函数可以确保只会调用一次，在多线程环境中只会有一个线程可以执行 `call_once()`，其他线程会等待
+C++11 标准提供了 `std::call_once()` 函数可以确保只会调用一次，在多线程环境中只会有一个线程可以执行 `call_once()`，其他线程会等待。同时，使用 C++ 提供的 `atomic` 类型，保证内存顺序
 
 ```cpp
 #include <iostream>
-#include <pthread.h>
 #include <mutex>
+#include <atomic>
+
+#include <pthread.h>
 
 
 using namespace std;
@@ -236,7 +246,12 @@ public:
     static Singleton* getInstance() {
 	    // call_once 确保了 new Singleton 只会执行一次
         std::call_once(flag, []() {
-            instance = new Singleton{10, 20};
+	        Singleton * tmp = instance.load(std::memory_order_acquire);  // 顺序获取
+            if (tmp == nullptr)
+            {
+                tmp = new Singleton{10, 20};
+                instance.store(tmp, std::memory_order_release);
+            }
         });
         return instance;  // 返回指针避免复制
     }
@@ -263,14 +278,14 @@ private:
     Singleton& operator=(Singleton&&) = delete;
 
 private:
-    static Singleton* instance;  // 声明类的静态成员：指向类的唯一实例
+    static std::atomic<Singleton*> instance;  // 声明类的静态成员：指向类的唯一实例
     static std::once_flag flag;  // 声明类的静态成员：保证线程安全
 private:
     int a;
     int b;
 };
 
-Singleton* Singleton::instance = nullptr;  // 类的仅仅是声明，在类外部定义
+std::atomic<Singleton*> Singleton::instance = nullptr;  // 类的仅仅是声明，在类外部定义
 std::once_flag Singleton::flag;  // 类的仅仅是声明，在类外部定义
 
 void * routine(void *arg) {
@@ -324,8 +339,13 @@ public:
 
 public:
     static Singleton* getInstance() {
-        std::call_once(newflag, []() {
-            instance = new Singleton{10, 20};
+        std::call_once(flag, []() {
+	        Singleton * tmp = instance.load(std::memory_order_acquire);  // 顺序获取
+            if (tmp == nullptr)
+            {
+                tmp = new Singleton{10, 20};
+                instance.store(tmp, std::memory_order_release);
+            }
         });
         return instance;  // 返回指针避免复制
     }
@@ -354,7 +374,7 @@ private:
     Singleton& operator=(Singleton&&) = delete;
 
 private:
-    static Singleton* instance;  // 声明类的静态成员：指向类的唯一实例
+    static std::atomic<Singleton*> instance;  // 声明类的静态成员：指向类的唯一实例
     static std::once_flag newflag;  // 声明类的静态成员：保证线程安全
     static std::once_flag destroyflag;  // 声明类的静态成员：保证线程安全
 private:
@@ -362,7 +382,7 @@ private:
     int b;
 };
 
-Singleton* Singleton::instance = nullptr;  // 类的仅仅是声明，在类外部定义
+std::atomic<Singleton*> Singleton::instance = nullptr;  // 类的仅仅是声明，在类外部定义
 std::once_flag Singleton::newflag;  // 类的仅仅是声明，在类外部定义
 std::once_flag Singleton::destroyflag;  // 类的仅仅是声明，在类外部定义
 
