@@ -2,7 +2,7 @@
 
 ## 函数对象
 
-Python 只能函数是一个对象，它有一些属性。通过内置函数 `dir()` 可以查看对象的属性
+Python 中函数是一个对象，它有一些属性。通过内置函数 `dir()` 可以查看对象的属性
 
 ```python
 def foo(a, b, /, x=5, y=10, *args, m=10, n, **kwargs):  
@@ -92,7 +92,10 @@ Python 中的函数是一个对象，其他对象能做的事情函数对象也�
 ```python hl:3
 def counter(base):
 	def inc(step=1):
-		base += step  # 会在 inc 的局部名字空间中创建了 base 名字，base 并没有绑定对象，就对其进行了引用。这句会触发 UnboundLocalError 异常
+		base += step  
+		# 会在 inc 的局部名字空间中创建了 base 名字，
+		# base 并没有绑定对象，就对其进行了引用。
+		# 这句会触发 UnboundLocalError 异常
 		return base
 	return inc
 ```
@@ -226,7 +229,7 @@ def counter():
         print(x, "+++++")
 
 c = counter()  # 返回一个生成器
-# c.send(1)       # TypeError: 不能发生 non-None 值给刚开始的生成器对象
+# c.send(1)       # TypeError: 不能发送 non-None 值给刚开始的生成器对象
 c.send(None)    # send (None) 等价于 next(c)，启动生成器
 ```
 
