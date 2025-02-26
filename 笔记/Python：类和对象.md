@@ -467,3 +467,198 @@ print(p.__dict__)  # {'_Person__name': '张三', '_Person__age': 48}
 ```
 
 观察输出结果，`__name` 和 `__age` 分别变成了 `_Person__name` 和 `_Person__age`。也就是说，Python  `__name` 的属性替换为了 `_classname__name` 的形式
+
+## property 装饰器
+
+当希望查看私有数据属性的值时，我们不能直接通过换名规则去访问私有属性，而是应该提供访问私有属性的方法。就像 C++ 中提供一个 `const` 成员函数一样
+
+```python
+class Person:
+
+    def __init__(self, name, age):
+        self.__name = name
+        self.__age = age
+    
+    def name(self):
+        return self.__name
+
+    def age(self):
+        return self.__age
+
+p = Person("张三", 48)
+
+print(p.name())  # 张三
+print(p.age())   # 48
+```
+
+通过函数访问数据属性并不优雅，而且不符合 Python 的使用习惯。Python 提供了一个装饰器 `property`，它的作用就是将一个方法当作数据属性使用。原理将在 [[Python：描述器]] 中介绍
+
+```python
+class Person:
+
+    def __init__(self, name, age):
+        self.__name = name
+        self.__age = age
+
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def age(self):
+        return self.__age
+
+p = Person("张三", 48)
+
+print(p.name)  # 张三
+print(p.age)   # 48
+```
+
+> [!attention] 
+> 
+> 请注意：这里的属性时不能赋值的。下面的代码给出了错误提示，说明属性 `name` 没有 `setter` 函数
+> 
+
+```python
+class Person:
+
+    def __init__(self, name, age):
+        self.__name = name
+        self.__age = age
+
+    @property
+    def name(self):   # name <==> property(name)
+        return self.__name
+
+    @property
+    def age(self):
+        return self.__age
+
+p = Person("张三", 48)
+
+print(p.name)
+print(p.age)
+
+p.name = "李斯"  # AttributeError: property 'name' of 'Person' object has no setter
+```
+
+如果需要给属性 `name` 和 `age` 赋值，就需要提供一个 `setter`。此时，`name` 和 `age` 都是 `property` 类的实例，该实例提供了一个 `setter` 方法返回 `property` 对象的一个副本
+
+```python
+class Person:
+
+    def __init__(self, name, age):
+        self.__name = name
+        self.__age = age
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, name):
+        if not isinstance(name, str):
+            raise ValueError("Name must be a string.")
+        self.__name = name
+
+    @property
+    def age(self):
+        return self.__age
+
+    @age.setter
+    def age(self, age):
+        if not isinstance(age, int):
+            raise ValueError("Age must be an integer.")
+        if age < 0:
+            raise ValueError("Age cannot be negative.")
+
+        self.__age = age
+
+
+p = Person("张三", 48)
+
+print(p.name)
+print(p.age)
+
+p.name = "李斯" 
+p.age = 5000
+
+print(p.name)
+print(p.age)
+```
+
+## staticmethod 装饰器
+
+在 Python 中，可以为类提供一个 **静态方法**：属于类但不属于实例。换句话说，**静态方法不会绑定实例对象**
+
+例如，在实现一个代表三角形的类时，我们需要检查提供的三条边的长度能否构成一个三角形。用于检查三条边能否构成三角形的方法不依赖于三角形对象，因此将其实现为静态方法
+
+```python
+class Triangle:
+    def __init__(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    @staticmethod
+    def is_triangle(a, b, c):
+        if a <= 0 or b <= 0 or c <= 0:
+            raise ValueError("三角形的三条边必须是正整数.")
+
+        if a + b > c and a + c > b and a + c > b:
+            return True
+
+        return False
+
+Triangle.is_triangle(1, 2, 3)
+```
+
+## classmethod 装饰器
+
+在类中定义的函数默认是绑定给类的实例使用的。有时候，我们想要类中定义的函数绑定给类使用，这样的函数称为 **类方法**
+
+在 Python 中，定义类方法需要使用 `classmethod` 装饰器，该装饰器就将当前类当中第一个参数传递。如下示例，展示了在 Python 中实现单例模式的方式之一。类方法 `get_instance()` 用于返回一个类的实例，因此该方法需要将当前类作为参数
+
+```python
+class Singleton:
+
+    @classmethod
+    def get_instance(cls):
+        if hasattr(cls, "_instance"):
+            return getattr(cls, "_instance")
+        else:
+            cls._instance = cls()
+            return cls._instance
+
+a = Singleton.get_instance()
+b = Singleton.get_instance()
+c = Singleton.get_instance()
+```
+
+> [!attention] 
+> 
+> 请注意：上述实现存在一个 bug。`_instance` 类属性是可以被访问的。
+> 
+
+```python
+a._instance  # 这里可以访问实例对象。这不是关键的问题
+Singleton._instance = Singleton()  # bug，我们可以修改类的单例
+```
+
+建议使用 `__instance`，可以进一步的隐藏，虽然依旧可能被修改，但是增加了修改成本
+
+```python
+class Singleton:
+
+    @classmethod
+    def get_instance(cls):
+        if hasattr(cls, f"_{cls.__name__}__instance"):
+            return getattr(cls, f"_{cls.__name__}__instance")
+        else:
+            cls.__instance = cls()
+            return cls.__instance
+
+a = Singleton.get_instance()
+b = Singleton.get_instance()
+c = Singleton.get_instance()
+```
