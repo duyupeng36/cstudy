@@ -331,6 +331,7 @@
 | [[Python：装饰器与偏函数]]       | 柯里化 装饰器 偏函数 `inspect`                                                                      |
 | [[Python：文件]]            | 文件对象，文件的读写，上下文管理，类文件对象                                                                     |
 | [[Python：序列化]]           | pickle JSON MessagePack Base64 编码                                                          |
+| [[Python：异常]]            | Python 中异常处理                                                                               |
 | [[Python：类和对象]]          | 类对象 实例对象 property staticmethod classmethod                                                 |
 | [[Python：继承与多态]]         | 继承 多继承 C3算法；多态 鸭子类型 抽象类                                                                    |
 | [[Python：魔术方法]]          | `__new__` `__init__` `__del__` `__str__` `__repr__` <br>`__bytes__` `__hash__`  `__bool__` |
@@ -339,9 +340,8 @@
 | [[Python：可调用对象]]         | 模拟 Python 中函数的行为                                                                           |
 | [[Python：上下文管理]]         | 管理资源                                                                                       |
 | [[Python：反射]]            | 获取或设置对象属性                                                                                  |
-| [[Python：描述器]]           |                                                                                            |
-| [[Python：元类]]            |                                                                                            |
-| [[Python：异常]]            |                                                                                            |
+| [[Python：描述器]]           | 描述器的概念 实现 和 应用                                                                             |
+| [[Python：元类]]            | 创建类的类                                                                                      |
 
 ## 算法
 
