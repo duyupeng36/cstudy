@@ -264,3 +264,55 @@ print(s1, s2)
 print(s1.x, s1.y)
 print(s2.x, s2.y)
 ```
+
+## 补充 `__slots__` 属性
+
+类还可以定义一个特殊的属性 `__slots__`。这个属性是用于替换类的名字空间的。
+
+> [!question] 
+> 
+> 默认情况下，Python 中的类的名字空间采用字典实现的。也就是我们经常使用的 `__dict__` 属性
+> 
+> 由于 `__dict__` 属性时一个字典，字典默认会提前分配一片内存空间。当一个进程中存在很多的实例对象时，可能会对内存效率带来巨大的开销
+> 
+
+为了解决上述问题，Python 引入了 `__slots__` 属性通常被定义为元组，它限制了实例对象只能添加 `__slots__` 中指定的名字
+
+```python
+class Person:
+    __slots__ = ("name", "age")  # 限制类的实例对象只能有两个属性
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __repr__(self):
+        return f"<Person({self.name}, {self.age})>"
+
+
+p = Person("John",  28)
+
+p.gender = "male"  # AttributeError: 'Person' object has no attribute 'gender'
+```
+
+> [!attention] 
+> 
+> 请注意：使用 `__slots__` 属性后，类实例对象就不存在 `__dict__` 属性了
+> 
+
+```python hl:13-14
+class Person:
+    __slots__ = ("name", "age")
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __repr__(self):
+        return f"<Person({self.name}, {self.age})>"
+
+
+p = Person("John",  28)
+
+print(p.__dict__)
+# AttributeError: 'Person' object has no attribute '__dict__'
+```
+
