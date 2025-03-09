@@ -22,23 +22,8 @@
               "icon": "lucide-file",
               "title": "README"
             }
-          },
-          {
-            "id": "34195b4aab16902d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "笔记/C++：模板.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "C++：模板"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -157,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/C++：模板.md",
+                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "C++：模板 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -185,11 +170,12 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "34195b4aab16902d",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
-    "笔记/C++：string 的底层实现.md",
-    "笔记/C++：模板.md",
+    "笔记/Python：模块和包.md",
     "README.md",
+    "笔记/C++：模板.md",
+    "笔记/C++：string 的底层实现.md",
     "作业/04-C++/作业53：多态.md",
     "assets/attachments/Pasted image 20250309175214.png",
     "assets/attachments/Pasted image 20250309175132.png",
@@ -218,7 +204,6 @@
     "笔记/Python：模拟容器.md",
     "笔记/Python：继承与多态.md",
     "笔记/Python：魔术方法.md",
-    "笔记/C++：特殊运算符.md",
     "assets/attachments/Pasted image 20250227222935.png",
     "assets/attachments/Pasted image 20250226213902.png",
     "assets/attachments/Pasted image 20250223225606.png",
