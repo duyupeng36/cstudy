@@ -88,3 +88,39 @@ Go1.14 版本之后，推荐使用 `go mod` 模式来管理依赖环境了，也
 ```shell
 go env -w GOPROXY=https://goproxy.cn,https://goproxy.io,direct
 ```
+
+## 第一个 Go 程序 
+
+Go 语言默认启用了 `go mod` 依赖管理工具。我们的所有代码都需要使用 `go mod` 进行管理。首先，创建一个文件夹，然后执行 `go mod` 命令
+
+```shell 
+mkdir hello && cd hello 
+go mod init hello 
+```
+
+然后，使用 Visual Studio Code 打开文件夹，新建一个文件 `hello.o` ，键入如下内容
+ 
+```go 
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Print("hello, world!\n") 
+} 
+```
+
+使用 `go build` 命令可以将上述代码编译为可执行文件，然后执行执行即可
+
+```shell
+➜ hello go build hello.go 
+➜ hello ./hello      
+Hello world
+```
+
+或者直接使用 `go run` 命令
+
+```shell
+➜ hello go run hello.go   
+Hello world
+```
