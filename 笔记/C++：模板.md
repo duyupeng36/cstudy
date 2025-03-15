@@ -377,5 +377,275 @@ void swap(T &a, T &b)
 > 使用不同的参数去调用模板函数，编译器会根据参数的类型自动实例化一个函数模板。这种实例化方式称为隐式实例化
 > 
 
+最初，编译器只能通过隐式实例化，来使用模板生成函数定义，但现在 C++ 还允许显式实例化。这意味着可以直接命令编译器创建特定的实例，如 `swap<int>()`。其语法是，声明所需的种类——用 `<>` 符号指示类型，并在声明前加上关键字 `template`：
+
+```cpp
+template void swap<int>(int &, int &);
+```
+
+实现了这种特性的编译器看到上述声明后，将使用 `swap()` 模板生成一个使用 `int` 类型的实例。也就是说，该声明的意思是 “使用 `swap()` 模板生成 `int` 类型的函数定义”
+
+还可通过在程序中使用函数来创建显式实例化。例如，请看下面的代码
+
+```cpp
+template<typename T>
+T add(T a, T b)
+{
+	return a + b;
+}
+
+...
+
+int m 6;
+double x = 10.2
+
+cout << add<double>(x, m) << endl;
+```
+
+这里的模板与函数调用 `add(x, m)` 不匹配，因为该模板要求两个函数参数的类型相同。但通过使用 `add<double>(x, m)`，可强制为 `double` 类型实例化，并将参数 `m` 隐式类型转换为 `double` 类型，以便与函数 `add<double>(double, double)` 的第二个参数匹配
+
+### 分离模板的声明与实现
+
+在一个源文件中，函数模板的声明与定义分离是可以的，即使把函数模板的实现放在调用之下也是可以的，与普通函数一致。
+
+```cpp
+//函数模板的声明
+template <class T>
+T add(T t1, T t2)；
 
 
+void test1(){ 
+    int i1 = 1, i2 = 2;
+	cout << add(i1,i2) << endl;
+}
+
+//函数模板的实现
+template <class T>
+T add(T t1, T t2)
+{
+    return t1 + t2;
+}
+```
+
+然而，如果像普通函数那样分别在 `.hpp` 文件中声明，然后在 `.cpp` 文件中实现，并在另一个 `.cpp` 文件中测试，那么编译将会错误
+
+```cpp title:add.hpp
+template <class T>
+T add(T t1, T t2);
+```
+
+```cpp title:add.cpp
+#include "add.hpp"
+
+template<typename T>
+T add(T lhs, T rhs) {
+    return lhs + rhs;
+}
+```
+
+```cpp title:main.cpp
+
+#include "add.hpp"
+
+int main() {
+    int a = 10;
+    int b = 20;
+    int c = add(a, b);
+
+    printf("%d + %d = %d\n", a, b, c);
+    return 0;
+}
+```
+
+当我们使用如下命令编译上述代码时，链接器提示未定义错误
+
+```shell
+➜  cppfiles g++ main.cpp add.cpp add.hpp 
+/usr/bin/ld: /tmp/ccq1P7Vy.o: in function `main':
+main.cpp:(.text+0x21): undefin
+```
+
+> [!important] 
+> 
+> 函数模板要被显示调用时，编译器才会为其生成对应的函数。也就是说，我们需要在 `add.cpp` 文件中调用一次 `add()`，那么编译器就会为其生成对应的指令
+> 
+
+```cpp title:add.cpp
+#include "add.hpp"
+
+template<typename T>
+T add(T lhs, T rhs) {
+    return lhs + rhs;
+}
+
+static int a = add(0, 0);  // 调用一次模板函数
+```
+
+然后我们再编译就会不会提示错误了
+
+```shell
+➜  cppfiles g++ main.cpp add.cpp add.hpp
+➜  cppfiles ./a.out 
+10 + 20 = 30
+```
+
+> [!attention] 
+> 
+> 在实现文件中调用函数通常是不符合编程规范的，也不是一个优雅的做法。
+> 
+
+如果要在使用文件调用函数模板时，推导的过程中，**看到的是完整的模板的代码**，那么应该可以解决问题。在头文件中加上 `#include "add.cpp"` 即可
+
+```cpp title:add.hpp
+
+#ifndef ADD_HPP
+
+template<typename T>
+T add(T lhs, T rhs);
+
+#include "add.cpp"
+#endif
+```
+
+```cpp title:add.cpp
+template<typename T>
+T add(T lhs, T rhs) {
+    return lhs + rhs;
+}
+```
+
+> [!tip] 
+> 
+> 请注意：在实现文件中，去调用头文件包含语句。如果加上，将会导致循环引用，从而出现重定义异常
+> 
+
+
+现在，我们只需要编译 `main.cpp` 也不会出现未定义异常了
+
+```shell
+➜  cppfiles g++ main.cpp
+➜  cppfiles ./a.out 
+10 + 20 = 30
+```
+
+> [!summary] 
+> 
+> 在 `.hpp` 中包含 `.cpp` 的内容，本质上就是相当于在头文件中实现了模板
+> 
+> 对模板的使用，必须要拿到模板的全部实现，如果只有一部分，那么推导也只能推导出一部分，无法满足需求。
+> 
+> 换句话说，**模板的使用过程中，其实没有了头文件和实现文件的区别**，在头文件中也需要获取模板的完整代码，不能只有一部分。
+> 
+
+C++的标准库都是由模板开发的，所以经过标准委员的商讨，**将这些头文件取消了后缀名，与 C 的头文件形成了区分；这些实现文件的后缀名设为了.tcpp**
+
+## 类模板
+
+通过继承并不总是能够满足重用代码的需要。假设我们实现了一个 `Stack` 容器类保存 `int` 类型的元素。现在，需求变了，需要保存 `long` 类型的元素。
+
+除了保存的对象类型不同外，这两种 `Stack` 类的代码是相同的。然而，与其编写新的类声明，不如编写一个 **泛型**（即独立于类型的）栈，然后将具体的类型作为参数传递给这个类。这样就可以使用通用的代码生成存储不同类型值的栈
+
+> [!tip] 
+> 
+> 在 [[栈和队列]] 中，我们通过 `typedef` 处理这种需求。然而，这种方法有两个缺点：
+> + 首先，每次修改类型时都需要编辑头文件
+> + 其次，在每个程序中只能使用这种技术生成一种栈，即不能让 `typedef` 同时代表两种不同的类型
+> 
+> 因此不能使用这种方法在同一个程序中同时定义 `int` 栈和 `long` 栈
+> 
+
+C++ 的类模板为生成通用的类声明提供了一种更好的方法。**模板提供参数化类型，即能够将类型名作为参数传递给接收方来建立类或函数**。例如，将类型名 `int` 传递给 `Queue` 模板，可以让编译器构造一个对 `int` 进行排队的 `Queue` 类
+
+> [!tip] 
+> 
+> C++ 的标准库就提供了许多模板类。例如，`<vector>` `<string>` 等
+> 
+
+### 定义类模板
+
+定义类模板和定义函数模板一样，都是使用 `template` 关键字。例如，我们声明一个 `Stack` 模板类
+
+```cpp
+template<typename T>
+class Stack {
+public:
+	Stack();  // 默认构造函数
+	explicit Stack(int siz); // 
+
+private:
+	T * _data;  // 指向一个存放 T 类型元素的动态内存
+	int _top;
+	int _siz;  
+};
+```
+
+`template<typename T>` 告诉编译器将要定义一个模板，使用 `T` 泛指不同的类型。
+
+如果个需要在类外部定义成员函数时，也需要使用 `template<typename T>` 的方式定义成员函数。例如
+
+```cpp
+template<typename T>
+Stack<T>::Stack(): _data{nullptr}, _top{-1}, _siz{0}
+{
+}
+
+template<typename T>
+Stack<T>::~Stack()
+{
+    if(_data) {
+        delete[] _data;
+        _data = nullptr;
+    }
+}
+```
+
+> [!tip] 
+> 
+> 如果在类声明中定义了方法（内联定义），则可以省略模板前缀和类限定符
+> 
+
+模板并不是类和成员函数的定义，它们只是 C++ 的编译器指令，说明了如何生成类和成员函数的定义
+
+> [!tip] 
+> 
+> 模板指示编译器如何生成类和函数的定义
+> 
+
+### 使用模板类
+
+仅在程序包含模板并不能生成模板类，而必须请求实例化。为此，需要声明一个类型为模板类的对象，方法是使用所需的具体类型替换泛型名
+
+例如，下面的代码创建两个栈，一个用于存储`int`，另一个用于存储 `string` 对象
+
+```cpp
+Stack<int> kernels;
+Stack<string> colonels;
+```
+
+编译器看到上述声明后，将按 `Stack<T>` 模板来生成两个独立的类声明和两组独立的类方法
+
+> [!attention] 
+> 
+> 请注意：必须显式地提供所需要的类型，这和函数模板是不同的。因为编译器可以根据调用函数是提供的参数推断类型
+> 
+
+## 可变模板参数
+
+**可变模板参数** 是 C++11 新增的最强大的特性之一，它对参数进行了高度泛化，它能表示 $0$ 到任意个数、任意类型的参数。
+
+> [!tip] 
+> 
+> 由于可变模版参数比较抽象，使用起来需要一定的技巧，所以它也是 C++11 中最难理解和掌握的特性之一
+> 
+
+可变参数模板和普通模板的语义是一样的，只是写法上稍有区别，声明可变参数模板时需要在 `typename` 或 `class` 后面带上省略号 `“...”` ，省略号写在右边，代表打包
+
+```cpp
+template <class... Args>  
+void func(Args... args);
+```
+
+> [!important] 
+> 
+> **Args 叫做模板参数包，args 叫做函数参数包**
+> 
