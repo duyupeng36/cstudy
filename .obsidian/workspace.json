@@ -24,21 +24,20 @@
             }
           },
           {
-            "id": "87c3d1f0cac34a74",
+            "id": "7b6ff040dccb098a",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "笔记/C++：模板.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
               "title": "C++：模板"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -91,11 +90,13 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 237.5
+    "width": 237.5,
+    "collapsed": true
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -157,13 +158,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/C++：模板.md",
+                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "C++：模板 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -171,7 +172,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 306.5
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -185,11 +186,16 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "87c3d1f0cac34a74",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
-    "笔记/C++：移动语义和默认操作.md",
+    "笔记/Go 语言：基础语法.md",
+    "assets/attachments/Pasted image 20231202192431.png",
     "笔记/C++：模板.md",
     "README.md",
+    "笔记/C 语言：标准 IO 流.md",
+    "笔记/数据存储.md",
+    "笔记/C++：IO 流.md",
+    "笔记/C++：移动语义和默认操作.md",
     "笔记/Python：模块和包.md",
     "笔记/C++：string 的底层实现.md",
     "作业/04-C++/作业53：多态.md",
@@ -214,15 +220,9 @@
     "笔记/Python：描述器.md",
     "笔记/Python：异常.md",
     "笔记/Python：反射.md",
-    "笔记/Python：上下文管理.md",
-    "笔记/Python：可调用对象.md",
-    "笔记/Python：模拟容器.md",
-    "笔记/Python：继承与多态.md",
-    "笔记/Python：魔术方法.md",
     "assets/attachments/Pasted image 20250227222935.png",
     "assets/attachments/Pasted image 20250226213902.png",
     "assets/attachments/Pasted image 20250223225606.png",
-    "assets/attachments/Pasted image 20250223221100.png",
     "作业/04-C++",
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
     "作业/04-Python",
