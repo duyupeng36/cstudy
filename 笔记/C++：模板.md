@@ -399,7 +399,7 @@ T add(T a, T b)
 int m 6;
 double x = 10.2
 
-cout << add<double>(x, m) << endl;
+cout << add<double>(x, m) << endl;  //注意：不推荐这样写，而是让编译器推导
 ```
 
 这里的模板与函数调用 `add(x, m)` 不匹配，因为该模板要求两个函数参数的类型相同。但通过使用 `add<double>(x, m)`，可强制为 `double` 类型实例化，并将参数 `m` 隐式类型转换为 `double` 类型，以便与函数 `add<double>(double, double)` 的第二个参数匹配
@@ -539,6 +539,80 @@ T add(T lhs, T rhs) {
 
 C++的标准库都是由模板开发的，所以经过标准委员的商讨，**将这些头文件取消了后缀名，与 C 的头文件形成了区分；这些实现文件的后缀名设为了.tcpp**
 
+### 非类型模板参数
+
+模板参数有两种类型：**类型化参数** 和 **非类型化参数**。下面我们介绍非类型化参数，因为类型化参数已经在之前介绍过了。
+
+定义模板时，在模板的参数列表中可以加入非类型参数。请注意：**非类型参数只能是整数类型**。例如，`bool, char, short, int, long, size_t` 等
+
+```cpp
+#include <iostream>
+using namespace std;
+
+template<typename T, int base>
+T multiply(T x, T y) {
+	return x * y * base;
+}
+
+void f() {
+	int i1 = 3, i2 = 4;
+	int result = multiply<int, 10>(i1, i2);  // 3 * 4 * 10
+	cout << result << endl; 
+}
+
+int main() {
+    f();
+}
+```
+
+非类型化参数可以提供默认值，在使用模板函数时，就可以让编译器执行隐式实例化，而不需要我们进行显式实例化
+
+```cpp
+#include <iostream>
+using namespace std;
+
+template<typename T, int base = 10>  // 非类型化参数可以提供默认值
+T multiply(T x, T y) {
+	return x * y * base;
+}
+
+void f() {
+	int i1 = 3, i2 = 4;
+	int result = multiply<int, 20>(i1, i2);  // 3 * 4 * 20。显式实例化
+	cout << result << endl; 
+	result = multiply(i1, i2); // 隐式实例化
+	cout << result << endl;
+}
+
+int main() {
+    f();
+}
+```
+
+模板参数与普通的函数参数类似，对于类型化参数，也可以提供默认类型
+
+```cpp
+template <class T = int, int base = 10>
+T multiply(T x, T y){
+    return x * y * kBase;
+}
+
+void test0(){
+    double d1 = 1.2, d2 = 1.2;
+    cout << multiply(d1,d2) << endl;
+    cout << multiply<int>(d1,d2) << endl;
+}
+```
+
+> [!attention] 
+> 
+> 模板实例化的优先级规则如下：
+> 
+> + 显式实例化 => 隐式实例化 => 类型默认参数
+> 
+> 模板参数的默认值（不管是类型参数还是非类型参数）只有在没有足够的信息用于推导时起作用。当存在足够的信息时，编译器会按照实际参数的类型去调用，不会受到默认值的影响
+> 
+
 ## 类模板
 
 通过继承并不总是能够满足重用代码的需要。假设我们实现了一个 `Stack` 容器类保存 `int` 类型的元素。现在，需求变了，需要保存 `long` 类型的元素。
@@ -638,14 +712,88 @@ Stack<string> colonels;
 > 由于可变模版参数比较抽象，使用起来需要一定的技巧，所以它也是 C++11 中最难理解和掌握的特性之一
 > 
 
-可变参数模板和普通模板的语义是一样的，只是写法上稍有区别，声明可变参数模板时需要在 `typename` 或 `class` 后面带上省略号 `“...”` ，省略号写在右边，代表打包
+可变参数模板和普通模板的语义是一样的，只是写法上稍有区别，声明可变参数模板时需要在 `typename` 或 `class` 后面带上省略号 `"..."`
 
 ```cpp
-template <class... Args>  
-void func(Args... args);
+template <class ...Args>  
+void func(Args ...args);
 ```
 
 > [!important] 
 > 
-> **Args 叫做模板参数包，args 叫做函数参数包**
+> **Args 叫做模板参数包**：里面包含的就是 `T1/T2/T3...` 这样的类型参数
 > 
+> **args 叫做函数参数包**：里面包含的就是函数的参数，分别对应类型 `T1/T2/T3...`
+> 
+
+我们在定义一个函数时，可能有很多个不同类型的参数，不适合一一写出，所以提供了可变模板参数的方法。
+
+```cpp
+template <class ...Args>//Args 模板参数包
+void display(Args ...args)//args 函数参数包
+{
+    //输出模板参数包中类型参数个数
+    cout << "sizeof...(Args) = " << sizeof...(Args) << endl;
+    //输出函数参数包中参数的个数
+    cout << "sizeof...(args) = " << sizeof...(args) << endl;
+}
+
+void test0(){
+    display();
+    display(1,"hello",3.3,true);
+}
+```
+
+假设我们想要定义一个求和函数模板，该模板可以接收任意个参数
+
+```cpp
+#include <iostream>
+
+// Base case for recursion
+template <typename T>
+T sum(T t) {
+  return t;
+}
+
+// Variadic template
+template <typename T, typename... Args>
+T sum(T t, Args... args) {
+  return t + sum(args...);
+}
+
+int main() {
+  int result = sum(1, 2, 3, 4, 5);  // expands to 1 + 2 + 3 + 4 + 5
+  std::cout << "The sum is: " << result << std::endl;
+
+  return 0;
+}
+```
+
+下面的示例给出了一个可变参数模板定义的元组类
+
+```cpp
+template <typename... Types>
+class Tuple;
+
+// Base case: empty tuple
+template <>
+class Tuple<> {};
+
+// Recursive case: Tuple with one or more elements
+template <typename Head, typename... Tail>
+class Tuple<Head, Tail...> : public Tuple<Tail...> {
+ public:
+  Tuple(Head head, Tail... tail) : Tuple<Tail...>(tail...), head_(head) {}
+
+  Head head() const { return head_; }
+
+ private:
+  Head head_;
+};
+
+int main() {
+  Tuple<int, float, double> tuple(1, 2.0f, 3.0);
+  std::cout << "First element: " << tuple.head() << std::endl;
+  return 0;
+}
+```
