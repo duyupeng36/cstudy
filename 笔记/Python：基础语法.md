@@ -150,7 +150,7 @@ ValueError: invalid literal for int() with base 10: 'aaff'
 
 > [!attention] 
 > 
-> 如果 `float()` 的参数是字符串时，则字符串必须符合的字符串字面值
+> 如果 `float()` 的参数是字符串时，则字符串必须是 Python 中浮点数字面值串。额外的还有 `"INF"` 和 `"NaN"`
 > 
 
 ### 复数类型
@@ -208,7 +208,7 @@ True
 
 ## 变量
 
-与 C 语言不同的是，**Python 中的变量在 _首次赋值的时定义_**，也就是说，Python 中的变量通过赋值定义的
+与 C/C++ 语言不同的是，**Python 中的变量在 _首次赋值的时定义_**，也就是说，Python 中的变量通过赋值定义的
 
 ```python
 >>> name = "杜宇鹏"  # 定义变量 name
