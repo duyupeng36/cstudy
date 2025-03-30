@@ -332,5 +332,5 @@
 | [[Python：环境搭建]]   | 安装 Python 解释器；传递参数；Python 解释器的执行环境         |
 | [[Python：基本概念]]   | 数据类型 运算符 控制流程                              |
 | [[Python：内建数据结构]] | 序列(list tuple str bytes 和 bytearray) 集合 字典 |
-|                   |                                            |
+| [[Python：推导式]]    | 列表生成式 集合生成式 字典生成式 生成器生成式                   |
 
