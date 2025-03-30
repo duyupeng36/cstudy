@@ -23,7 +23,7 @@ Python 中的序列都是 [[线性表]] 的实现。下面我们就开始学习 
 
 列表是我们学习的第一个序列，它是 [[线性表]] 的顺序实现。在 Python 中，列表的类型是 `list`，提供非常多的方法用于操作 `list` 对象
 
-在 Python 中创建列表对象可以使用 **列表字面值** 或者 **类型转换函数 `list()`**。使用字面值创建一个列表对象是 Python 中最常用的方式。
+在 Python 中创建列表对象可以使用 **列表字面值** 或者 **构造函数 `list()`**。使用字面值创建一个列表对象是 Python 中最常用的方式。
 
 ```python
 >>> numbers = []  # 空列表
@@ -703,7 +703,7 @@ Python 为列表重定义了运算符 `+` 和 `*` 的含义，下面我们介绍
 > 然而，由于可变对象可修改其内容，这种情况下，表现出来特性和引用一样
 > 
 
-下面我们介绍如何创建元组对象。Python 提供了 $2$ 种创建元组对象的方法：**字面值** 和 **类型转换函数 `tuple()`**
+下面我们介绍如何创建元组对象。Python 提供了 $2$ 种创建元组对象的方法：**字面值** 和 **构造函数 `tuple()`**
 
 > [!tip] 
 > 
@@ -723,7 +723,7 @@ Python 为列表重定义了运算符 `+` 和 `*` 的含义，下面我们介绍
 
 > [!tip] 
 > 
-> 使用类型转换函数 `tuple(iterable)` 时，需要提供一个可迭代对象作为参数，该函数会使用可迭代对象中元素创建一个全新的元组对象并返回
+> 使用构造函数 `tuple(iterable)` 时，需要提供一个可迭代对象作为参数，该函数会使用可迭代对象中元素创建一个全新的元组对象并返回
 > 
 
 ```python
@@ -1355,10 +1355,10 @@ Python 为字符串格式化提供了几种方法，其中有两个简单的方�
 字符串具有一种特殊的内置操作：使用 `%` (取模) 运算符。 这也被称为字符串的 __格式化__ 或 __插值__ 运算符。例如，
 
 ```python
-format % value
+format % values
 ```
 
-将 `value` 值插入到 `format` 字符串中 转换标记(`%[可选项]转换符`)  的位置上。这是继承自 C 语言 `printf` 函数的格式化方式
+将 `values` 值插入到 `format` 字符串中 **转换标记**(`%[可选项]转换符`)  的位置上。这是继承自 C 语言 `printf` 函数的格式化方式
 
 **转换标记** 按照从左到右顺序包括如下几个部分
 
@@ -1432,7 +1432,6 @@ Python has 002 quote types.
 > 
 注意：在键值映射格式化过程中，不能出现 `*` 标记符
 
-
 ##### `format` 方法
 
 可以调用 `format` 字符串的 `str.format()` 方法产生一个 `format` 的副本，其中 `{}` 的位置被替换为 `format` 中指定的参数
@@ -1462,7 +1461,7 @@ Python has 2    quote types.
 
 注意，此时如果想要格式化后的值靠左对齐需要使用 `<` 标志
 
-**键值映射格式化**在 `format` 方法中也是可用的，只需要在花括号中指定名字 `{somename}` 并在 `str.format()` 方法中给出对应的名字和值即可
+**键值映射格式化**在 `format` 方法中也是可用的，只需要在花括号中指定名字 `{soname}` 并在 `str.format()` 方法中给出对应的名字和值即可
 
 ```python
 >>> print('{language} has {number} quote types.'.format(language="Python", number=2))
@@ -1505,19 +1504,662 @@ print(f"{line = !r:20}")
 
 ### Bytes
 
+> [!seealso] 
+> 
+> 我们在 [[数据存储#存储文本]] 中详细介绍了计算机是如何存储字符，这里就不在重复
+> 
 
+Python 内部的字符串存储为 `U+000 ~ U+10FFFF` 范围内的 Unicode 码值 ^[[[数据存储#存储文本]]]。由于一个字符占用了多个字节，一旦字符串对象需要再 CPU 和内存以外使用，**字节序** ^[[[信息存储#寻址和字节序]]] 就会成为一个重要的影响因素
+
+> [!tip] 
+> 
+> 例如，将字符串对象通过网络发送给其他计算机；或者，将字符串对象存储到文件中
+> 
+
+因此，我们需要将字符串转为与字节序无关的 **字节序列**，我们称这样的过程为 **编码**。而从字节序列重建字符串被称为 **解码**。 
+
+> [!tip] 
+> 
+> 存在许多不同的文本序列化编解码器，它们被统称为 **文本编码格式**。
+> 
+
+在 Python 中，字节序列使用类型 `bytes` 表示，它是不可变类型，即 `bytes` 对象是不可变对象。`bytes` 类型的对象处理的通常是与类型无关的数据。换句话说，**bytes对象持有的数据是无类型的**
+
+Python 提供了 $2$ 种创建 `bytes` 类型的对象的方法：**字面值** 和 **构造函数 `bytes()`**。老规矩，我们还是先看字面值。注意到，`bytes` 是一个字节序列，也就是说，这个序列的每个元素都只占一个字节。简单来讲，在使用字面值创建 `bytes` 对象时，提供的字符必须是 ASCII 编码的字符
+
+> [!attention] 
+> 
+> `bytes` 的字面值是基于基于 ASCII 字符，但 **`bytes` 对象的行为实际上更像是不可变的整数序列**，序列中的每个值的大小被限制为 `0 <= x < 256`
+> 
+> 无论将 `.py` 文件声明的是何种编码，`bytes` 的字面值中只能包含 ASCII 字符。任何超出 $127$ 的二进制值必须使用相应的转义序列形式加入 `bytes` 字面值
+> 
+
+```python
+>>> b = b"hello, world"  # 本质上就是字符串 "hello, world" 的 ASCII 编码值的序列
+>>> for i in b:
+...     print(i, type(i))
+...
+104 <class 'int'>
+101 <class 'int'>
+108 <class 'int'>
+108 <class 'int'>
+111 <class 'int'>
+44 <class 'int'>
+32 <class 'int'>
+119 <class 'int'>
+111 <class 'int'>
+114 <class 'int'>
+108 <class 'int'>
+100 <class 'int'>
+```
+
+表示 `bytes` 字面值的语法与字符串字面值的大致相同，只是添加了一个 `b` 前缀：
+- 单引号: `b'同样允许嵌入 "双" 引号'`。
+- 双引号: `b"仍然允许嵌入 '单' 引号"`
+- 三重引号: `b'''三重单引号'''`, `b"""三重双引号"""
+
+请注意，此处仅仅为了说明 `bytes` 字面值语法，并不是说 `bytes` 字面值中可以使用 ASCII 字符以外的字符
+
+下面我们介绍 `bytes` 对象的构造函数 `bytes()`。首先，我们可以使用一个字符串或者一个字面值，如下示例
+
+```python
+class bytes(source=b'')  # 创建一个空字节序列
+class bytes(source, encoding)  # source 是字符串，encoding 指定编码方式
+class bytes(source, encoding, errors) # errors 指定编码错误的处理程序
+```
+
+此外，`bytes` 对象还可以通过其他几种方式来创建：
+- 指定长度的以零值填充的 bytes 对象: `bytes(10)`
+- 通过由整数组成的可迭代对象: `bytes(range(20))`
+- 通过缓冲区协议复制现有的二进制数据: `bytes(obj)`
+
+```python
+>>> bytes("中文", "utf-8")
+b'\xe4\xb8\xad\xe6\x96\x87'
+>>> bytes(10)  # 长度为 10 的零字节序列
+b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+>>> bytes(range(97, 108))  # 使用整数序列
+b'abcdefghijk'
+
+>>> import array
+>>> a = array.array('b', range(65,76))
+>>> a
+array('b', [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75])
+>>> bytes(a)  # 使用实现缓冲区协议的对象
+b'ABCDEFGHIJK' 
+```
+
+> [!tip] 
+> 
+> `bytes` 类型和 `str` 类型非常相似。`str` 类型的方法，`bytes` 类型都有其对应的字节版本
+> 
+
+##### 字符串与 bytes 之间的转换
+
+我们说过在 Python 字符串被存储为 Unicode 码值。当字符串需要存储到磁盘或者通过网络发送时，将字符串需要 Unicode 码值重新编码，将其转换为 `bytes` 类型
+
+> [!important] 
+> 
+> 字符串对象提供了 `str.encode([codes])` 用于将字符串编码为指定编码方式 `codes` 的字节序列。默认情况下采用 `UTF-8` 编码
+> 
+
+此外，也可以使用 `bytes()` 构造函数将一个字符串编码为指定字符编码方式的字节序列
+
+```python
+>>> "中文".encode()
+b'\xe4\xb8\xad\xe6\x96\x87'
+>>> "中文".encode("GB2312")
+b'\xd6\xd0\xce\xc4'
+```
+
+`bytes` 对象提供了 `bytes.decode([codes])` 方法用于将字节对象转换为 `str` 对象
+
+```python
+>>> b'\xd6\xd0\xce\xc4'.decode()  # 注意使用编码时对应的字符集进行解码
+Traceback (most recent call last):
+  File "<python-input-2>", line 1, in <module>
+    b'\xd6\xd0\xce\xc4'.decode()  # 注意使用编码时对应的字符集进行解码
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd6 in position 0: invalid continuation byte
+>>> b'\xd6\xd0\xce\xc4'.decode("GB2312")
+'中文'
+```
+
+##### int 与 bytes 之间的转换
+
+我们知道在 Python 中，整数类型(`int`)可以占用任意字节，本质上就是字节序列，只是我们将这个字节序列当做了整数处理
+
+> [!attention] 
+> 
+> 字节序列可以表示任何东西，它与数据类型无关。因此，当需要向计算机外部传递数据时，通常需要传递与类型无关的字节序列
+> 
+
+当我们需要按字节处理整数时，就可以使用 `int` 对象的方法 `int.to_bytes(with, byteorder="big")` 的方式将整数转换为长度为 `with` 的字节序列，整数字节按照大端序排列
+
+```python
+>>> (0xeaff).to_bytes()  # 默认是 1 字节按大端序。由于1字节不足以存放 0xeaff，所谓抛出异常
+Traceback (most recent call last):
+  File "<python-input-4>", line 1, in <module>
+    (0xeaff).to_bytes() 
+    ~~~~~~~~~~~~~~~~~^^
+OverflowError: int too big to convert
+>>> (0xeaff).to_bytes(2)  # 默认大端序
+b'\xea\xff'
+>>> (0xeaff).to_bytes(2, byteorder="big")
+b'\xea\xff'
+>>> (0xeaff).to_bytes(2, byteorder="little")  # 小端序
+b'\xff\xea'
+```
+
+当我们有一个字节序列对象时，想要转换为整数，就需要使用 `int` 类型的类方法 `int.from_bytes(bytes, byteorder="big")`，该方法会按照大端序字节序将字节序列转换为一个整数
+
+```python
+>>> int.from_bytes(b'\xea\xff')  # 默认大端序
+60159
+>>> 0xeaff
+60159
+>>> int.from_bytes(b'\xea\xff', byteorder="little")  # 按小端序解释字节序列
+65514
+>>> 0xffea
+65514
+```
 
 ### Bytearray
 
+`bytearry` 与 `bytes` 类似，只是 `bytes` 的可变版本。但是，**`bytearray` 对象没有专属的字面值语法**，它们总是通过调用构造器来创建：
+- 创建一个空实例: `bytearray()`
+- 创建一个指定长度的以零值填充的实例: `bytearray(10)`
+- 通过由整数组成的可迭代对象: `bytearray(range(20))`
+- 通过缓冲区协议复制现有的二进制数据: `bytearray(b'Hi!')`
+
+> [!attention] 
+> 
+> 由于 `bytearray` 对象是可变的，该对象除了 `bytes` 和 `bytearray` 操作 中所描述的 `bytes` 和 `bytearray` 共有操作之外，**还支持 可变 序列操作**
+> 
+
+> [!important] 
+> 
+> `bytes` 和 `bytearry` 的元素是 $1$ 字节的无符号整数，即 $[0, 255]$
+> 
+
+## 散列
+
+**散列表** 是只不过是一个 **具有固定大小的顺序表**，其中的元素包含一个 **关键字**，和一个 **值**，我们将其记为 `(key, value)`。将数组得大小称为散列表的大小记为 `TableSize`。当我们需要存储一个键值对(`key, value`)时，将 `key` 使用 **散列函数** 处理得到一个 **散列值**，然后使用散列值从 $0$ 到 $\text{TableSize} - 1$ 范围中的某个索引，它指明了`(key, value)` 存储在数组中的位置。
+
+有两种常用的方法将散列值映射到 $0 \sim \text{TableSize}-1$ 范围内的数：**取模法** 和 **位与**
+
+![[Pasted image 20250329161618.png]]
 
 
+> [!attention] 
+> 
+> 请注意，当使用位与选择索引时，必须要要求 `TableSize` 的值是 $2^n$。详细参考 [[栈和队列#^2f9461|使用位与代替模运算]]
+> 
 
-## 集合
+由于表中存储单元数目有限，但是关键字实际上是无穷无尽的，所以不可能保证任何两个关键字映射到不同的存储单元。**当两个关键字的散列值相同**，称为 **散列冲突**。当出现散列冲突时，通常有两种解决方法：**开放地址法** 和 **链接表法**
+
+所谓的开放地址法是指当出现散列冲突时，就从冲突位置向后选择没有被存储数据的地址；而链接表法则是在出现散列冲突后，就在后面链接一个表即可。如下图所示：假设 `k1` 和 `k2` 的散列值都选择了编号为 $2$ 的位置，由于 `k1` 先占用了位置 $2$。开放地址法就在 `k1` 的后面寻找可插入位置；而链接表法就直接在 `k1` 的后面连一张表即可
+
+![[Pasted image 20250329184710.png]]
+
+Python 中散列表的实现有两类：**集合(`set`)** 和 **字典(`dict`)**。下面我们介绍这两种数据结构
+
+### Set & Frozenset
+
+集合(`set`)是 **可变的** 容器类型；而 `frozenset` 是不可变容器类型 。集合是由 _不重复_ 元素组成的 _无序容器_。既然是容器，那么容器支持的操作(成员检查、迭代容器中的元素)，集合也支持
+
+> [!tip] 
+> 
+> 集合中存储的对象必须是可以计算哈希值的 **可哈希对象**。由于对象是根据其哈希值选择的存放位置，因此是元素在容器中是无序的
+> 
+
+> [!important] 
+> 
+> Python 中的可哈希对象
+> + `int` `float` `complex` 类型的对象
+> + `True` `False`
+> + 字符串对象
+> + 字节序列 `bytes`
+> + 元组对象 `tuple`
+> + 空值对象 `None`
+> 
+
+在 Python 中，创建一个集合对象有两种方式：**集合字面值** 和 **构造函数 `set()`**。从字面值开始，因为字面值是我们最常使用的方式。在 Python 中，集合的字面值词法使用一对 **大括号** 包围一些列的值组成
+
+```python
+>>> s = {1,2,"hello", "world", (1,2,3), 3.14}
+>>> s
+{1, 2, 3.14, 'hello', (1, 2, 3), 'world'}
+>>> not_set = {}  # 注意，这样的字面值不是集合，而是字典
+>>> type(not_set)
+<class 'dict'>
+```
+
+> [!attention] 
+> 
+> 请注意：仅仅使用 `{}` 表示是创建一个空字典，而非空集合
+> 
+
+我们可使用 `set(iterable)` 函数创建集合，其中的元素来自可迭代对象 `iterable`，如果其中的有重复元素，在集合中只会出现一次
+
+```python
+>>> s = set([1,2,3,4,3,2,1])
+>>> s
+{1, 2, 3, 4}
+>>> s = set()  # 空集合：只能使用构造函数创建空集合
+>>> s
+set()
+```
+
+> [!important]
+> 
+> 集合有一下几个特性:  
+> 1.  **无序性**: 集合中的元素是没有顺序
+> 2.  **唯一性**: 相同值的元素在集合中只存在一个
+> 3.  集合是**可变数据类型**, 但是集合中的 **元素只能存放不可变(可哈希)的数据.**  如果存放了可变类型数据, 会触发`TypeError`异常
+> 
+
+Python >= 3.2.3 对 `str` 和 `bytes` 对象的哈希值会使用一个不可预测的随机值 _加盐_。虽然它们在一个单独 Python 进程中会保持不变，但是它们的值在重复运行的 Python 之间是不可预测的
+
+> [!info] 
+> 
+> 这是为了**防止**通过精心选择输入来利用字典插入操作在最坏情况下的执行效率即  $O(n^2)$ 复杂度制度的 **拒绝服务攻击**
+> 
+
+```shell
+dyp@ubuntu:~$ python -c "print(hash('123'))"
+-8446606495242098355
+dyp@ubuntu:~$ python -c "print(hash('123'))"
+-9111418234901541349
+dyp@ubuntu:~$ python -c "print(hash('123'))"
+-6107098491586316605
+```
+
+改变哈希值会影响集合的迭代次序。Python 也从不保证这个次序不会被改变（通常它在 32 位和 64 位构建上是不一致的）
+
+> [!info] 
+> 
+> 环境变量 `PYTHONHASHSEED` Python 哈希种子：默认为 None。如果此变量未设置或设为 `random`，将使用一个随机值作为 `str` 和 `bytes` 对象哈希运算的种子
+> 
+
+```shell
+dyp@ubuntu:~$ PYTHONHASHSEED=1 python -c "print(hash('123'))"
+8874197587556847498
+dyp@ubuntu:~$ PYTHONHASHSEED=1 python -c "print(hash('123'))"
+8874197587556847498
+dyp@ubuntu:~$ PYTHONHASHSEED=1 python -c "print(hash('123'))"
+8874197587556847498
+```
+
+已经知道了集合的原理和如何创建集合对象，下面我们介绍集合对象支持的方法和运算符
+
+#### 数学运算
+
+Python 提供的集合类型是模拟数学上的集合概念，因此，Python 必须提供集合的数学运算：**交集** **并集** **差集** **对称差** 等，下表总结了 Python 目前提供的集合运算
+
+| 运算                                       | 描述                       |
+| :--------------------------------------- | :----------------------- |
+| `&` 或 `set.intersection(*others)`        | 返回 **交集**                |
+| $\mid$ 或 `set.union(*others)`            | 返回 **并集**                |
+| `-` 或 `set.difference(*others)`          | 返回 **差集**                |
+| `^` 或 `set.symmetric_difference(other)`  | 返回 **对称差集**              |
+| `set.isdijoint(other)`                   | 检查 `set` 与 `other` 是否不相交 |
+| `set.issubset(other)` 或者 `set <= other`  | 检查 `set` 是否是 `other` 的子集 |
+| `set.issuperset(other)` 或者 `set>= other` | 检查 `set` 是否包含 `other`    |
+
+> [!tip] 
+> 
+> 交集：例如 `a & b` 返回一个全新的集合对象，元素是集合 `a` 和 `b` 中共同出现的元素
+> 
+> 并集：例如 `a | b` 返回一个全新的集合对象，元素是集合 `a` 和 `b` 中都出现的元素
+> 
+> 差集：例如 `a - b` 返回一个全新的集合对象，元素是集合 `a` 中的元素并且这些元素没有在 `b` 中出现
+> 
+> 对称差集：例如 `a ^ b` 返回一个全新的集合对象，元素是 `(a - b) | (b - a)`
+> 
+
+```python
+# 交集
+>>> {1,2,3} & {2, 3, 4}  # 交集
+{2, 3}
+>>> {1,2,3}.intersection({2, 3, 4})
+{2, 3}
+
+# 并集
+>>> {1,2,3} | {2, 3, 4} # 并集
+{1, 2, 3, 4}
+>>> {1,2,3}.union({2, 3, 4})
+{1, 2, 3, 4}
+
+# 差集
+>>> {1,2,3} - {2, 3, 4}
+{1}
+>>> {1,2,3}.difference({2, 3, 4})
+{1}
+>>> {2, 3, 4} - {1,2,3}
+{4}
+>>> {2, 3, 4}.difference({1,2,3})
+{4}
 
 
+# 对称差
+>>> {1,2,3} ^ {2, 3, 4}
+{1, 4}
+>>> {1,2,3}.symmetric_difference({2, 3, 4})
+{1, 4}
+>>> {1,2,3} - {2,3,4} | {2,3,4} - {1,2,3}
+{1, 4}
 
+# 检查是否存在交集
+>>> {1,2, 3}.isdisjoint({4,5,6})
+True
+>>> {1,2, 3}.isdisjoint({3, 4,5,6})
+False
 
+# 检查是否是子集
+>>> {1,2,3} <= {1,2}
+False
+>>> {1,2,3} <= {1,2,3,4}
+True
+>>> {1,2,3} < {1,2,3,4}
+True
 
-## 字典
+# 检查是否是超集
+>>> {1,2,3} > {1,2}
+True
+>>> {1,2,3} >{1,2,4}
+False
+```
 
+> [!attention] 
+> 
+> 不可变的集合 `frozenset` 也支持上述已经介绍的方法 。下面的方法是 `set` 类型独有的方法
+> 
 
+#### 增加
+
+`set` 对象时可变的容器，那么我们可以向其中添加元素。下表列出了 `set` 对象支持的元素添加方法
+
+| 方法              | 描述                   |
+| :-------------- | :------------------- |
+| `set.add(elem)` | 向集合 `set` 中元素 `elem` |
+
+```python
+>>> s = {4, 5, 7, 8}
+>>> s.add(9)
+>>> s
+{4, 5, 7, 8, 9}
+```
+
+#### 更新集合
+
+使用其他集合对象更新当前集合中的元素：可以添加元素，也可以移除元素
+
+| 方法                                       | 描述                                   |
+| :--------------------------------------- | ------------------------------------ |
+| `set.update(*others)`                    | 向 `set` 中添加 `others` 并集中的元素          |
+| `set.difference_update(*others)`         | 从 `set` 中移除 `others` 并集中的元素          |
+| `set.intersection_update(*others)`       | 从 `set` 中移除元素，只保留 `others` 交集中存在的元素  |
+| `set.symmetric_difference_update(other)` | 更新 `set`，只保留 `set` 和 `other` 中均存在的元素 |
+
+方法 `set.update(others)` 等价于 `set |= others | ...`
+
+```python
+>>> s = {4, 5, 7, 8, 9}
+>>> s.update({1, 2, 4}, {5, 7}, {9, 10})  # 向 s 中添加 others 并集中的元素
+>>> s
+{1, 2, 4, 5, 7, 8, 9, 10}
+
+>>> s |= {3, 0} | {11, 20}  # 等价于 s.update(others)
+>>> s
+{0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 20}
+```
+
+方法 `set.difference_update(*others)` 等价于 `set -= others | ...`
+
+```python
+>>> s = {0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 20}
+>>> s.difference_update({3,5,7}, {0, 3, 9}, {11, 20})
+>>> s
+{1, 2, 4, 8, 10}
+
+>>> s = {0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 20}
+>>> s -= {3,5,7} | {0, 3, 9} | {11, 20}
+>>> s
+{1, 2, 4, 8, 10}
+```
+
+方法 `set.intersection_update(*others)` 等价于 `set &= other & ...`
+
+```python
+>>> s = {0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 20}
+>>> s.intersection_update({3,5,7}, {0, 3,5,7,9})
+>>> s
+{3, 5, 7}
+
+>>> s = {0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 20}
+>>> s &= {3, 5, 7} & {0, 3, 5, 7, 9}
+>>> s
+{3, 5, 7}
+```
+
+方法 `set.symmetric_difference_update(other)` 等价于 `set ^= other`
+
+```python
+>>> s = {0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 20}
+>>> s.symmetric_difference_update({90, 27, 11, 20, 3, 5, 7})
+>>> s
+{0, 1, 2, 4, 8, 9, 10, 90, 27}
+```
+
+#### 删除
+
+将一个元素从集合中移除也是非常有用的操作。Python 的 `set` 对象提供的删除元素的方法在下表列出
+
+| 方法                  | 描述                                        |
+| :------------------ | :---------------------------------------- |
+| `set.remove(elem)`  | 从 `set` 中移除元素 `elem`，不存在则抛出 `KeyError`    |
+| `set.discard(elem)` | 类似于 `set.remove()`，只是它不抛出异常               |
+| `set.pop()`         | 从 `set` 中删除一个元素并返回，`set` 为空则抛出 `KeyError` |
+| `set.clear()`       | 清空 `set`                                  |
+
+```python
+>>> s = {0, 1, 2, 4, 8, 9, 10, 90, 27}
+>>> s.remove(0)
+>>> s
+{1, 2, 4, 8, 9, 10, 90, 27}
+>>> s.remove(20)   # 不存在抛出 keyError
+Traceback (most recent call last):
+  File "<python-input-69>", line 1, in <module>
+    s.remove(20)
+    ~~~~~~~~^
+
+>>> s.discard(10)
+>>> s
+{1, 2, 4, 8, 9, 90, 27}
+>>> s.discard(20)  # 没有 20 也不会抛出 KeyError
+
+>>> s.pop()
+1
+>>> s.pop()
+2
+>>> s.pop()
+4
+
+>>> s.clear()
+>>> s
+set()
+```
+
+### Dict
+
+Python 中的字典(`dict`) 就是真正的散列表了，它是是可变的键值对容器。由于要对 `key`  求哈希值，因此 `key` 必须是可哈希对象，至于 `value` 的类型没有任何要求
+
+> [!tip] 
+> 
+> 在 Python 中，通常使用 **字符串** 的对象作为字典的键，此外还可以使用 **数字**、**只包含不可变对象的元组**
+> 
+> 请注意：如果一个元组包含了列表，由于列表是可变的，从而会导致元组的值发生变化，影响到元组的哈希值
+> 
+
+我们 **可以把字典理解为 _键值对_ 的集合**，但是要求 **键必须是唯一的**。在 Python 中，创建字典可以使用 **字典字面值** 或 **构造函数 `dict()`**
+
+字典字面值使用 **花括号(`{}`)** 包围的形如 `key:value` 的集合，例如
+
+```python
+>>> person = {"name": "小明", "age": 20, "gender": "male"}
+>>> person
+{'name': '小明', 'age': 20, 'gender': 'male'}
+```
+
+使用构造函数 `dict()` 创建字典对象的形式就比较多了，下面列表了常见的用法
+
+```python
+>>> p = dict(person)  # 返回一个字典对象的拷贝
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male'}
+
+>>> p = dict((("name", "小明"), ("age", 20), ("gender", "male")))
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male'}
+
+>>> p = dict([["name", "小明"], ["age", 20], ["gender", "male"]])
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male'}
+
+>>> p = dict(zip(["name", "age", "gender"], ["小明", 20, "male"]))
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male'}
+
+>>> p = dict(name="小明", age=20, gender="male")
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male'}
+```
+
+> [!tip] 
+> 
+> 上述这些方式可以混合使用，但是我们建议只单纯的使用一种方式
+> 
+
+Python 为操作字典对象提供了许多方法，下表列出了字典常用操作
+
+| 方法                | 描述                                              |
+| :---------------- | ----------------------------------------------- |
+| `list(dict)`      | 从 `dict` 中获取 `key`，并返回 `key` 形成的列表              |
+| `len(dict)`       | 获取 `dict` 的长度                                   |
+| `dict[key]`       | 从 `dict` 中返回 `key` 对应的 `value`。没有则抛出 `KeyError` |
+| `dict[key]=value` | 设置 `key:value` 键值对                              |
+| `del dict[key]`   | 从 `dict` 中删除 `key`。没有则抛出 `KeyError              |
+| `key in dict`     | 检查 `key` 是否在 `dict` 中                           |
+| `iter(d)`         | 返回 `dict` 中 `key` 形成的迭代器                        |
+
+```python
+>>> map = {'one': 1, 'two': 2, 'three': 3}
+>>> len(map)  # 字典中的项数
+3
+>>> list(map)  # 返回字典key的列表
+['one', 'two', 'three']
+>>> map['one']  # 获取字典中间对应的值，字典中没有触发 KeyError
+1
+>>> map['one'] = "一"  # 设置键的值
+>>> map
+{'one': '一', 'two': 2, 'three': 3}
+```
+
+#### 获取值
+
+通过 `key` 获取 `value` 除了使用 `dict[key]` 以外，Python 还提供了额外的方法
+
+| 方法                                   | 描述                                |
+| :----------------------------------- | :-------------------------------- |
+| `dict.get(key, default=None)`        | 返回 `key` 对应的 `value`              |
+| `dict.setdefault(key, default=None)` | 返回 `key` 对应的 `value`              |
+| `dict.values()`                      | 返回 `dict` 中所有 `values` 组成的迭代器     |
+| `dict.items()`                       | 以 `(key, value)` 形式返回 `dict` 中的元素 |
+
+> [!tip] 
+> 
+> `dict.get()` 和 `dict.setdefault()` 都可以用于获取 `key` 对应的 `value`，它们之间的区别就是当不存在 `key` 是 `dict.get()` 会返回参数 `default` 指定的值，默认为 `None`
+> 
+> 然而，`dict.setdefault()` 则将 `key:default` 添加到 `dict` 中，并返回参数 `default` 的值
+> 
+
+```python
+>>> p = {'name': '小明', 'age': 20, 'gender': 'male'}
+>>> p.get("gender")
+'male'
+>>> p.setdefault("name")
+'小明'
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male'}
+>>> p.setdefault("math")
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male', 'math': None}
+>>> p.values()
+dict_values(['小明', 20, 'male', None])
+>>> p.items()
+dict_items([('name', '小明'), ('age', 20), ('gender', 'male'), ('math', None)])
+```
+
+#### 修改
+
+除了通过表达式 `dict[key] = value` 的方式添加或修改 `dict` 中的键值对外，我们还可以使用下表列出来的方法
+
+| 方法                               | 描述                        |
+| :------------------------------- | :------------------------ |
+| `dict.update(other)`             | 使用 `other` 中的键值对更新 `dict` |
+| $\text{dict} \mid= \text{other}$ | 使用 `other` 中的键值对更新 `dict` |
+
+```python
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male', 'math': None}
+>>> p.update({"math": 90, "Chinese": 120})
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male', 'math': 90, 'Chinese': 120}
+```
+
+#### 删除
+
+通过 `del dict[key]` 删除字典中的键存在风险的，因为 `key` 可能不存在会抛出 `KeyError`。因此，Python 提供了下表列出的方法用于删除 `dict` 中的键
+
+| 方法                        | 描述                              |
+| :------------------------ | :------------------------------ |
+| `dict.pop(key[,default])` | 删除 `dict` 中的 `key`，并返回其 `value` |
+| `dict.popitem()`          | 从 `dict` 中移除并返回 `(key, value)`  |
+
+> [!tip] 
+> 
+> 请注意，方法 `dict.pip()` 如果没有提供参数 `default`，则当 `key` 不存在时，也会抛出 `KeyError`
+> 
+> `dict.popitem()` 在 Python 3.7 之前是随机删除，而在 Python3.7 之后，会确保采用 `LIFO` 顺序
+> 
+
+```python
+>>> p
+{'name': '小明', 'age': 20, 'gender': 'male', 'math': 90, 'Chinese': 120}
+>>> p.pop("math")
+90
+>>> p.popitem()
+('Chinese', 120)
+```
+
+#### 字典视图对象
+
+由 `dict.keys()`,` dict.values()` 和 `dict.items()` 所返回的对象是 **视图对象**。 该对象提供 **字典元素的动态视图**
+
+> [!important] 
+> 
+> 当字典改变时，视图也会相应改变
+> 
+
+```python
+>>> dict1 = {"one":1, "two":2, "three":3}
+>>> keys = dict1.keys()
+>>> keys
+dict_keys(['one', 'two', 'three'])
+>>> dict1 |= {"four": 4}  # 添加 "four"
+>>> keys  # keys 中增加了 "four"
+dict_keys(['one', 'two', 'three', 'four'])
+```
+
+字典视图 **可以被迭代** 以产生与其对应的数据，并 **支持成员检测**
