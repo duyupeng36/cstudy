@@ -6,6 +6,7 @@
       {
         "id": "97655f33aa98c5f2",
         "type": "tabs",
+        "dimension": 54.53431372549019,
         "children": [
           {
             "id": "8d2f73eaa5bd1a92",
@@ -44,6 +45,7 @@
       {
         "id": "e7ccd260dc7221c8",
         "type": "tabs",
+        "dimension": 45.46568627450981,
         "children": [
           {
             "id": "fc7c91ef8fac9604",
@@ -211,6 +213,9 @@
   },
   "active": "44139ccb3285f4a6",
   "lastOpenFiles": [
+    "README.md",
+    "笔记/正则表达式.md",
+    "笔记/Python：正则表达式.md",
     "assets/attachments/Pasted image 20250406001902.png",
     "assets/attachments/Pasted image 20250406001624.png",
     "assets/attachments/Pasted image 20250406001331.png",
@@ -221,10 +226,7 @@
     "assets/attachments/Pasted image 20250405205126.png",
     "assets/attachments/Pasted image 20250405204953.png",
     "assets/attachments/Pasted image 20250405204811.png",
-    "assets/attachments/Pasted image 20250405204659.png",
     "笔记/Go 语言：基本概念.md",
-    "笔记/Python：正则表达式.md",
-    "README.md",
     "笔记/Go 语言：开发环境搭建.md",
     "笔记/Python：基本概念.md",
     "笔记/Python：目录.md",
