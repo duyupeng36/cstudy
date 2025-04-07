@@ -339,8 +339,8 @@
 | [[Python：内置函数]]    | 内置函数大总结                                    |
 | [[Python：文件 IO]]   | 文件对象                                       |
 | [[Python：目录]]      | 目录操作                                       |
-| [[Python：正则表达式]]   |                                            |
-| [[Python：序列化]]     |                                            |
+| [[Python：正则表达式]]   | 介绍 re 模块中常用的函数                             |
+| [[Python：序列化]]     | pickle  JSON  MessagePack                  |
 |                    |                                            |
 |                    |                                            |
 
