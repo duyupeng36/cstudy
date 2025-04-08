@@ -1,0 +1,52 @@
+{
+  "id": "7a64a68e-2dd5-497f-9efc-8ee5f18f8dd9",
+  "title": "Python",
+  "messages": [
+    {
+      "role": "user",
+      "content": {
+        "root": {
+          "children": [
+            {
+              "children": [
+                {
+                  "detail": 0,
+                  "format": 0,
+                  "mode": "normal",
+                  "style": "",
+                  "text": "Python",
+                  "type": "text",
+                  "version": 1
+                }
+              ],
+              "direction": "ltr",
+              "format": "",
+              "indent": 0,
+              "type": "paragraph",
+              "version": 1,
+              "textFormat": 0,
+              "textStyle": ""
+            }
+          ],
+          "direction": "ltr",
+          "format": "",
+          "indent": 0,
+          "type": "root",
+          "version": 1
+        }
+      },
+      "promptContent": null,
+      "id": "ab5fb01d-a2d5-4560-9488-32fbb5e2b8d8",
+      "mentionables": []
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "id": "af4dec61-1390-49ef-9898-12e63106946f",
+      "metadata": {}
+    }
+  ],
+  "createdAt": 1744122852662,
+  "updatedAt": 1744122902579,
+  "schemaVersion": 1
+}
