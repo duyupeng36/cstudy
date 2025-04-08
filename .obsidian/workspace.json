@@ -39,8 +39,7 @@
             },
             "group": "2ccf854bc7fc3cd7"
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "e7ccd260dc7221c8",
@@ -182,13 +181,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/Python：序列化.md",
+                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Python：序列化 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -210,11 +209,14 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "44139ccb3285f4a6",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
+    "笔记/Python：序列化.md",
+    "assets/attachments/Pasted image 20240527193447.png",
+    "assets/attachments/Pasted image 20240527193046.png",
+    "assets/attachments/Pasted image 20250408214700.png",
     "assets/attachments/Pasted image 20250406233553.png",
     "README.md",
-    "笔记/Python：序列化.md",
     "笔记/Python：正则表达式.md",
     "笔记/正则表达式.md",
     "assets/attachments/Pasted image 20250406001902.png",
@@ -223,10 +225,6 @@
     "assets/attachments/Pasted image 20250405231838.png",
     "assets/attachments/Pasted image 20250405211858.png",
     "assets/attachments/Pasted image 20250405205447.png",
-    "assets/attachments/Pasted image 20250405205207.png",
-    "assets/attachments/Pasted image 20250405205126.png",
-    "assets/attachments/Pasted image 20250405204953.png",
-    "assets/attachments/Pasted image 20250405204811.png",
     "笔记/Go 语言：基本概念.md",
     "笔记/Go 语言：开发环境搭建.md",
     "笔记/Python：基本概念.md",

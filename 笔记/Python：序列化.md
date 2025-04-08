@@ -178,7 +178,7 @@ ccc
 
 ## JSON
 
-对于 PICKLE 协议，我们只需要了解它是如何工作的即可。下面我们详细介绍 JSON 是如何组织数据的
+对于 PICKLE 协议，我们只需要了解它是如何工作的即可。下面我们详细介绍 [JSON](https://www.json.org/json-zh.html) 是如何组织数据的
 
 > [!tip] 
 >
@@ -500,8 +500,213 @@ TypeError: Object of type complex is not JSON serializable
 
 函数 `json.loads(string)` 将 JSON 字符串 `string` 反序列化为 Python 对象。此外，这函数还有几个参数用于控制 `json.loads()` 的行为
 
+| 参数                   | 描述                  |
+| :------------------- | :------------------ |
+| `cls`                | 指定 JSONDecoder      |
+| `object_hook`        | 指定一个函数拦截对象的反序列化     |
+| `object_pairs_hook ` | 指定一个函数拦截对象的反序列化     |
+| `parse_float`        | 指定一个函数拦截浮点数的反序列化    |
+| `parse_int`          | 指定一个函数拦截整数的序列化      |
+| `parse_constant`     | 指定一个函数拦截无效的 JSON 数字 |
+
+> [!tip] 
+> 
+> 参数 `cls` 指定在反序列化时使用的 JSON 解码器，默认使用 JSONDecoder。我们可以继承 JSONDecoder 并重写 `loads()` 方法用于自定义 JSON 解码规则
+> 
+
+```python
+import re
+import json
 
 
+class ComplexEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, complex):
+            return f"{o.real} + {o.imag}i"
+
+        return super().default(o)
 
 
+class ComplexDecoder(json.JSONDecoder):
+    def decode(self, s, *args, **kwargs):
+        res = re.search(r"(\d+\.\d+) \+ (\d+\.\d+)i", s)
+        return complex(float(res.group(1)), float(res.group(2)))
+
+c = 3 + 3j
+
+r = json.loads(json.dumps(c, cls=ComplexEncoder), cls=ComplexDecoder)
+print(r)  # (3+3j)
+```
+
+## MessagePack
+
+JSON 是文本序列协议，使用 JSON 序列化出来的结果是字符串。如果序列化的对象本身就是字符串，那么这是毫无疑问的。然而，有时候我们需要将其他类型的数据序列化为字符串，这可能会造成字节的浪费
+
+例如，对于整数 $255$，只需要 $1$ 个字节就能保存。然而，将其序列化为 JSON 字符串的结果为 `"255"`，这样就需要 $3$ 个字节，从而浪费了 $2$ 个字节
+
+为了避免这种浪费，我们需要采用 **二进制序列化协议**。这里我们将介绍一个类似于 JSON 的二进制序列化协议 [MessagePack](https://msgpack.org/)
+
+MessagePack 是一种 **高效的二进制序列化协议**。它允许你在多种语言(如 JSON)之间交换数据。但它更快、更小。例如，**小的整数被编码成一个字节**，典型的短字符串除了字符串本身外只需要一个额外的字节。
+
+它可以像 JSON 那样，在许多种语言之间交换结构对象。但是它比 JSON 更快速也更轻巧。如下图，这是 MessagePack 官网上与 JSON 格式的对比
+
+![[Pasted image 20250408214700.png]]
+
+### 压缩原理
+
+MessagePack 的压缩原理，详细内容参考 [MessagePack 规范](https://github.com/msgpack/msgpack/blob/master/spec.md)
+
++ `true` `false` 采用 $1$ 个字节表示，（`0xc3` 表示 `true`，`0xc2` 表示 `false`）
++ **定长对象**：就是 **数字** 之类的，他们天然是定长的，是用一个字节表示后面的内容是什么
+	+ `0xcc` 表示这后面的内容是个 `uint8`
+	+ `oxcd` 表示后面的内容是个 `uint16`
+	+ `0xca` 表示后面的是个 `float32`
+	+ 对于数字做了进一步的压缩处理，根据大小选择用更少的字节进行存储，比如 `<256` 的 `int`，完全可以用一个字节表示
++ **不定长对象**：比如 _字符串_、_数组_、_二进制数据_，类型后面加 `1~4`个字节，用来存长度
+	+ 比如字符串长度是 $256$ 以内的，只需要 $1$ 个字节
+	+ MessagePack 能存的最长的字符串，是($2^{32} -1$ ) 最长的 `4G` 的字符串大小
++ **高级数据结构**：`map` ，就是 `k-v` 结构的数据，和数组差不多，加 `1~4` 个字节表示后面有多少个项
++ **Ext结构**：表示特定的小单元数据。也就是 **用户自定义数据结构**
+
+
+> [!tip] 
+> 
+> 关于 MessagePack 协议我们不做详细解释，如有需要请参看 [ [MessagePack 规范](https://github.com/msgpack/msgpack/blob/master/spec.md)
+> 
+
+### 接口
+
+[message-pack](https://github.com/msgpack/msgpack-python) 提供了 Python 的 MessagePack 协议的实现。因此，我们应该首先安装这个第三方库
+
+```shell
+$ pip install -U msgpack
+```
+
+用于序列化和反序列的函数分别是 `msgpack.packb()` 和 `msgpack.unpackb()`
+
+```python
+>>> import msgpack
+>>> person = {"name": "张三", "age": 28, "gender": "male"}
+>>> msgpack.packb(person)
+b'\x83\xa4name\xa6\xe5\xbc\xa0\xe4\xb8\x89\xa3age\x1c\xa6gender\xa4male'
+>>> msgpack.unpackb(_)
+{'name': '张三', 'age': 28, 'gender': 'male'}
+```
+
+此外，还提供了与标准库 `json` 同名的接口，它们只是 `msgpack.packb()` 和 `msgpack.ubpackb()` 的包装器
+
+```python
+>>> msgpack.dumps(person)
+b'\x83\xa4name\xa6\xe5\xbc\xa0\xe4\xb8\x89\xa3age\x1c\xa6gender\xa4male'
+>>> msgpack.loads(_)
+{'name': '张三', 'age': 28, 'gender': 'male'}
+```
+
+## Base64
+
+Base64 是一种基于 $64$ 个可打印字符来表示二进制数据的方法。由于 $\log_2 64 = 6$ ，所以只需要 $6$ 个比特就可以编码一个可打印字符
+
+> [!important] 
+> 
+> 在 Base64 编码中，使用 $4$ 个 Base64 字符代表  $3$ 个字节（ $24$ 个比特）组成，即 **$3$ 个字节可由 $4$ 个可打印字符来表示**
+> 
+
+在 Base64 中的可打印字符包括字母`A-Z`、`a-z`、数字 `0-9`，这样共有 $62$ 个字符，此外两个可打印符号在不同的系统中而不同
+
+> [!important] 
+> 
+> Base64 编码的核心就是使用 $4$ 个可打印字符表示 $3$ 个字节
+> 
+
+### RFC 4648 标准的 Base64 索引表
+
+| 索引  | 二进制      | 字符  |     | 十进制 | 二进制      | 字符  |     | 十进制 | 二进制      | 字符  |     | 十进制 | 二进制      | 字符  |
+| --- | -------- | --- | --- | --- | -------- | --- | --- | --- | -------- | --- | --- | --- | -------- | --- |
+| 0   | `000000` | A   |     | 16  | `010000` | Q   |     | 32  | `100000` | g   |     | 48  | `110000` | w   |
+| 1   | `000001` | B   |     | 17  | `010001` | R   |     | 33  | `100001` | h   |     | 49  | `110001` | x   |
+| 2   | `000010` | C   |     | 18  | `010010` | S   |     | 34  | `100010` | i   |     | 50  | `110010` | y   |
+| 3   | `000011` | D   |     | 19  | `010011` | T   |     | 35  | `100011` | j   |     | 51  | `110011` | z   |
+| 4   | `000100` | E   |     | 20  | `010100` | U   |     | 36  | `100100` | k   |     | 52  | `110100` | 0   |
+| 5   | `000101` | F   |     | 21  | `010101` | V   |     | 37  | `100101` | l   |     | 53  | `110101` | 1   |
+| 6   | `000110` | G   |     | 22  | `010110` | W   |     | 38  | `100110` | m   |     | 54  | `110110` | 2   |
+| 7   | `000111` | H   |     | 23  | `010111` | X   |     | 39  | `100111` | n   |     | 55  | `110111` | 3   |
+| 8   | `001000` | I   |     | 24  | `011000` | Y   |     | 40  | `101000` | o   |     | 56  | `111000` | 4   |
+| 9   | `001001` | J   |     | 25  | `011001` | Z   |     | 41  | `101001` | p   |     | 57  | `111001` | 5   |
+| 10  | `001010` | K   |     | 26  | `011010` | a   |     | 42  | `101010` | q   |     | 58  | `111010` | 6   |
+| 11  | `001011` | L   |     | 27  | `011011` | b   |     | 43  | `101011` | r   |     | 59  | `111011` | 7   |
+| 12  | `001100` | M   |     | 28  | `011100` | c   |     | 44  | `101100` | s   |     | 60  | `111100` | 8   |
+| 13  | `001101` | N   |     | 29  | `011101` | d   |     | 45  | `101101` | t   |     | 61  | `111101` | 9   |
+| 14  | `001110` | O   |     | 30  | `011110` | e   |     | 46  | `101110` | u   |     | 62  | `111110` | +   |
+| 15  | `001111` | P   |     | 31  | `011111` | f   |     | 47  | `101111` | v   |     | 63  | `111111` | /   |
+| 填充  |          | =   |     |     |          |     |     |     |          |     |     |     |          |     |
+
+### 示例
+
+举例来说，一段引用自托马斯·霍布斯《利维坦》的文句
+
+```
+Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.
+```
+
+经过 Base64 编码之后变成：
+
+```base64
+TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=
+```
+
+编码 `"Man"` 的结果为`"TWFu"`，详细原理如下
+
+![[Pasted image 20240527193046.png]]
+
+在此例中，**Base64 算法将 3 个字节编码为 4 个字符**
+
+**如果要编码的字节数不能被 3 整除，最后会多出 1 个或 2 个字节，那么可以使用下面的方法进行处理：先使用 0 字节值在末尾补足，使其能够被 3 整除，然后再进行 Base64 的编码**。在编码后的 Base64 文本后加上一个或两个`=`号，代表补足的字节数。也就是说，当最后剩余两个八位(待补足)字节（`2`个 `bytes`）时，最后一个 6 位的 Base64 字节块有四位是 0 值，最后附加上两个等号；如果最后剩余一个八位(待补足)字节（`1` 个 `byte`）时，最后一个 `6` 位的 `base` 字节块有两位是 `0` 值，最后附加一个等号。 参考下表：
+
+![[Pasted image 20240527193447.png]]
+
+### Base64 编码实现
+
+
+编码过程就是对 $3$ 个任意字节数据编码为 $4$ 个字节，每个字节的最高 $2$ 位不用了，只用 $6$ 位，而 $6$ 位的变化只有 $64$ 种，如上图，利用上图查表对应就得出编码了。字节不够 $3$ 会补齐
+
+```python
+def encoding(src: bytes):
+    """base64 编码
+    """
+    MAP_VALUE2CHAR: dict = {index : char for index, char in enumerate((ascii_uppercase + ascii_lowercase + "0123456789+/").encode())}
+
+    # src = bytearray(src)
+    # 计算字节数
+    length = len(src)
+    # 判断字节能否被 3 整除。如果不能，则需要要补充 0
+    remainder = length % 3
+    if remainder:
+        # 不能被 3 整除，需要填充
+        # 主要不要写为 src += b"0" * (3 - remainder)。b"0" 是 字符0的编码
+        src += b"\x00" * (3 - remainder) # 填充 3 - remainder 个 0
+    
+    # 能被 3 整除，准备编码
+    # 从 src 中获取 3 和字节，然后将其组合成一个大整数
+    result = bytearray()  # 保存编码的结果
+    for i in range(3, len(src)+1, 3):
+        """ 
+        u = 0
+       
+        for index, value in enumerate(src[i-3:i]):
+            u |= value << (24 - (index + 1) * 8)
+
+        print(hex(u))
+        """
+        # 获取三个字节，构建整数。使用位运算
+        u = int.from_bytes(src[i-3:i], byteorder="big")
+
+        for j in range(4):
+            move_ndigits = 24 - (j + 1) * 6
+            if  i == len(src) and remainder and j >= 2 and not ((u & (0x3f << move_ndigits)) >> move_ndigits):
+                result.append(ord("="))  # 这里需要使用 ord() 将 "=" 获取它的编码
+            else:
+                result.append(MAP_VALUE2CHAR[(u & (0x3f << move_ndigits)) >> move_ndigits])
+
+    return bytes(result)
+```
 
