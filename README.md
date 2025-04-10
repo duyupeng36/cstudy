@@ -333,18 +333,20 @@
 | [[Python：基本概念]]    | 数据类型 运算符 控制流程                              |
 | [[Python：内建数据结构]]  | 序列(list tuple str bytes 和 bytearray) 集合 字典 |
 | [[Python：推导式]]     | 列表生成式 集合生成式 字典生成式 生成器生成式                   |
+|                    |                                            |
 | [[Python：函数基础]]    | 函数的定义与调用 名字空间与作用域 global和nonlocal          |
 | [[Python：函数高级]]    | 函数对象 匿名函数 递归 生成器函数 高阶函数                    |
 | [[Python：装饰器与偏函数]] | 装饰器 偏函数                                    |
 | [[Python：内置函数]]    | 内置函数大总结                                    |
-| [[Python：模块和包]]      | Python 代码的组织与管理                            |
+| [[Python：模块和包]]    | Python 代码的组织与管理                            |
+|                    |                                            |
 | [[Python：文件 IO]]   | 文件对象                                       |
 | [[Python：目录]]      | 目录操作                                       |
 | [[Python：正则表达式]]   | 介绍 re 模块中常用的函数                             |
 | [[Python：序列化]]     | pickle  JSON  MessagePack Base64           |
 |                    |                                            |
-| [[Python：类与对象]]    |                                            |
-|                    |                                            |
+| [[Python：类与对象]]    | 类定义 类对象 实例对象                               |
+| [[Python：继承]]      |                                            |
 |                    |                                            |
 
 ## 扩展：工具
