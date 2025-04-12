@@ -427,3 +427,43 @@ print(Dog.__class__)  # <class 'type'>
 > 每个对象都有一个 `__class__` 属性，它是该对象的类
 > 
 
+## 构造与析构
+
+通常，在类实例化时我们希望给实例初始化一些属性。就像 C++ 中那样给对象的数据成员初始化一样。
+
+在 Python 中，对象的构造函数是 Python 的特殊方法 `__init__(self)`。任何类都有默认的 `__init__(self)`，即使我们不定义 `__init__(self)` 方法，Python 解释器也会帮我们初始化对象，只它初始化的对象是一个 **空对象**，即，没有任何属性的对象
+
+> [!tip] 
+> 
+> 在 Python 中，任何对象在被刚创建出来的时候都是空的，它没有携带任何属性。只有被 `__init__(self)` 初始化之后，对象才会被设置属性
+> 
+
+在 Python 中，给对象添加属性就像定义变量那样直接赋值即可
+
+```python
+class Dog:
+
+    def __init__(self, name, age):
+        self.name = name  # 给对象添加属性 name
+        self.age = age    # 给对象添加属性 age
+```
+
+> [!tip] 
+> 
+> 和 C++ 一样，**构造函数不能有返回值**。在 Python 中，构造函数不能有除了 `None` 之外的任何其他的返回值
+> 
+
+对象可能持有一些资源，例如 **打开的文件**、**锁** 等，当对象被销毁时，这些资源也应该被释放。当对象要被销毁时，Python 解释器会调用特殊方法 `__del__(self)` 
+
+```python
+class Dog:
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __del__(self):
+        print("Dog was deleted")
+```
+
+然而，**对于 Python 而言，对象的销毁完全由解释器的垃圾回收机制管理**。也就是说，对象的销毁可能不及时，从而导致进程中的 **文件关闭不及时** 或者 **锁释放不及时**。

@@ -345,9 +345,14 @@
 | [[Python：正则表达式]]   | 介绍 re 模块中常用的函数                             |
 | [[Python：序列化]]     | pickle  JSON  MessagePack Base64           |
 |                    |                                            |
-| [[Python：类与对象]]    | 类定义 类对象 实例对象                               |
-| [[Python：继承]]      |                                            |
+| [[Python：类与对象]]    | 类定义 类对象 实例对象 构造与析构                         |
+| [[Python：继承]]      | 单继承 多继承  C3算法(MRO) 多态                      |
+| [[Python：异常处理]]    | `try...except...else...finaly` 语句          |
 |                    |                                            |
+|                    |                                            |
+|                    |                                            |
+|                    |                                            |
+| [[Python：元类]]      |                                            |
 
 ## 扩展：工具
 
