@@ -358,6 +358,114 @@ while True:
 > 请注意：我们可以随时向一个实例对象添加他们自己的数据属性而不会影响方法的可用性，只要保证避免名称冲突 --- 再次提醒，**使用命名约定可以省去许多令人头痛的麻烦**
 > 
 
+#### property 装饰器
+
+对于隐藏属性，不建议使用者直接修改，而是使用类提供的 **数据属性访问接口** 进行访问和修改
+
+如下示例，表示一个平面上的点。我们不希望直接修改这点的位置，而是通过类提供的方法进行修改
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.__x = x
+        self.__y = y
+
+
+point = Point(10, 20)
+print(point.__x, point.__y) # 错误：无法访问 __x 和 __y
+```
+
+> [!warning] 
+> 
+> 上述脚本执行时会抛出 `AttributeError`，告知我们没有属性 `__x` 和 `__y`
+> 
+
+为了能够访问和修改这个两个属性，就需要提供一个 `x()` 和 `y()` 两个方法
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.__x = x
+        self.__y = y
+
+    def x(self):
+        return self.__x
+
+    def y(self):
+        return self.__y
+
+
+point = Point(10, 20)
+print(point.x(), point.y())  # 通过函数访问
+```
+
+然而，`x` 和 `y` 在概念上应该是数据属性，此处表现出来的是方法属性。Python 提供的一个装饰器 `property`，它可以将这种读取值的方式标记为数据属性。当通过数据属性方式访问方法时，就会自动执行该方法的调用
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.__x = x
+        self.__y = y
+
+    @property
+    def x(self):
+        print("通过数据属性的访问方式我被调用了")
+        return self.__x
+
+    @property
+    def y(self):
+        print("通过数据属性的访问方式我被调用了")
+        return self.__y
+
+
+point = Point(10, 20)
+print(point.x, point.y)  # 通过函数访问
+```
+
+为了修改值，往往使用 `obj.name = value` 的方式，此时我们还无法做到修改值
+
+```python
+point = Point(10, 20)
+point.x = 30
+```
+
+这段代码执行时，也会抛出 `AttributeError`，异常信息为 `property 'x' of 'Point' object has no setter`，这个异常信息提示我们属性 `x` 没有 `setter` 方法
+
+为了能够通过 `obj.name = value` 的方式修改属性值，只需要重新定义一个 `name` 函数，并标记上 `@name.setter` 即可
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.__x = x
+        self.__y = y
+
+    @property
+    def x(self):   # getter
+        return self.__x
+
+    @x.setter
+    def x(self, x):  # setter
+        if not isinstance(x, (int, float)):
+            raise TypeError("x must be int or float")
+        self.__x = x
+
+    @property
+    def y(self):  # getter
+        return self.__y
+
+    @y.setter
+    def y(self, y): # setter
+        if not isinstance(y, int| float):
+            raise TypeError("y must be int or float")
+        self.__y = y
+
+point = Point(10, 20)
+print(point.x, point.y)  # 通过函数访问
+point.x = 30
+point.y = 100
+print(point.x, point.y)  # 通过函数访问
+```
+
 ### 方法调用约定
 
 在方法内部引用数据属性或其他方法时，并没有简便方式。 我发现这实际上提升了方法的可读性：当浏览一个方法代码时，不会存在混淆局部变量和实例变量的机会。
@@ -425,6 +533,99 @@ print(Dog.__class__)  # <class 'type'>
 > 只要一个类属性是函数对象，那么都为该类的实例定义了一个方法。因此，我们可以在类外定义函数，然后将这个函数对象赋值给类的局部变量
 > 
 > 每个对象都有一个 `__class__` 属性，它是该对象的类
+> 
+
+在类中定义的函数，默认情况下都是给该类实例调用的方法，即 **绑定实例的方法**。然而，有时候我们可能需要再没有实例的时候调用某些方法。
+
+在 Python 中，有两类方法在调用时可以不用于绑定实例：**静态方法** 和 **类方法**
+
+#### staticmethod 装饰器
+
+我们在定义 **三角形类** 时，需要提供三条边的边长度用于构造三角形，并提供计算三角形周长和面积的方法。然而，传入的 $3$ 条边并不一定能够构造三角形，因此需要验证这 $3$ 三边是否能够构成三角形
+
+```python
+class Trangle:
+
+	def __init__(self, a, b, c):
+		if not (a + b > c and a + c > b and b + c > a):
+			raise ValueError(f"{a} {b} {c} 不能构成三角形")
+		self.a = a
+		self.b = b
+		self.c = c
+
+	def circumference(self):
+		pass
+
+	def area(self):
+		pass
+```
+
+验证三条边长是否能够构成三角形的代码最好不要出现在`__init__()` 方法中，我们要保证 `__init__()` 方法中的代码比较简单。因此，我们需要将这段代码抽取出来编写成一个验证方法。由于此时尚未有三角形的实例，因此这个验证方法不需要知道是哪个实例调用的它
+
+```python
+import math
+
+
+class Triangle:
+
+	def __init__(self, a, b, c):
+		if not self.valid_triangle(a, b, c):
+			raise ValueError(f'the three edge {a} {b} {c} cannot be triangulated')
+			
+		self.a = a
+		self.b = b
+		self.c = c
+
+	def circumference(self):
+		return self.a + self.b + self.c
+
+	def area(self):
+		p = self.circumference() / 2
+		return math.sqrt(p * (p - self.a) * (p - self.b) * (p - self.c))
+
+	@staticmethod
+	def valid_triangle(a, b, c):
+		return a + b > c and a + c > b and b + c > a
+```
+
+因为在调用这个方法时三角形对象尚未创建出来（因为都不知道三条边能不能构成三角形），所以这个方法是 **属于三角形类而并不属于三角形对象的**。在 Python 中，我们可以使用装饰器 `staticmethod` 标记一个在类中定义的函数为静态方法。
+
+> [!attention] 
+> 
+> 请注意：`staticmethod` 装饰器只是拦截了方法的调用。此时，不在给方法传递实例
+> 
+> 关于 `staticmethod` 的原理，我们会在 [[Python：描述器]] 中介绍
+> 
+
+#### classmethod 装饰器
+
+在 Python 中，类本身也是对象，它也可以有方法，这个方法被称为 **类方法**。想要为类定义方法可以在类定义中使用装饰器 `classmethod` 标记一个函数，并让其成为类方法。
+
+> [!tip] 
+> 
+> 在类定义时，被 `classmethod` 装饰的函数会变成类方法，通过类调用该方法时，会将类作为第一个参数传递给该方法
+> 
+
+**类方法通常用于创建该类的实例**。比如，内置类型 `int` 就有一个类方法 `int.from_bytes()` 它从字节序列中返回一个 `int` 类的实例。
+
+```python
+class Dog:
+
+    @classmethod
+    def from_name(cls):
+        print("类方法", cls)
+
+
+print(Dog.from_name)  # <bound method Dog.from_name of <class '__main__.Dog'>>
+print(Dog().from_name)  # <bound method Dog.from_name of <class '__main__.Dog'>>
+
+Dog.from_name()  # 类方法 <class '__main__.Dog'>
+Dog().from_name()  # 类方法 <class '__main__.Dog'>
+```
+
+> [!attention] 
+> 
+> 请注意：无论是通过类对象还是通过其实例对象，最终传递给类方法的第一个参数始终是该类对象
 > 
 
 ## 构造与析构
