@@ -349,7 +349,7 @@
 | [[Python：继承]]      | 单继承 多继承  C3算法(MRO) 多态                      |
 | [[Python：异常处理]]    | `try...except...else...finaly` 语句          |
 | [[Python：基本魔术方法]]  | 实例化 可视化 可哈希 逻辑值                            |
-| [[Python：运算符重载]]   |                                            |
+| [[Python：运算符重载]]   | 运算符重载                                      |
 |                    |                                            |
 | [[Python：描述器]]     |                                            |
 | [[Python：元类]]      |                                            |
