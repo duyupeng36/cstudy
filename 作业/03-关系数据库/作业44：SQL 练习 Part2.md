@@ -76,7 +76,7 @@ company=# \d locations
     TABLE "departments" CONSTRAINT "dept_loc_fk" FOREIGN KEY (location_id) REFERENCES locations(location_id)
 ```
 
-## [[连接表]]
+## [[数据库：连接表]]
 
 #### 显示所有员工的姓名，部门号和部门名称
 

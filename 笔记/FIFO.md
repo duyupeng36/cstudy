@@ -36,7 +36,7 @@ mkfifo [-m mode] pathname
 
 > [!tip] 
 > 
-> `-m mode` 用于指定 FIFO 文件的权限为 `mode`，指定方式类似于 `chmod` 命令，参考 [[Linux 命令和 vim 操作#类型和权限#修改权限]]
+> `-m mode` 用于指定 FIFO 文件的权限为 `mode`，指定方式类似于 `chmod` 命令，参考 [[Linux：命令和 vim#类型和权限#修改权限]]
 > 
 
 系统调用 `mkfifo()` 也可以用于创建 FIFO 文件

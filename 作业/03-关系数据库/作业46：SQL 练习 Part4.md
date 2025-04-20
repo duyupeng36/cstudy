@@ -1,6 +1,6 @@
 # 作业46：SQL 练习 Part4
 
-## [[子查询#不相关子查询]]
+## [[数据库：子查询#不相关子查询]]
 
 #### 找出比 Abel 工资高的员工的姓名和工资
 
@@ -352,7 +352,7 @@ WHERE dep.department_id = dep_avg_sal_table.department_id
 ```
 
 
-## [[子查询#相关子查询]]
+## [[数据库：子查询#相关子查询]]
 
 #### 查询工资大于本部门平均工资的员工的 `last_name`,`salary` 和其 `department_id`
 
