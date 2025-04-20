@@ -359,7 +359,7 @@ L[object] = object
 > 
 > ```
 > L[C(B)] = C + merge(L[B],B) 
-> 	    = C + merage(B0,B)
+> 	    = C + merage(BO,B)
 > 	    = C+ B + O
 > ```
 

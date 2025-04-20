@@ -594,7 +594,7 @@ class Triangle:
 > 
 > 请注意：`staticmethod` 装饰器只是拦截了方法的调用。此时，不在给方法传递实例
 > 
-> 关于 `staticmethod` 的原理，我们会在 [[Python：描述器]] 中介绍
+> 关于 `staticmethod` 的原理，我们会在 [[Python：描述器#staticmethod 原理]] 中介绍
 > 
 
 #### classmethod 装饰器
