@@ -97,141 +97,141 @@
 
 #### 文件系统
 
-| 内容                 | 描述            | 系统调用/库函数                                                                                                                                                                              |
-| :----------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 理论：操作系统            |               |                                                                                                                                                                                       |
-| [[文件系统]]           | 文件和文件系统       |                                                                                                                                                                                       |
-| [[文件系统的实现]]        | 实现文件系统        |                                                                                                                                                                                       |
-|                    |               |                                                                                                                                                                                       |
-| Linux 系统调用         |               |                                                                                                                                                                                       |
-| [[文件 IO：通用 IO 模型]] | 通用 IO 接口      | 打开和关闭：`open` `close` <br>读写：`read` `write` <br>文件指针：`lseek` <br>`ioctl`                                                                                                               |
-| [[深入文件 IO]]        | 原子操作<br>描述符复制 | 文件描述符控制: `fcntl`<br>文件描述符复制:  `dup` `dup2` `dup3`                                                                                                                                     |
-| [[文件 IO 缓冲]]       | 同步 IO 完整性     | 文件完整性:`fsync` <br>数据完整性: `fdatasync`<br>IO完整性: `sync`                                                                                                                                 |
-| [[文件属性]]           | 文件元数据         | 文件属性：`stat` `utime` `access`<br> 权限：`umask` `chmod`                                                                                                                                   |
-| [[目录与链接]]          | 目录和链接         | 硬链接：`link` `unlink`<br>符号链接：`symlink` `readlink`<br>目录：`mkdir` `rmdir`<br>删除和重命名`remove` `rename` <br>目录流：`opendir` `fdopendir` `readdir` `dirfd`<br>当前工作目录：`getcwd` `chdir` `chroot` |
+| 内容                      | 系统调用/库函数                                                                                                                                                                              |
+| :---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 理论：操作系统                 |                                                                                                                                                                                       |
+| [[操作系统：文件系统]]           |                                                                                                                                                                                       |
+| [[操作系统：文件系统的实现]]        |                                                                                                                                                                                       |
+|                         |                                                                                                                                                                                       |
+| Linux 系统调用              |                                                                                                                                                                                       |
+| [[Linux 系统编程：文件 IO]]    | 打开和关闭：`open` `close` <br>读写：`read` `write` <br>文件指针：`lseek` <br>`ioctl`                                                                                                               |
+| [[Linux 系统编程：深入文件 IO]]  | 文件描述符控制: `fcntl`<br>文件描述符复制:  `dup` `dup2` `dup3`                                                                                                                                     |
+| [[Linux 系统编程：文件 IO 缓冲]] | 文件完整性:`fsync` <br>数据完整性: `fdatasync`<br>IO完整性: `sync`                                                                                                                                 |
+| [[Linux 系统编程：文件属性]]     | 文件属性：`stat` `utime` `access`<br> 权限：`umask` `chmod`                                                                                                                                   |
+| [[Linux 系统编程：目录与链接]]    | 硬链接：`link` `unlink`<br>符号链接：`symlink` `readlink`<br>目录：`mkdir` `rmdir`<br>删除和重命名`remove` `rename` <br>目录流：`opendir` `fdopendir` `readdir` `dirfd`<br>当前工作目录：`getcwd` `chdir` `chroot` |
 
 #### 进程 用户 时间
 
-| 内容         | 描述                                                                 | 系统调用/库函数                                                                                                                                                                                                                                  |
-| :--------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 理论：操作系统    |                                                                    |                                                                                                                                                                                                                                           |
-| [[进程概念]]   | 进程内存结构<br>进程状态转换                                                   |                                                                                                                                                                                                                                           |
-| [[进程调度]]   | 先来先服务<br>短作业优先<br>最短剩余时间优先<br><br>时间片轮转<br>优先级调度<br>多级队列<br>多级反馈队列 |                                                                                                                                                                                                                                           |
-|            |                                                                    |                                                                                                                                                                                                                                           |
-| Linux 系统调用 |                                                                    |                                                                                                                                                                                                                                           |
-| [[进程]]     | 进程的属性                                                              | PID和PPID: `getpid` `getppid` <br>环境变量: `getenv` `putenv` `setenv` `unsetenv` `clearenv`                                                                                                                                                   |
-| [[用户和组]]   | Linux 用户管理                                                         | 读密码文件：`getpwnam` `getpwuid` <br>读组文件：`getgrnam` `getgrgid` <br>读影子文件：`getspnam`<br>遍历密码文件：`getpwent` `setpwent` `getpwent`<br>遍历组文件：`getgrent` `setgrent` `endgrent`<br>遍历影子文件：`getspent` `setspent` `endspent`<br>密码验证：`crypt` `getpass` |
-| [[时间]]     | 时间处理                                                               | 日历时间：`gettimeofday` `settimeofday`<br>获取当前时间：`time`  `mktime` <br>分解时间: `gmtime` `localtime` `strptime`<br>打印时间: `ctime` `asctime` `strftime` <br>进程时间: `times` `clock`                                                                   |
+| 内容                  | 描述                                                                 | 系统调用/库函数                                                                                                                                                                                                                                  |
+| :------------------ | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 理论：操作系统             |                                                                    |                                                                                                                                                                                                                                           |
+| [[操作系统：进程概念]]       | 进程内存结构<br>进程状态转换                                                   |                                                                                                                                                                                                                                           |
+| [[操作系统：进程调度]]       | 先来先服务<br>短作业优先<br>最短剩余时间优先<br><br>时间片轮转<br>优先级调度<br>多级队列<br>多级反馈队列 |                                                                                                                                                                                                                                           |
+|                     |                                                                    |                                                                                                                                                                                                                                           |
+| Linux 系统调用          |                                                                    |                                                                                                                                                                                                                                           |
+| [[Linux 系统编程：进程属性]] | 进程的属性                                                              | PID和PPID: `getpid` `getppid` <br>环境变量: `getenv` `putenv` `setenv` `unsetenv` `clearenv`                                                                                                                                                   |
+| [[Linux 系统编程：用户和组]]            | Linux 用户管理                                                         | 读密码文件：`getpwnam` `getpwuid` <br>读组文件：`getgrnam` `getgrgid` <br>读影子文件：`getspnam`<br>遍历密码文件：`getpwent` `setpwent` `getpwent`<br>遍历组文件：`getgrent` `setgrent` `endgrent`<br>遍历影子文件：`getspent` `setspent` `endspent`<br>密码验证：`crypt` `getpass` |
+| [[Linux 系统编程：时间]]              | 时间处理                                                               | 日历时间：`gettimeofday` `settimeofday`<br>获取当前时间：`time`  `mktime` <br>分解时间: `gmtime` `localtime` `strptime`<br>打印时间: `ctime` `asctime` `strftime` <br>进程时间: `times` `clock`                                                                   |
 
 #### 内存管理
 
 | 内容          | 描述             | 系统调用/库函数                                                              |
 | :---------- | -------------- | --------------------------------------------------------------------- |
 | 理论：硬件       |                |                                                                       |
-| [[存储器层次结构]] | 组织存储器，避免 IO 低效 |                                                                       |
+| [[计算机组成：存储器层次结构]] | 组织存储器，避免 IO 低效 |                                                                       |
 |             |                |                                                                       |
 | 理论：内存管理     |                |                                                                       |
-| [[内存管理]]    | 分段和分页          |                                                                       |
-| [[虚拟内存]]    | 虚拟内存管理/地址转换    |                                                                       |
+| [[操作系统：内存管理]]    | 分段和分页          |                                                                       |
+| [[操作系统：虚拟内存]]    | 虚拟内存管理/地址转换    |                                                                       |
 |             |                |                                                                       |
 | Linux 系统调用  |                |                                                                       |
-| [[内存分配]]    | 虚拟内存分配         | 堆上分配空间：`brk` `sbrk` <br>栈上分配空间：`alloca`                               |
-| [[内存映射]]    | 将文件映射到虚拟内存     | 建立映射：`mmap` <br>解除映射：`munmap`                                         |
-| [[虚拟内存操作]]  | 虚拟地址空间上执行系统调用  | 修改保护位：`mprotect`<br>锁定内存：`mlock` `mlockall`<br>建议：`mincore` `madvise` |
+| [[Linux 系统编程：内存分配]]    | 虚拟内存分配         | 堆上分配空间：`brk` `sbrk` <br>栈上分配空间：`alloca`                               |
+| [[Linux 系统编程：内存映射]]    | 将文件映射到虚拟内存     | 建立映射：`mmap` <br>解除映射：`munmap`                                         |
+| [[Linux 系统编程：虚拟内存操作]]  | 虚拟地址空间上执行系统调用  | 修改保护位：`mprotect`<br>锁定内存：`mlock` `mlockall`<br>建议：`mincore` `madvise` |
 
 #### 进程管理
 
-| 内容          | 描述                              | 系统调用/库函数                                                                                                                                                                                   |
-| :---------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [[进程凭证]]    | 进程权限认证                          | 获取实际ID: `getuid` `getgid`<br>获取有效ID: `geteuid` `getegid` <br>修改有效ID: `setuid` `setgid` `seteuid` `setegid`<br>文件系统ID: `setfsuid` `setfsgid`<br>辅助组ID: `getgroups` `setgroups` `initgroups` |
-| [[进程创建]]    | 创建进程                            | 写时复制创建子进程：`fork` <br>子进程使用父进程内存：`vfork`                                                                                                                                                    |
-| [[进程终止]]    | 进程退出<br>退出处理                    | 系统调用：`_exit`<br>库函数: `exit` <br>注册退出处理程序：`atexit` `on_exit`                                                                                                                                |
-| [[监控子进程]]   | 子进程状态                           | 等待子进程: `wait` `waitpid` <br>等待子进程状态变化：`waitid` <br>获取子进程资源使用情况：`wait3` `wait4`                                                                                                             |
-| [[程序执行]]    | 加载程序                            | 系统调用: `execve` <br>库函数: `execl`  `execle` `execlp`  `execv` `execvp`                                                                                                                       |
-| [[优先级和调度]]  | 进程调度相关                          | 获取 nice 值：`getpriority`<br>设置 nice 值：`setpriority`                                                                                                                                         |
-| [[进程间关系]]   | 进程组和会话                          | 获取进程的 PGID: `getpgrp` `getpgid`<br>修改进程的 PGID: `setpgid`<br>获取进程的 SID: `getsid`<br>新建会话: `setsid`                                                                                          |
-| [[守护进程]]    | 守护进程<br>syslog                  | `openlog`<br>`syslog`<br>`closelog`                                                                                                                                                        |
-| [[多进程编程细节]] | 探讨 `exec()` 和 `fork()` 对进程属性的影响 | 克隆子进程: `clone`                                                                                                                                                                             |
+| 内容                    | 系统调用/库函数                                                                                                                                                                                   |
+| :-------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [[Linux 系统编程：进程凭证]]   | 获取实际ID: `getuid` `getgid`<br>获取有效ID: `geteuid` `getegid` <br>修改有效ID: `setuid` `setgid` `seteuid` `setegid`<br>文件系统ID: `setfsuid` `setfsgid`<br>辅助组ID: `getgroups` `setgroups` `initgroups` |
+| [[Linux系统编程：进程创建]]    | 写时复制创建子进程：`fork` <br>子进程使用父进程内存：`vfork`                                                                                                                                                    |
+| [[Linux 系统编程：进程终止]]   | 系统调用：`_exit`<br>库函数: `exit` <br>注册退出处理程序：`atexit` `on_exit`                                                                                                                                |
+| [[Linux 系统编程：监控子进程]]  | 等待子进程: `wait` `waitpid` <br>等待子进程状态变化：`waitid` <br>获取子进程资源使用情况：`wait3` `wait4`                                                                                                             |
+| [[Linux 系统编程：程序执行]]   | 系统调用: `execve` <br>库函数: `execl`  `execle` `execlp`  `execv` `execvp`                                                                                                                       |
+| [[Linux 系统编程：优先级和调度]] | 获取 nice 值：`getpriority`<br>设置 nice 值：`setpriority`                                                                                                                                         |
+| [[Linux 系统编程：进程间关系]]  | 获取进程的 PGID: `getpgrp` `getpgid`<br>修改进程的 PGID: `setpgid`<br>获取进程的 SID: `getsid`<br>新建会话: `setsid`                                                                                          |
+| [[Linux 系统编程：守护进程]]              | `openlog`<br>`syslog`<br>`closelog`                                                                                                                                                        |
+| [[Linux 系统编程：多进程编程细节]]           | 克隆子进程: `clone`                                                                                                                                                                             |
 
 #### 进程间通信(IPC)
 
-| 内容                    | 描述                                                                      | 系统调用/库函数                                                                                                                                                                                      |
-| :-------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [[进程间通信简介]]           | 介绍 Unix 提供的进程间通信工具                                                      |                                                                                                                                                                                               |
-|                       |                                                                         |                                                                                                                                                                                               |
-| 通信工具：管道               |                                                                         |                                                                                                                                                                                               |
-| [[PIPE]]              | 无名管道：亲缘进程间通信                                                            | 创建 PIPE: `pipe`                                                                                                                                                                               |
-| [[FIFO]]              | 有名管道：任意进程间通信                                                            | 创建 FIFO: `mkfifo`                                                                                                                                                                             |
-|                       |                                                                         |                                                                                                                                                                                               |
-| 通信工具：System V         |                                                                         |                                                                                                                                                                                               |
-| [[System V IPC 介绍]]   | System V 的三个 IPC 工具概览                                                   | 生成 IPC key: `ftok`                                                                                                                                                                            |
-| [[System V 共享内存]]     | System V 共享内存细节                                                         | 申请共享内存: `shmget`<br>附加共享内存: `shmat`<br>分离共享内存: `shmdt`<br>控制共享内存: `shmctl`                                                                                                                    |
-| [[System V 信号量]]      | System V 信号量细节                                                          | 创建信号量集: `semget`<br>控制信号量集: `semctl`<br>操作信号量: `semop` <br>`semtimedop`                                                                                                                       |
-| [[System V 消息队列]]     | System V 消息队列细节                                                         | 创建消息队列: `msgget`<br>发送消息: `msgsnd`<br>接收消息: `msgrcv`<br>控制消息队列: `msgctl`                                                                                                                      |
-|                       |                                                                         |                                                                                                                                                                                               |
-| 通信工具：POSIX            |                                                                         |                                                                                                                                                                                               |
-| [[POSIX 共享内存]]        |                                                                         |                                                                                                                                                                                               |
-| [[POSIX 信号量]]         |                                                                         |                                                                                                                                                                                               |
-| [[POSIX 消息队列]]        |                                                                         |                                                                                                                                                                                               |
-|                       |                                                                         |                                                                                                                                                                                               |
-| 通信工具：内存映射             |                                                                         |                                                                                                                                                                                               |
-| [[内存映射]] 和 [[虚拟内存操作]] | 类似于共享内存                                                                 |                                                                                                                                                                                               |
-|                       |                                                                         |                                                                                                                                                                                               |
-| 通信工具：文件锁              |                                                                         |                                                                                                                                                                                               |
-| [[文件锁]]               | 针对文件的同步技术                                                               | 文件加锁/解锁: `flock`<br>区域加锁/解锁: `fcntl`                                                                                                                                                          |
-|                       |                                                                         |                                                                                                                                                                                               |
-| 通信工具：信号               |                                                                         |                                                                                                                                                                                               |
-| [[信号基本概念]]            | 信号概念 <br>信号类型和处置<br>改变信号处置<br>发送信号                                      | 注册处理函数: `signal`<br>发送信号: `kill` `raise`  `killpg`<br>信号描述: `strsignal`                                                                                                                       |
-| [[信号集]]               | 信号集<br>阻塞信号传递<br>改变信号处置                                                 | 初始化信号集: `sigemptyset` `sigfillset`<br>添加或移除信号: `sigaddset` `sigdelset`<br>测试信号集: `sigismember`<br>添加/获取信号掩码: `sigprocmask`<br>获取等待信号集: `sigpending`<br>改变信号处置: `sigaction`<br>暂停等待信号: `pause` |
-| [[信号处理器函数]]           | 可重入函数<br>异步信号安全函数<br>从信号处理器函数中返回<br>备选信号栈<br>SA_SIGINFO 标志<br>重启中断的系统调用 | 保存跳转环境: `sigsetjmp`<br>执行非局部跳转: `siglongjmp`                                                                                                                                                  |
-| [[信号高级特性]]            | 实时信号：用于进程间通信                                                            | 发送实时信号: `sigqueue`<br>等待信号: `sigsuspend` `sigwaitinfo`                                                                                                                                        |
-| [[定时器与休眠]]            | 定时器：到期通知<br>休眠：暂停执行                                                     | 创建定时器: `setitimer` `alam` <br>获取定时器状态: `getitimer`<br>暂停运行: `sleep` `nanosleep`                                                                                                               |
+| 内容                                            | 系统调用/库函数                                                                                                                                                                                      |
+| :-------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [[Linux 系统编程：进程间通信简介]]                        |                                                                                                                                                                                               |
+|                                               |                                                                                                                                                                                               |
+| 通信工具：管道                                       |                                                                                                                                                                                               |
+| [[Linux 系统编程：PIPE]]                           | 创建 PIPE: `pipe`                                                                                                                                                                               |
+| [[Linux 系统编程：FIFO]]                           | 创建 FIFO: `mkfifo`                                                                                                                                                                             |
+|                                               |                                                                                                                                                                                               |
+| 通信工具：System V                                 |                                                                                                                                                                                               |
+| [[Linux 系统编程：System V IPC 介绍]]                | 生成 IPC key: `ftok`                                                                                                                                                                            |
+| [[Linux 系统编程：System V 共享内存]]                  | 申请共享内存: `shmget`<br>附加共享内存: `shmat`<br>分离共享内存: `shmdt`<br>控制共享内存: `shmctl`                                                                                                                    |
+| [[Linux 系统编程：System V 信号量]]                   | 创建信号量集: `semget`<br>控制信号量集: `semctl`<br>操作信号量: `semop` <br>`semtimedop`                                                                                                                       |
+| [[Linux 系统编程：System V 消息队列]]                  | 创建消息队列: `msgget`<br>发送消息: `msgsnd`<br>接收消息: `msgrcv`<br>控制消息队列: `msgctl`                                                                                                                      |
+|                                               |                                                                                                                                                                                               |
+| 通信工具：POSIX                                    |                                                                                                                                                                                               |
+| [[POSIX 共享内存]]                                |                                                                                                                                                                                               |
+| [[POSIX 信号量]]                                 |                                                                                                                                                                                               |
+| [[POSIX 消息队列]]                                |                                                                                                                                                                                               |
+|                                               |                                                                                                                                                                                               |
+| 通信工具：内存映射                                     |                                                                                                                                                                                               |
+| [[Linux 系统编程：内存映射]] <br>[[Linux 系统编程：虚拟内存操作]] | 类似于共享内存                                                                                                                                                                                       |
+|                                               |                                                                                                                                                                                               |
+| 通信工具：文件锁                                      |                                                                                                                                                                                               |
+| [[Linux 系统编程：文件锁]]                            | 文件加锁/解锁: `flock`<br>区域加锁/解锁: `fcntl`                                                                                                                                                          |
+|                                               |                                                                                                                                                                                               |
+| 通信工具：信号                                       |                                                                                                                                                                                               |
+| [[Linux 系统编程：信号基本概念]]                                    | 注册处理函数: `signal`<br>发送信号: `kill` `raise`  `killpg`<br>信号描述: `strsignal`                                                                                                                       |
+| [[Linux 系统编程：信号集]]                                       | 初始化信号集: `sigemptyset` `sigfillset`<br>添加或移除信号: `sigaddset` `sigdelset`<br>测试信号集: `sigismember`<br>添加/获取信号掩码: `sigprocmask`<br>获取等待信号集: `sigpending`<br>改变信号处置: `sigaction`<br>暂停等待信号: `pause` |
+| [[Linux 系统编程：信号处理器函数]]                                   | 保存跳转环境: `sigsetjmp`<br>执行非局部跳转: `siglongjmp`                                                                                                                                                  |
+| [[Linux 系统编程：信号高级特性]]                                    | 发送实时信号: `sigqueue`<br>等待信号: `sigsuspend` `sigwaitinfo`                                                                                                                                        |
+| [[Linux 系统编程：定时器与休眠]]                                    | 创建定时器: `setitimer` `alam` <br>获取定时器状态: `getitimer`<br>暂停运行: `sleep` `nanosleep`                                                                                                               |
 
 #### 多线程
 
-| 内容                  | 描述                         | 系统调用/库函数                                                                                                                                                                                             |
-| :------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 理论：多线程              |                            |                                                                                                                                                                                                      |
-| [[多线程概念]]           |                            |                                                                                                                                                                                                      |
-|                     |                            |                                                                                                                                                                                                      |
-| Pthreads：线程管理       |                            |                                                                                                                                                                                                      |
-| [[Pthreads API 介绍]] | 概述 Pthreads API<br>创建和管理线程 | 创建线程: `pthread_create`<br>线程终止:`pthread_exit`<br>线程ID: `pthread_self` `pthread_equal`<br>连接终止线程: `pthread_join`<br>线程分离: `pthread_detach`                                                            |
-| [[互斥量]]             | 互斥量                        | 互斥量初始化: `pthread_mutex_init`<br>互斥量销毁: `pthread_mutex_destroy`<br>锁定互斥量: `pthread_mutex_lock` <br>非阻塞加锁: `pthread_mutex_trylock`<br>加锁超时: `pthread_mutex_timedlock`<br>解锁互斥量: `pthread_mutex_unlock` |
-| [[条件变量]]            | 条件变量                       | 初始化条件变量：`pthread_cond_init`<br>销毁条件变量：`pthread_cond_destroy`<br>通知一个线程：`pthread_cond_signal`<br>通知所有线程：`pthread_cond_broadcast`<br>等待条件变量通知：`pthread_cond_wait`                                      |
-|                     |                            |                                                                                                                                                                                                      |
-| [[线程安全]]            | 再论可重入<br>线程特有数据<br>线程局部存储  | 创建key: `pthread_key_create`<br>设置线程特有数据：`pthread_setsprcific`<br>获取线程特有数据：`pthread_getsprcific`                                                                                                      |
-| [[线程取消]]            | POSIX 线程取消                 | 发送取消请求: `pthread_cancle`<br>测试取消请求: `pthread_testcancle`<br>设置取消状态: `pthread_setcanclestate`<br>设置取消类型: `pthread_setcancletype`<br>添加清理函数: `pthread_cleanup_push`<br>移除清理函数: `pthread_cleanup_pop`   |
-| [[线程细节]]            | 线程与信号                      | 线程信号掩码: `pthread_sigmask`<br>向线程发送信号: `pthread_kill` `pthread_sigqueue`                                                                                                                              |
+| 内容                          | 系统调用/库函数                                                                                                                                                                                             |
+| :-------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 理论：多线程                      |                                                                                                                                                                                                      |
+| [[操作系统：多线程概念]]              |                                                                                                                                                                                                      |
+|                             |                                                                                                                                                                                                      |
+| Pthreads：线程管理               |                                                                                                                                                                                                      |
+| [[Linux 系统编程：Pthreads API]] | 创建线程: `pthread_create`<br>线程终止:`pthread_exit`<br>线程ID: `pthread_self` `pthread_equal`<br>连接终止线程: `pthread_join`<br>线程分离: `pthread_detach`                                                            |
+| [[Linux 系统编程：互斥量]]          | 互斥量初始化: `pthread_mutex_init`<br>互斥量销毁: `pthread_mutex_destroy`<br>锁定互斥量: `pthread_mutex_lock` <br>非阻塞加锁: `pthread_mutex_trylock`<br>加锁超时: `pthread_mutex_timedlock`<br>解锁互斥量: `pthread_mutex_unlock` |
+| [[Linux 系统编程：条件变量]]         | 初始化条件变量：`pthread_cond_init`<br>销毁条件变量：`pthread_cond_destroy`<br>通知一个线程：`pthread_cond_signal`<br>通知所有线程：`pthread_cond_broadcast`<br>等待条件变量通知：`pthread_cond_wait`                                      |
+|                             |                                                                                                                                                                                                      |
+| [[Linux 系统编程：线程安全]]         | 创建key: `pthread_key_create`<br>设置线程特有数据：`pthread_setsprcific`<br>获取线程特有数据：`pthread_getsprcific`                                                                                                      |
+| [[Linux 系统编程：线程取消]]         | 发送取消请求: `pthread_cancle`<br>测试取消请求: `pthread_testcancle`<br>设置取消状态: `pthread_setcanclestate`<br>设置取消类型: `pthread_setcancletype`<br>添加清理函数: `pthread_cleanup_push`<br>移除清理函数: `pthread_cleanup_pop`   |
+| [[Linux 系统编程：线程细节]]         | 线程信号掩码: `pthread_sigmask`<br>向线程发送信号: `pthread_kill` `pthread_sigqueue`                                                                                                                              |
 
 #### 网络编程
 
-| 内容              | 描述                                                                              | 系统调用/库函数                                                                                                                             |
-| :-------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| 理论：TCP/IP       |                                                                                 |                                                                                                                                      |
-| [[网络：链路层协议]]    | 以太网帧格式<br> ARP 协议                                                               |                                                                                                                                      |
-| [[网络：网络层协议]]    | IP 地址的结构<br>Internet 协议，IP 数据报格式<br>Internet 校验和<br>路由表                         |                                                                                                                                      |
-| [[网络：传输层协议]]    | UDP 协议<br>TCP 协议，TCP 报文段格式<br>TCP 连接：三次握手<br>TCP 终止：四次挥手<br>TCP 半关闭<br>TCP 状态转换 |                                                                                                                                      |
-|                 |                                                                                 |                                                                                                                                      |
-| socket 概览       |                                                                                 |                                                                                                                                      |
-| [[SOCKET 概览]]   | 初步介绍 SOCKET API                                                                 | 创建 SOCKET：`socket`<br>绑定地址：`bind`<br>监听连接：`listen`<br>接受连接：`accept`<br>连接对等套接字: `connect`                                            |
-| [[SOCKET：地址转换]] | 网络的地址转换                                                                         | 主网字节序: `hton{s, l}`<br>网主字节序: `ntoh{s, l}`<br>地址转换: `inet_pton` `inet_ntop`<br>地址转换: `getaddrinfo` <br>`getnameinfo` <br>            |
-| [[SOCKET：高级主题]] |                                                                                 | 关闭一端：`shutdown`<br>发送文件：`sendfile`<br>本地套接字地址：`getsockname`<br>对端套接字地址：`getpeername`<br>获取套接字选项：`getsockopt`<br>设置套接字选项：`setsockopt` |
-| [[服务器设计]]       | 迭代服务器和并发服务器<br>并发服务器：基于进程/线程并发；基于事件的并发；池方案                                      |                                                                                                                                      |
+| 内容                         | 系统调用/库函数                                                                                                                             |
+| :------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 理论：TCP/IP                  |                                                                                                                                      |
+| [[网络：链路层协议]]               | 以太网帧格式<br> ARP 协议                                                                                                                    |
+| [[网络：网络层协议]]               | IP 地址的结构<br>Internet 协议，IP 数据报格式<br>Internet 校验和<br>路由表                                                                              |
+| [[网络：传输层协议]]               | UDP 协议<br>TCP 协议，TCP 报文段格式<br>TCP 连接：三次握手<br>TCP 终止：四次挥手<br>TCP 半关闭<br>TCP 状态转换                                                      |
+|                            |                                                                                                                                      |
+| socket 概览                  |                                                                                                                                      |
+| [[Linux 系统编程：SOCKET 概览]]   | 创建 SOCKET：`socket`<br>绑定地址：`bind`<br>监听连接：`listen`<br>接受连接：`accept`<br>连接对等套接字: `connect`                                            |
+| [[Linux 系统编程：SOCKET 地址转换]] | 主网字节序: `hton{s, l}`<br>网主字节序: `ntoh{s, l}`<br>地址转换: `inet_pton` `inet_ntop`<br>地址转换: `getaddrinfo` <br>`getnameinfo` <br>            |
+| [[Linux 系统编程：SOCKET 高级主题]] | 关闭一端：`shutdown`<br>发送文件：`sendfile`<br>本地套接字地址：`getsockname`<br>对端套接字地址：`getpeername`<br>获取套接字选项：`getsockopt`<br>设置套接字选项：`setsockopt` |
+| [[Linux 系统编程：服务器设计]]                  |                                                                                                                                      |
 
 #### 备选 IO 模型
 
-| 内容              | 描述                  | 系统调用/库函数                                                                      |
-| :-------------- | ------------------- | ----------------------------------------------------------------------------- |
-| [[IO 多路复用]]     | 监控多路IO              | IO多路复用：`select` `poll`                                                        |
-| [[信号驱动 IO]]     | 信号驱动 IO             | `fcntl(fd, F_SETSIG, sig)`                                                    |
-| [[Linux epoll]] | Linux 特有的 IO 多路复用机制 | 创建 epoll 实例：`epoll_create`<br>修改 epoll 的兴趣列表：`epoll_ctl`<br>事件等待：`epoll_wait` |
+| 内容                     | 描述      | 系统调用/库函数                                                                      |
+| :--------------------- | ------- | ----------------------------------------------------------------------------- |
+| [[Linux 系统编程：IO 多路复用]] | 监控多路IO  | IO多路复用：`select` `poll`                                                        |
+| [[Linux 系统编程：信号驱动 IO]] | 信号驱动 IO | `fcntl(fd, F_SETSIG, sig)`                                                    |
+| [[Linux 系统编程： epoll]]  | IO 多路复用 | 创建 epoll 实例：`epoll_create`<br>修改 epoll 的兴趣列表：`epoll_ctl`<br>事件等待：`epoll_wait` |
 
 #### 进程池和线程池
 
 | 内容      | 描述              |
 | :------ | --------------- |
-| [[进程池]] | 基于进程池实现文件上传下载任务 |
-| [[线程池]] | 基于线程池实现文件上传下载任务 |
+| [[Linux 系统编程：进程池]] | 基于进程池实现文件上传下载任务 |
+| [[Linux 系统编程：线程池]] | 基于线程池实现文件上传下载任务 |
 
 ## 第三阶段：关系型数据库
 
@@ -290,11 +290,10 @@
 | [[C++：继承]]              | 继承方式 单继承 多继承(菱形继承问题)                 |
 | [[C++：多态]]              | 虚函数 虚函数表 抽象类 纯虚函数 虚析构函数              |
 | [[C++：模板]]              | 模板的概念 函数模板                           |
-| [[C++：资源管理技术]]            | 资源管理技术：RAII                          |
+| [[C++：资源管理技术]]          | 资源管理技术：RAII                          |
+|                         |                                      |
 
 ## 第五阶段：Python 语言
-
-### Python 基础
 
 | 内容                 | 描述                                         |
 | :----------------- | ------------------------------------------ |
@@ -329,9 +328,9 @@
 | [[Python：模块和包]]    | Python 代码的组织与管理                            |
 | [[Python：包管理]]     | 管理 Python 项目的依赖                            |
 |                    |                                            |
+| [[Python：并发执行]]    | 线程 进程 协程                                   |
+|                    |                                            |
 | [[Python：元类]]      | 自定义类创建                                     |
-
-### 并发编程
 
 
 

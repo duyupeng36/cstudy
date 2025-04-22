@@ -1,4 +1,4 @@
-# 作业37：[[Pthreads API 介绍]]
+# 作业37：[[Linux 系统编程：Pthreads API]]
 
 ## 问答题
 

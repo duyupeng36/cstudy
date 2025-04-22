@@ -1,4 +1,4 @@
-# 作业42：[[Linux epoll]]
+# 作业42：[[Linux 系统编程： epoll]]
 
 下面的代码是 [[作业41：SOCKET 概览 和 SOCKET 地址转换#聊天服务器]] 中的服务端，使用 epoll 实现
 
