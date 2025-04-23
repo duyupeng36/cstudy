@@ -108,7 +108,7 @@
 
 在 Python 中，发起 HTTP 请求可以使用标准库  [`urllib`](https://docs.python.org/zh-cn/3.13/library/urllib.html)；此外，第三方库 [`requests`](https://requests.readthedocs.io/en/latest/) 也是一个非常好用且简单的 HTTP 客户端
 
-```python
+```python title:io_sync.py
 import time
 import requests
 
@@ -166,7 +166,7 @@ Downloaded 160 sites in 22.760866600001464 seconds
 
 如您可能猜到的，编写利用多线程的程序需要更多努力。然而，您可能会惊讶于在基本情况下这需要多少额外的努力。下面是当您利用前面提到的 `concurrent.futures` 和 `threading` 模块时，同样的程序看起来是什么样子：
 
-```python hl:2,3,7,9-12,16,21-22
+```python hl:2,3,7,9-12,16,21-22 title:io_thread.py
 import time
 import threading
 from concurrent.futures import ThreadPoolExecutor
@@ -274,7 +274,7 @@ pip install aihttp
 
 现在，我们安装好了 `aiohttp` 这个第三方库。现在，我们将之前的实例代码修改为异步版本的
 
-```python
+```python title:io_async.py
 import asyncio
 import time
 
@@ -354,8 +354,6 @@ Downloaded 160 sites in 2.6161483000032604 seconds
 > 
 > 协程不会被操作系统知晓，协程的切换完全有应用程序控制。一旦有一个协程阻塞，那么整个进程都会被阻塞
 > 
-
-https://realpython.com/python-concurrency/
 
 ### 使用进程
 

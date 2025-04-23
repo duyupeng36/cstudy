@@ -37,7 +37,8 @@
               "title": "Python：并发执行"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -156,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
+                "file": "笔记/Python：并发执行.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "Python：并发执行 的大纲"
             }
           }
         ],
@@ -184,8 +185,9 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "8d2f73eaa5bd1a92",
+  "active": "83198c67ca7c8f82",
   "lastOpenFiles": [
+    "README.md",
     "笔记/Python：并发执行.md",
     "笔记/操作系统：进程调度.md",
     "assets/attachments/Pasted image 20250423214745.png",
@@ -193,7 +195,6 @@
     "assets/attachments/Pasted image 20250423010734.png",
     "assets/attachments/Pasted image 20250423010524.png",
     "笔记/计算机组成：计算机组成原理.md",
-    "README.md",
     "笔记/Linux 系统编程：线程池.md",
     "笔记/Linux 系统编程：进程池.md",
     "笔记/Linux 系统编程：IO 多路复用.md",
