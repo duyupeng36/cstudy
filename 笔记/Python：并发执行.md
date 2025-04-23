@@ -435,6 +435,174 @@ Read 10966 bytes from https://www.jython.org
 Downloaded 160 sites in 3.0692823999852408 seconds
 ```
 
+在配备四个CPU核心的计算机上，它的运行速度大约是同步版本的 $4$ 倍。然而，它比多线程版本略慢，比异步版本慢得多。这段代码的执行时序图看起来是这样的
 
+![[Pasted image 20250424002657.png]]
 
+## 加速 CPU 密集型任务
 
+现在，我们将研究一个 CPU 密集型问题。正如你之前所学的，IO 密集型问题大部分时间都在等待外部操作完成，例如网络调用。相比之下，CPU 密集型问题执行较少的 IO 操作，其总执行时间取决于它处理所需数据有多快
+
+为了这个示例，你将使用一个有点愚蠢的函数来创建一个运行在CPU上需要很长时间的代码片段。此函数使用递归方法计算第 $n$ 个斐波那契数
+
+```python
+>>> def fib(n):
+...     return n if n < 2 else fib(n - 2) + fib(n - 1)
+...
+>>> for n in range(1, 11):
+...     print(f"fib({n:>2}) = {fib(n):,}")
+...
+fib( 1) = 1
+fib( 2) = 1
+fib( 3) = 2
+fib( 4) = 3
+fib( 5) = 5
+fib( 6) = 8
+fib( 7) = 13
+fib( 8) = 21
+fib( 9) = 34
+fib(10) = 55
+```
+
+注意，随着函数计算更高的斐波那契数，结果值增长得多快。这种实现的递归性质导致对相同数字的多次重复计算，这需要大量的处理时间。这就是为什么这是一个如此方便的CPU密集型任务示例。
+
+首先，我们实现一个非并发的版本
+
+```python
+import time
+
+def main():
+    start_time = time.perf_counter()
+    for _ in range(20):  # 计算 20 次 fib(35)
+        fib(35)
+    duration = time.perf_counter() - start_time
+    print(f"Computed in {duration} seconds")
+
+def fib(n):
+    return n if n < 2 else fib(n - 2) + fib(n - 1)
+
+if __name__ == "__main__":
+    main()
+```
+
+这段代码在循环中调用 `fib(35)` 二十次。由于其实现具有递归性质，函数自身调用了数亿次！它全部在一个单线程、一个进程、一个 CPU 上完成。
+
+与 IO 密集型示例不同，CPU 密集型示例通常在运行时间上比较一致。这个在之前相同的机器上大约需要 $15$ 秒：
+
+```
+Computed in 15.171952964000013 seconds
+```
+
+显然，我们能做得比这更好。毕竟，所有的东西都在单个 CPU 上运行，没有任何并发。接下来，你将看到你可以如何改进它
+
+### 使用线程
+
+CPU密集型问题，无需等待。CPU正在尽可能快地运转以完成问题。在Python中，线程和异步任务都在同一进程中运行在同一个CPU上。这意味着一个CPU要完成非并发代码的所有工作，还要额外设置线程或任务的工作
+
+> [!attention] 
+> 
+> 这意味着，在 CPU 密集型任务中使用线程并不会提高程序性能
+> 
+
+```python
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+def main():
+    start_time = time.perf_counter()
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        executor.map(fib, [35] * 20)
+    duration = time.perf_counter() - start_time
+    print(f"Computed in {duration} seconds")
+
+def fib(n):
+    return n if n < 2 else fib(n - 2) + fib(n - 1)
+
+if __name__ == "__main__":
+    main()
+```
+
+少量代码需要从非并发版本更改。导入 `concurrent.futures` 后，只需将循环遍历数字更改为创建线程池并使用其 `.map()` 方法将单个数字发送到空闲的工作线程。
+
+执行上述代码的输出结果为
+
+```
+Computed in 16.114787849000038 seconds
+```
+
+注意到：因为 Python 存在 GIL，一个 Python 进程中有且只有一个线程执行。因为线程切换带来额外的性能消耗，从而导致程序性能降低
+
+### 使用异步
+
+实现这个 CPU 密集型问题的异步版本涉及将你的函数重写为协程函数，使用`async def`并等待它们的返回值：
+
+```python
+import asyncio
+import time
+
+async def main():
+    start_time = time.perf_counter()
+    tasks = [fib(35) for _ in range(20)]
+    await asyncio.gather(*tasks, return_exceptions=True)
+    duration = time.perf_counter() - start_time
+    print(f"Computed in {duration} seconds")
+
+async def fib(n):
+    return n if n < 2 else await fib(n - 2) + await fib(n - 1)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+这里我们创建了二十个任务并将它们传递给 `asyncio.gather()` 以使相应的协程并发运行。然而，实际上它们是按顺序运行的，因为每个任务都会阻塞执行，直到前一个任务完成
+
+  运行时，此代码执行时间比您的原始同步版本多一倍，并且比多线程版本也要长：
+
+```
+Computed in 37.484856695000076 seconds
+```
+
+> [!important] 
+> 
+> 异步方法对于CPU密集型问题来说是最慢的，然而对于I/O密集型问题来说却是最快的。由于这里没有涉及I/O操作，因此没有什么需要等待的。事件循环以及每个 `await` 语句处的上下文切换开销显著减慢了总体的执行速度。
+> 
+
+### 使用进程
+
+与其他并发模型不同，基于进程的并行计算是专门设计来在多个 CPU 之间共享繁重的 CPU 工作负载的。
+
+```python
+import time
+from concurrent.futures import ProcessPoolExecutor
+
+def main():
+    start_time = time.perf_counter()
+    with ProcessPoolExecutor() as executor:
+        executor.map(fib, [35] * 20)
+    duration = time.perf_counter() - start_time
+    print(f"Computed in {duration} seconds")
+
+def fib(n):
+    return n if n < 2 else fib(n - 2) + fib(n - 1)
+
+if __name__ == "__main__":
+    main()
+```
+
+几乎与斐波那契问题的多线程版本完全相同。你实际上只修改了两行代码！你用 `ProcessPoolExecutor` 替换了 `ThreadPoolExecutor`
+
+之前提到，到 `ProcessPoolExecutor` 构造函数的 `max_workers` 可选参数值得注意。您可以使用它来指定您想创建和管理多少个进程。默认情况下，它将确定您的机器中有多少个 CPU，并为每个 CPU 创建一个进程。虽然这对您的简单示例来说效果很好，但在生产环境中，您可能想要更多一点的控制。
+
+这个版本大约需要 $3$ 秒，只使用了最初开始的非并发实现五分之一的时间：
+
+```
+Computed in 2.657741920000035 seconds
+```
+
+这是比您看到的其他选项要好得多，因此无疑是此类任务的最佳选择。这里显示的是执行时序图：
+
+![[Pasted image 20250424005333.png]]
+
+多进程使用中存在一些缺点，这些缺点在像这样的简单示例中并不明显。例如，**将问题划分为若干部分以便每个处理器可以独立操作有时可能很困难**。
+
+也许多种解决方案需要进程之间进行更多的通信。这可能会给您的解决方案增加一些复杂性，这对于一个非并发程序来说根本不需要处理
