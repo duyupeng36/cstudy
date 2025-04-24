@@ -24,21 +24,20 @@
             }
           },
           {
-            "id": "83198c67ca7c8f82",
+            "id": "a0d900ef39d27305",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Python：并发执行.md",
+                "file": "笔记/Python：线程.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Python：并发执行"
+              "title": "Python：线程"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -70,7 +69,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "运算符重载",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -130,12 +129,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/Python：包管理.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Python：包管理 的出链列表"
+              "title": "README 的出链列表"
             }
           },
           {
@@ -157,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/Python：并发执行.md",
+                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Python：并发执行 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -185,12 +184,19 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "83198c67ca7c8f82",
+  "active": "8d2f73eaa5bd1a92",
   "lastOpenFiles": [
+    "笔记/Python：线程.md",
+    "笔记/Linux：命令和 vim.md",
+    "README.md",
+    "笔记/GNU：GCC.md",
+    "笔记/GNU：GDB.md",
+    "笔记/GNU：Makefile.md",
+    "笔记/工具：git.md",
+    "笔记/排序与去重.md",
+    "笔记/Python：并发执行.md",
     "assets/attachments/Pasted image 20250424005333.png",
     "assets/attachments/Pasted image 20250424002657.png",
-    "README.md",
-    "笔记/Python：并发执行.md",
     "笔记/操作系统：进程调度.md",
     "assets/attachments/Pasted image 20250423214745.png",
     "assets/attachments/Pasted image 20250423202814.png",
@@ -212,17 +218,10 @@
     "笔记/Linux 系统编程：条件变量.md",
     "笔记/Linux 系统编程：互斥量.md",
     "笔记/Linux 系统编程：Pthreads API.md",
-    "笔记/操作系统：多线程概念.md",
-    "笔记/Linux 系统编程：定时器与休眠.md",
-    "笔记/Linux 系统编程：信号高级特性.md",
-    "笔记/Linux 系统编程：信号处理器函数.md",
-    "笔记/Linux 系统编程：信号集.md",
-    "笔记/Linux 系统编程：信号基本概念.md",
     "assets/attachments/Pasted image 20250421001557.png",
     "assets/attachments/Pasted image 20250412151429.png",
     "assets/attachments/Pasted image 20240622145609.png",
     "assets/attachments/Pasted image 20250410234030.png",
-    "assets/attachments/Pasted image 20250410233229.png",
     "作业/05-Go",
     "作业/04-C++",
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
