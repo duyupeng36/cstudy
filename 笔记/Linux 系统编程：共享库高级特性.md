@@ -38,7 +38,7 @@ void * dlopen(const char *libfilename, int flags);
 > [!tip] 参数 `libfilename` 是动态库路径
 > 
 > + 如果 `libfilename` 包含 `/` ，则 `dlopen` 按照 `libfilename` 指定的目录加载库
-> + 否则，按照 [[库基础#运行时加载库]] 中指定的规则搜索共享库
+> + 否则，按照 [[Linux 系统编程：库基础#运行时加载库]] 中指定的规则搜索共享库
 > 
 
 > [!tip] 参数 `flags` 是加载库的方式
@@ -164,7 +164,7 @@ typedef struct
 
 ### 例程：延迟加载 libcalc 库
 
-例程：调用在 [[库基础]] 中制作的 `libcalc.so.2.0.1`
+例程：调用在 [[Linux 系统编程：库基础]] 中制作的 `libcalc.so.2.0.1`
 
 ```c
 #include <stdio.h>
