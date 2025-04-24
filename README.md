@@ -370,3 +370,6 @@
 | [[工具：git]]   | 分布式版本控制工具             |
 | [[通用：正则表达式]] | 正则表达式语法               |
 
+```
+type $env:USERPROFILE\.ssh\id_rsa.pub | ssh dyp@47.117.190.192 "cat >> .ssh/authorized_keys"
+```
