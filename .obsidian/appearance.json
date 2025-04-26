@@ -1,7 +1,7 @@
 {
-  "cssTheme": "Atom",
+  "cssTheme": "Border",
   "accentColor": "",
   "baseFontSize": 16,
-  "theme": "system",
+  "theme": "moonstone",
   "baseFontSizeAction": false
 }

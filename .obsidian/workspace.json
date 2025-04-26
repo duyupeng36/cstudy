@@ -37,7 +37,8 @@
               "title": "Python：线程"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -156,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
+                "file": "笔记/Python：线程.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "Python：线程 的大纲"
             }
           }
         ],
@@ -184,11 +185,19 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "8d2f73eaa5bd1a92",
+  "active": "a0d900ef39d27305",
   "lastOpenFiles": [
-    "笔记/Python：线程.md",
-    "笔记/Linux 系统编程：共享库高级特性.md",
+    "assets/attachments/Pasted image 20250426154341.png",
+    "assets/attachments/Pasted image 20250426152838.png",
     "README.md",
+    "笔记/Python：线程.md",
+    "笔记/操作系统：多线程概念.md",
+    "笔记/Linux 系统编程：互斥量.md",
+    "笔记/Linux 系统编程：Pthreads API.md",
+    "笔记/Python：基本概念.md",
+    "笔记/Go 语言：开发环境搭建.md",
+    "笔记/Python：包管理.md",
+    "笔记/Linux 系统编程：共享库高级特性.md",
     "笔记/Linux 系统编程：库基础.md",
     "笔记/X86-64汇编：浮点代码.md",
     "笔记/X86-64汇编：过程.md",
@@ -205,23 +214,15 @@
     "笔记/GNU：Makefile.md",
     "笔记/工具：git.md",
     "笔记/排序与去重.md",
-    "笔记/Python：并发执行.md",
     "assets/attachments/Pasted image 20250424005333.png",
     "assets/attachments/Pasted image 20250424002657.png",
-    "笔记/操作系统：进程调度.md",
     "assets/attachments/Pasted image 20250423214745.png",
     "assets/attachments/Pasted image 20250423202814.png",
     "assets/attachments/Pasted image 20250423010734.png",
     "assets/attachments/Pasted image 20250423010524.png",
-    "笔记/计算机组成：计算机组成原理.md",
-    "笔记/Linux 系统编程：线程池.md",
-    "笔记/Linux 系统编程：进程池.md",
-    "笔记/Linux 系统编程：IO 多路复用.md",
-    "笔记/Linux 系统编程：信号驱动 IO.md",
     "assets/attachments/Pasted image 20250421001557.png",
     "assets/attachments/Pasted image 20250412151429.png",
     "assets/attachments/Pasted image 20240622145609.png",
-    "assets/attachments/Pasted image 20250410234030.png",
     "作业/05-Go",
     "作业/04-C++",
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
