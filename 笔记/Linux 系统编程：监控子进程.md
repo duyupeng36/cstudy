@@ -393,7 +393,7 @@ int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
 
 | options                      | 描述                       |
 | :--------------------------- | :----------------------- |
-| `WEXITED(With EXITED)`       | 等待已终止的子进程，无论是否正常返回       |
+| `WEXITED`：`With EXITED`      | 等待已终止的子进程，无论是否正常返回       |
 | `WSTOPPED(With STOPPED)`     | 等待已通过信号而停止的子进程           |
 | `WCONTINUED(With CONTINUED)` | 等待经由信号 `SIGCONT` 而恢复的子进程 |
 |                              |                          |
