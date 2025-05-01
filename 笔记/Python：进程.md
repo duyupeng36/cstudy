@@ -715,29 +715,6 @@ Python 在标准库 `os` 中提供的函数与 [[Linux 系统编程：程序执�
 
 `multiprocessing` 支持进程之间的两种通信通道：**队列** 和 **管道**
 
-### 队列
-
-在标准库 `multiprocessing` 中提供了一个类 `Queue` 它类似于 **消息队列**；任何放入 `multiprocessing.Queue` 中的对象都将被序列化
-
-> [!tip] 
-> 
-> 关于 `Queue` 的细节请参阅 [管道和队列](https://docs.python.org/zh-cn/3.13/library/multiprocessing.html#pipes-and-queues)
-> 
-
-```python
-from multiprocessing import Process, Queue
-
-def f(q):
-    q.put([42, None, 'hello'])
-
-if __name__ == '__main__':
-    q = Queue()
-    p = Process(target=f, args=(q,))
-    p.start()
-    print(q.get())    # 打印 "[42, None, 'hello']"
-    p.join()
-```
-
 ### 管道
 
 使用 `multiprocessing.Pipe()` 函数会返回一个由管道连接的 **连接对象**，默认情况下是双工（双向）。例如
@@ -763,3 +740,47 @@ if __name__ == '__main__':
 > 
 > `send()` 方法将序列化对象而 `recv()` 将重新创建对象
 > 
+
+> [!seealso] 
+> 
+> 关于管道的概念，参考 [[Linux 系统编程：PIPE]] 和 [[Linux 系统编程：FIFO]]
+> 
+
+### 队列
+
+Python 在标准库 `mutilprocessing` 中提供了三种类型的队列，但是只有两种是我们常用的类型，分别是 `Queue` 和 `JoinableQueue`。它们实现了 **先进先出**(`FIFO`) 的队列类型
+
+`Queue` 和 `JoinableQueue` 的差异在于，如果你使用了 `JoinableQueue` ，那么 **必须** 对每个已经移出队列的任务调用 `JoinableQueue.task_done()`。 不然的话用于统计未完成任务的信号量最终会溢出并抛出异常。
+
+`Queue([maxsize])` 返回一个使用一个管道和少量锁和信号量实现的 **共享队列** 实例。当一个进程将一个对象放进队列中时，一个 **写入线程** 会启动并将对象从缓冲区写入管道中。
+
+> [!warning] 
+> 
+> 一旦超时，将抛出标准库 `queue` 模块中常见的异常 `queue.Empty` 和 `queue.Full`
+> 
+
+下表列出了 `Queue` 实例支持的方法
+
+| 方法                                   | 描述                    |
+| :----------------------------------- | :-------------------- |
+| `Queue.qsize()`                      | 队列中元素的估计个数            |
+| `Queue.empty()`                      | 检查队列是否为空              |
+| `Queue.full()`                       | 检查队列是否满队              |
+| `Queue.put(obj[, block[, timeout]])` | 将对象 `obj` 放入队列中       |
+| `Queue.put_nowait(obj)`              | 相当于 `put(obj, False)` |
+| `Queue.get([block[, timeout]])`      | 从队列中获取一个对象            |
+| `Queue.get_nowait()`                 | 相当于 `get(False)`      |
+
+> [!tip] 
+> 
+> `put()` 和 `get()` 方法中的可选参数 `block` 默认值为 `True`，表示阻塞等待放入队列或获取元素成功；参数 `timeout` 指定超时时间，在阻塞了最多 `timeout` 秒之后还是没有可用的缓冲槽时抛出 `queue.Full` 或 `queue.Empty` 异常
+> 
+
+---
+
+`JoinableQueue([maxsize])` 与 `Queue([maxsize])` 类似，只是支持两个额外的方法：`task_done()` 和 `join()` 方法。
+
+| 方法                          | 描述                   |
+| :-------------------------- | :------------------- |
+| `JoinableQueue.task_done()` | 进程处理完之后需要调用该方法       |
+| `JoinableQueue.join()`      | 阻塞至队列中所有的元素都被接收和处理完毕 |
