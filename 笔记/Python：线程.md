@@ -173,9 +173,176 @@ if __name__ == '__main__':
 
 ### 竞争条件
 
+**竞态条件可能在两个或多个线程访问共享数据或资源时发生**。在这个例子中，你将创建一个每次都会发生的巨大竞态条件，但请注意，大多数竞态条件并不这么明显。通常，它们只偶尔发生，并且可能会产生令人困惑的结果。正如你可以想象的那样，这使得它们相当难以调试
+
+```python
+import sys
+from threading import Thread
+import time
+
+glob = [0]
 
 
+def incr(loops, name):
+
+    while loops > 0:
+        loc = glob[0]
+        print(f"Thread {name} get loc={loc}")
+        loc += 1
+        glob[0] = loc
+        print(f"Thread {name} set glob[0]={loc}")
+        loops -= 1
+    
+    print(f"Thread {name} finished")
 
 
+def main():
+
+    if len(sys.argv) != 3:
+        print("Usage: python race.py <thread_number> <loops>", file=sys.stderr)
+    
+    threads = []
+    for i in range(int(sys.argv[1])):
+        t = Thread(target=incr, args=(int(sys.argv[2]), i + 1))
+        threads.append(t)
+        t.start()
+    
+    for t in threads:
+        t.join()
+    
+    print("All thread end! glob is %s" % glob)
+
+if __name__ == "__main__":
+    main()
+```
+
+执行上述代码输出的结果如下
+
+```
+$ python race.py 2 10 
+Thread 1 get loc=0
+Thread 1 set glob[0]=1
+Thread 2 get loc=1
+Thread 1 get loc=1
+Thread 1 set glob[0]=2
+Thread 2 set glob[0]=2
+Thread 1 get loc=2
+Thread 2 get loc=2
+Thread 1 set glob[0]=3
+....
+Thread 1 get loc=12
+Thread 2 set glob[0]=12
+Thread 1 set glob[0]=13
+Thread 2 finished
+Thread 1 get loc=13
+Thread 1 set glob[0]=14
+Thread 1 finished
+All thread end! glob is [14]
+```
+
+为了解决上述问题，Python 提供了许多线程同步工具，我们主要使用两个：**互斥锁** 和 **条件变量**
+
+### 互斥锁
+
+为了解决上面的竞态条件，我们需要找到一种方法，使得 **一次只允许一个线程进入** 您的代码的 **读-修改-写** 部分(这个部分称为 **临界区域**)。在 Python 中，最常见的方法称为锁。在有些其他语言中，这个概念被称为 **互斥锁**(mutex)。互斥锁来源于MUTual EXclusion（互斥），这正是锁所做的事情
+
+一个锁是一个像通行证一样的对象。同一时间只能有一个线程拥有锁。任何想要获取锁的其他线程都必须等待锁的所有者释放它。
+
+在 Python 使用互斥锁非常简单，不用像 [[Linux 系统编程：互斥量]] 中那样进行复杂的初始化操作
+
+```python hl:2,7,13,19
+import sys
+from threading import Thread, Lock
+import time
+
+glob = [0]
+
+lock = Lock()
+
+def incr(loops, name):
+
+    while loops > 0:
+
+        lock.acquire()  # 获取互斥锁
+        loc = glob[0]
+        print(f"Thread {name} get loc={loc}")
+        loc += 1
+        glob[0] = loc
+        print(f"Thread {name} set glob[0]={loc}")
+        lock.release()  # 释放互斥锁
+        loops -= 1
+    
+    print(f"Thread {name} finished")
 
 
+def main():
+
+    if len(sys.argv) != 3:
+        print("Usage: python race.py <thread_number> <loops>", file=sys.stderr)
+    
+    threads = []
+    for i in range(int(sys.argv[1])):
+        t = Thread(target=incr, args=(int(sys.argv[2]), i + 1))
+        threads.append(t)
+        t.start()
+    
+    for t in threads:
+        t.join()
+    
+    print("All thread end! glob is %s" % glob)
+
+if __name__ == "__main__":
+    main()
+```
+
+> [!attention] 
+> 
+> 请注意：线程在进入临界区之前**获得互斥锁**，在离开临界区是必须**释放互斥锁**。简单来讲，获取和释放是一对操作，
+> 
+
+`Lock` 类是支持上下文管理的，因此，我们可以使用 `with` 语句，这样可以自动在进入临界区之前获取锁，在离开临界区时释放锁
+
+```python
+lock = Lock()
+
+def incr(loops, name):
+
+    while loops > 0:
+
+        with lock:
+            loc = glob[0]
+            print(f"Thread {name} get loc={loc}")
+            loc += 1
+            glob[0] = loc
+            print(f"Thread {name} set glob[0]={loc}")
+        
+        loops -= 1
+    
+    print(f"Thread {name} finished")
+```
+
+> [!tip] 
+> 
+> 死锁问题：有时，一个线程需要 **同时访问多个不同的共享资源**，并且 **每个资源由不同的互斥量管理**。当超过一个线程加锁同一组互斥量时，就有可能发生死锁
+> 
+
+> [!tip] 
+> 
+> 死锁的 $4$ 个必要条件：**只有当下面 $4$ 个条件同时成立时才会引起死锁**
+> 
+> + **互斥(mutual exclusion)**：共享资源一次只能被一个进程或线程使用
+> + **占用并等待(hold and wait)**：进程或线程必须占用一个共享资源，并等待另一个共享资源
+> + **非抢占(no preemption)**：进程或线程持有的资源不能被抢占
+> + **循环等待(circular wait)**：有一组等待进程或线程$\{T_0, T_1, \cdots, T_{n}\}$，$T_0$ 等待的资源为 $T_1$ 占有，$T_1$ 等待的资源为 $T_2$ 占有，$\cdots$，$T_{n-1}$ 等待的资源为 $T_n$ 占有，$T_n$ 等待的资源为 $T_0$ 占有
+> 
+
+## 标准库：queue 
+
+我们在 [[Python：进程#进程间通信]] 中介绍了用于进程间通信的队列，下面我们介绍标准库 `queue` 提供的队列
+
+> [!tip] 
+> 
+> [`queue`](https://docs.python.org/zh-cn/3.13/library/queue.html#module-queue "queue: A synchronized queue class.") 模块实现了多生产者、多消费者队列。这特别适用于消息必须安全地在 **多线程** 间交换的线程编程。模块中的 [`Queue`](https://docs.python.org/zh-cn/3.13/library/queue.html#queue.Queue "queue.Queue") 类实现了所有所需的锁定语义。
+> 
+
+`queue.Queue()` 返回一个用于线程间交换数据的队列实例对象。`Queue()` 与 `mutilprocessing.JoinableQueue()` 类似，具有相同的方式。我们就不在复述
