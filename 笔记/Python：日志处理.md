@@ -577,5 +577,148 @@ def basicConfig(**kwargs):
 > + 想要要为 `Handler` 添加格式器，则需要调用 `Handler.setFormatter()`
 > 
 
-请注意：只要在 `root logger` 持有任意一个 `Handler` 时，该函数` basicConfig()`  就会不执行
+请注意：只要 `root logger` 持有任意一个 `Handler` 时，该函数` basicConfig()`  就不被不执行
 
+#### 日志流转
+
+在 Python 的官方文档中，关于日志流转的流程图如下
+
+![[Pasted image 20250511211627.png]]
+
+应用程序调用日志函数，例如，调用 `logger.info(...)`。首先，检查 `Logger's level <= Message's Level`；只要满足这个条件，就创建 `LogRecord`，否则结束。
+
+当 `LogRecord` 创建成功后，检查 `Logger` 的过滤器是否拒绝这个新创建的  `LogRecord`。当 `LogRecord` 被过滤器接受时，就会调用当前 `Logger` 的所有  `Handlers` 处理日志；否则结束
+
+日志被发送到 `Handler` 时，首先检查 `Handler's Level <= Record's Level`；只要满足条件，调用 `Handler` 的过滤器过滤 `Record`；通过过滤器检查的 `Record` 就会被发送给对应的位置，此时会调用格式器处理日志格式问题
+
+最后，检查 `Logger` 的 `propagate` 属性是否为 `True`。如果是，则查找 `Logger` 的 `Parent Logger`，然后再将 `Record` 处理
+
+下面的代码就是 `Logger` 用于处理 `Record` 的源码
+
+```python
+    def callHandlers(self, record):
+        c = self   # 当前的 logger
+        found = 0  # 当前 logger 的 handler 个数(包括父 logger 的)
+        while c:
+	        # 对于每一个 handler
+            for hdlr in c.handlers:
+                found = found + 1
+	            # 如果 record.level >= handler.level 就开始处理日志
+                if record.levelno >= hdlr.level:
+                    hdlr.handle(record)
+            # 如果 logger.propagate 为 False 表示不调用父 Logger
+            if not c.propagate:
+                c = None    #break out
+            else:
+                c = c.parent
+        # 最终都没有 handler 就使用 lastResort handler
+        if (found == 0):
+            if lastResort:
+                if record.levelno >= lastResort.level:
+                    lastResort.handle(record)
+            elif raiseExceptions and not self.manager.emittedNoHandlerWarning:
+                sys.stderr.write("No handlers could be found for logger"
+                                 " \"%s\"\n" % self.name)
+                self.manager.emittedNoHandlerWarning = True
+```
+
+### 格式器
+
+格式器(`Formater`) 被 `Handler` 持有，也就在创建 `Handler` 时，我们就需要给它添加一个 `Formater`
+
+> [!tip] 
+> 
+> 请注意：`Handler` 默认会自动创建一个格式器，这个格式器只会输出消息
+> 
+
+下面我们阅读 `handler.format()` 方法的源码验证上述说话。
+
+```python
+    def format(self, record):
+	    # 检查 handler 是否设置了 formatter 
+        if self.formatter:
+            fmt = self.formatter 
+        else:
+	        # 如果没有设置就使用默认的 formatter
+            fmt = _defaultFormatter
+        return fmt.format(record)
+```
+
+其中 `_defaultFormatter = Formatter()`，也就是没有提供格式的默认格式器。
+
+### 过滤器
+
+过滤器(`Filter`) 用于过滤过滤哪个 `Handler` 发送来的日志。我们来看一下 `Filter` 的实现
+
+```python
+class Filter(object):
+    def __init__(self, name=''):
+
+        self.name = name
+        self.nlen = len(name)
+
+    def filter(self, record):
+
+        if self.nlen == 0:
+            return True
+        elif self.name == record.name:
+            return True
+        elif record.name.find(self.name, 0, self.nlen) != 0:
+            return False
+        return (record.name[self.nlen] == ".")
+```
+
+> [!tip] 
+> 
+> `Filter` 类的实现非常简单，它只是根据 `name` 属性检查 `Record` 对象的 `name` 属性中是否包含了 `filter.name` 属性
+> 
+> 如果 `filter.name` 属性为 `""`，则不会过滤任何记录
+> 
+
+我们可以为  `logger` 和 `handler` 添加 `filter`。因为 `Logger` 和 `Handler` 都是下面类的子类
+
+```python
+class Filterer(object):
+    """
+    A base class for loggers and handlers which allows them to share
+    common code.
+    """
+    def __init__(self):
+        """
+        Initialize the list of filters to be an empty list.
+        """
+        self.filters = []
+
+    def addFilter(self, filter):
+        """
+        Add the specified filter to this handler.
+        """
+        if not (filter in self.filters):
+            self.filters.append(filter)
+
+    def removeFilter(self, filter):
+        """
+        Remove the specified filter from this handler.
+        """
+        if filter in self.filters:
+            self.filters.remove(filter)
+
+    def filter(self, record):
+        for f in self.filters:
+            if hasattr(f, 'filter'):
+                result = f.filter(record)
+            else:
+                result = f(record)
+            if not result:
+                return False
+            if isinstance(result, LogRecord):
+                record = result
+        return record
+
+```
+
+> [!tip] 
+> 
+> 过滤器会根据 `filter.name` 属性与 `logger.name` 属性的关系过滤 `Record`。
+> 
+> 只有 `logger.name` 属性的前缀与 `filter.name` 属性的值相等，则 `Record` 就通过过滤器 
