@@ -678,3 +678,58 @@ Computed in 2.657741920000035 seconds
 > 提高单颗 CPU 性能；或者安装更多的 CPU，从而提高程序性能。这是一种 **垂直扩展** 的思想
 > 
 > 
+
+## queue 模块
+
+`queue` 模块实现了 **多生产者-多消费者队列**。这特别 **适用于消息必须安全地在多线程间交换** 的线程编程。模块中的 `Queue` 类实现了所有所需的锁定语义。
+
+本模块实现了 **三种类型的队列**，它们的 **区别仅仅是条目的提取顺序**。 在 FIFO 队列中，先添加的任务会先被提取。 在 LIFO 队列中，最近添加的条目会先被提取 (类似于一个栈)。 在优先级队列中，条目将保持已排序状态 (使用 [`heapq`](https://docs.python.org/zh-cn/3.13/library/heapq.html#module-heapq "heapq: Heap queue algorithm (a.k.a. priority queue).") 模块) 并且值最小的条目会先被提取。
+
+下表总结了 `queue` 模块中的 $3$ 种队列
+
+| 队列                      | 描述      |
+| :---------------------- | :------ |
+| `queue.Queue()`         | FIFO 队列 |
+| `queue.LifoQueue()`     | LIFO 队列 |
+| `queue.PriorityQueue()` | 优先队列    |
+
+由于这 $3$ 中类型的队列只有获取条目顺序的差异，下面我们介绍 `queue.Queue()` 类的使用即可
+
+### queue.Queue(maxsize=0)
+
+`queue.Queue(maxsize=0)` 构造一个FIFO队列。`maxsize` 是一个整数，用于设置队列中可以放置的项目数量的上限。一旦达到这个大小，插入将阻塞，直到队列项目被消耗
+
+> [!important] 
+> 
+> 如果 `maxsize` 小于或等于零，则队列大小为无限
+> 
+
+此外，`Queue` 对象支持下表列出的方法
+
+| 方法                                          | 描述                           |
+| :------------------------------------------ | :--------------------------- |
+| `Queue.qsize()`                             | 返回队列的估计大小                    |
+| `Queue.empty()`                             | 检查队列是否为空                     |
+| `Queue.full()`                              | 检查队列是否满队                     |
+|                                             |                              |
+| `Queue.put(item, block=True, timeout=None)` | 将 `item` 放入队列                |
+| `Queue.put_nowait(itme)`                    | 相当于 `put(item, block=False)` |
+| `Queue.get(block=True, timeout=None)`       | 从队列中获取元素                     |
+| `Queue.get_nowait()`                        | 相当于 `get(False)`             |
+|                                             |                              |
+| `Queue.task_done()`                         | 表示前面排队的任务已处理完成               |
+| `Queue.join()`                              | 阻塞至队列中所有的元素都被处理              |
+|                                             |                              |
+| `Queue.shutdown(immediate=False)`           | 关闭队列                         |
+
+> [!tip] 
+> 
+> `Queue.put(item, block=True, timeout=None)` 会将 `item` 放入队列中。如果队列为满队，则阻塞 `timeout` 秒。如果 `timeout` 秒之后没有插入成功，则抛出 `queue.Full` 异常
+> 
+> `Queue.get(block=True, timeout=None)` 从队列中获取数据。如果队列为空，则会阻塞 `timeout` 描述。如果 `timeout` 秒之后没有获取成功，则抛出 `queue.Empty` 异常
+> 
+> `Queue.shutdown(immediate=False)` 会关闭队列。对于关闭后的队列，在调用 `Queue.get()` 和 `Queue.put()` 方法时就会引发 `queue.ShutDown` 异常
+> + 默认情况下，`Queue.get()` 只会空队列上引发异常
+> + 如果 `immediate=True`，则会将队列中的所有元素标记为已完成。此时，调用 `Queue.get()` 会立即抛出异常。并且，所有 `put()` 和 `get()` 被阻塞的调用方将被撤销阻塞
+> 
+
