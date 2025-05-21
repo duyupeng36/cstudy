@@ -592,12 +592,145 @@ except AttributeError as e:
 
 ### local 类的实现原理
 
+`threading.local()` 的源码如下
 
+```python
+class local:
+	# 限制 local 实例只有两个属性 _local_impl 和 __dict__
+    __slots__ = '_local__impl', '__dict__'
 
+    def __new__(cls, /, *args, **kw):
+        if (args or kw) and (cls.__init__ is object.__init__):
+            raise TypeError("Initialization arguments are not supported")
+        # 调用 object 的 __new__ 方法创建 local 类的实例
+        self = object.__new__(cls)
+	    
+	    # 创建 _localimpl 类的实例
+        impl = _localimpl()
+        impl.localargs = (args, kw)
+        impl.locallock = RLock()
+        
+        # 在 local 类的实例上添加一个 _local_impl 属性
+        # 其属性值为 _localimpl 类的实例
+        object.__setattr__(self, '_local__impl', impl)
+	    
+        # 我们需要在__init__被调用之前创建 **线程字典**，
+        # 以确保我们自己不会再次调用它。
+        impl.create_dict()
+	    
+	    # 最后返回 local 类的实例
+        return self
 
+    def __getattribute__(self, name):
+	    #  实现 local 实例的属性访问操作
+        with _patch(self):
+	        # 将属性访问委托给 object 的 __getattribute__ 方法
+            return object.__getattribute__(self, name)
 
+    def __setattr__(self, name, value):
+	    # 实现 local 实例的属性设置操作
+        if name == '__dict__':
+            raise AttributeError(
+                "%r object attribute '__dict__' is read-only"
+                % self.__class__.__name__)
+        with _patch(self):
+	        # 将属性设置委托给 object 的 __setattr__ 方法
+            return object.__setattr__(self, name, value)
 
+    def __delattr__(self, name):
+	    # 实现 local 实例的属性删除操作
+        if name == '__dict__':
+            raise AttributeError(
+                "%r object attribute '__dict__' is read-only"
+                % self.__class__.__name__)
+        with _patch(self):
+	        # 将属性删除委托给 object 的 __delattr__ 方法
+            return object.__delattr__(self, name)
+```
 
+阅读上述代码之后，我们发现实现线程局部属性的类并不是 `local` 类，而是 `_localimpl` 类。下面我们继续阅读 `_localimpl` 类
 
+```python
+class _localimpl:
+    """管理线程本地字典的类"""
+    # 现在 _localimpl 类的实例只允许有如下属性
+    __slots__ = 'key', 'dicts', 'localargs', 'locallock', '__weakref__'
 
+    def __init__(self):
+	    # 创建 key：对于每一个 _localimpl 实例都不相同
+        self.key = '_threading_local._localimpl.' + str(id(self))
+        # 创建字典：它将 id(Thread):(ref(Thread), thread-local dict)
+        self.dicts = {}
 
+    def get_dict(self):
+        """返回当前线程的字典。如果没有定义则引发 KeyError。"""
+        thread = current_thread()
+        return self.dicts[id(thread)][1]
+
+    def create_dict(self):
+        """为当前线程创建一个新字典，并返回它。"""
+        localdict = {}  # 创建一个局部字典
+        key = self.key  # 获取当前的 key
+        thread = current_thread()  # 获取当前线程
+        idt = id(thread)  # 当前线程对象的 id
+        
+        def local_deleted(_, key=key):
+	        # 当 _localimpl 实例被删除，
+	        # 则需要删除 current_thread().__dict__[key]
+            thread = wrthread()
+            if thread is not None:
+                del thread.__dict__[key]
+        
+        def thread_deleted(_, idt=idt):
+	        # 当线程对象被删除时，同步删除该线程的局部字典
+            local = wrlocal()  # 返回 _localimpl 对象，即 self
+            if local is not None:
+                dct = local.dicts.pop(idt)  # 删除局部字典
+        
+        # ref 创建关联关系。wrlocal() 就会返回 slef
+        wrlocal = ref(self, local_deleted)
+        # ref 创建关联关系：wrthread() 返回 thread
+        wrthread = ref(thread, thread_deleted)
+	    
+	    # 在当前线程对象中增加一个属性
+        thread.__dict__[key] = wrlocal
+        
+        # 保存当前线程对应的局部字典
+        self.dicts[idt] = wrthread, localdict
+        return localdict
+```
+
+下面我们串联一下上述代码。首先，我们使用 `local = threading.local()` 实例化一个 `local` 实例。
+
+```python
+local = threading.local()
+```
+
+在实例化 `local()` 类时，自动创建 `_localimpl` 类的实例并保存在 `local` 实例的 `_local__impl` 属性上，然后再调用 `_localimpl.create_dict()` 创建线程的局部字典。到此，`local()` 类的实例化才算完成
+
+接下来，我们使用 `local.x = 10` 在 `local` 实例上创建属性 `x` 并赋值为 `10`。这一步，会触发 `local.__setattr__()` 方法。`local.__setattr__()` 方法做 $3$ 间事情
++ 首先，检查创建的属性是否为 `__dict__`，如果是抛出 `AttributeError`。这个属性不允许线程直接访问
++ 由于要在 `local` 实例上设置属性，因此需要 `local` 实例由 `__dict__` 属性。然而，此时 `local` 实例并没有 `__dict__` 属性。现在要做的就是将创建 `__dict__` 属性，并设置为当前线程的局部字典。创建 `__dict__` 属性的是 `_patch()` 函数
++ 最后，将设置属性的操作委托给 `object` 的 `__setattr__()` 方法
+
+现在，最关键的一点出现了。就是如何获取到当前线程的局部字典，并赋值给 `local.__dict__` 属性。实现这一步的关键就是 `_patch()` 函数。该函数的实现如下代码
+
+```python
+@contextmanager
+def _patch(self):
+	# 获取当前 local 实例的 _local__impl 属性的值。即 _localimpl 类实例
+    impl = object.__getattribute__(self, '_local__impl')
+    try:
+	    # 获取当前线程的局部字典
+        dct = impl.get_dict()
+    except KeyError:
+	    # 如果当前线程没有局部字典，则创建局部字典
+        dct = impl.create_dict()
+        args, kw = impl.localargs
+        self.__init__(*args, **kw)
+    # 加锁
+    with impl.locallock:
+	    # 将 local 实例的 __dict__ 属性设置为当前线程的局部字典
+        object.__setattr__(self, '__dict__', dct)
+        yield
+```
