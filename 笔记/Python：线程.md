@@ -240,16 +240,11 @@ Thread 1 finished
 All thread end! glob is [14]
 ```
 
-为了解决上述问题，Python 提供了许多线程同步工具，我们主要使用两个：**互斥锁** 和 **条件变量**
-
-### Event
-
-
-
+为了解决上述问题，Python 提供了许多线程同步工具，下面我们将开始介绍 **线程同步工具**
 
 ### 互斥锁
 
-为了解决上面的竞态条件，我们需要找到一种方法，使得 **一次只允许一个线程进入** 您的代码的 **读-修改-写** 部分(这个部分称为 **临界区域**)。在 Python 中，最常见的方法称为锁。在有些其他语言中，这个概念被称为 **互斥锁**(mutex)。互斥锁来源于MUTual EXclusion（互斥），这正是锁所做的事情
+为了解决上面的竞态条件，我们需要找到一种方法，使得 **一次只允许一个线程进入** 您的代码的 **读-修改-写** 部分(这个部分称为 **临界区域**)。在 Python 中，最常见的方法称为锁。在有些其他语言中，这个概念被称为 **互斥锁**(`mutex`)。互斥锁来源于 `MUTual EXclusion`（互斥），这正是锁所做的事情
 
 一个锁是一个像通行证一样的对象。同一时间只能有一个线程拥有锁。任何想要获取锁的其他线程都必须等待锁的所有者释放它。
 
@@ -340,6 +335,80 @@ def incr(loops, name):
 > + **非抢占(no preemption)**：进程或线程持有的资源不能被抢占
 > + **循环等待(circular wait)**：有一组等待进程或线程$\{T_0, T_1, \cdots, T_{n}\}$，$T_0$ 等待的资源为 $T_1$ 占有，$T_1$ 等待的资源为 $T_2$ 占有，$\cdots$，$T_{n-1}$ 等待的资源为 $T_n$ 占有，$T_n$ 等待的资源为 $T_0$ 占有
 > 
+
+
+### 可重入锁
+
+
+### Event
+
+Event 是 Python 中线程同步工具中最简单工具之一：一个线程发出事件信号，而其他线程等待该信号
+
+一个 Event 对象管理一个 **内部标识**，调用 `Event.set()` 方法可将其设置为 `True` ，调用 `Event.clear()` 方法可将其设置为 `False` ，调用 `Event.wait()` 方法将进入阻塞直到标识为 `True` 。
+
+> [!tip] 
+> 
+> 此外，还有一个 `Event.is_set()` 方法用于检查内部标识是否为 `True`
+> 
+
+这个过程非常像我们在路上 **等待红绿灯**。当我们要通过路口时，如果红灯亮起，那么我们就必须等待。只有当绿灯亮起的时候，才能通过。
+
+> [!tip] 
+> 
+> 某些线程必须等待另一个线程完成工作后，它们才能继续。此时，使用 Event 就非常合适
+> 
+
+```python
+import time
+import logging
+import sys
+from threading import Thread, Event, current_thread
+
+logging.basicConfig(
+    format="%(asctime)s %(threadName)s %(filename)s:%(lineno)s [%(message)s]", 
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO
+)
+
+
+
+
+def light(e: Event):
+    while True:
+        sys.stdout.flush()
+        e.clear()
+        logging.info("红灯")
+        time.sleep(10)
+        e.set()  # 发送信号
+        logging.info("绿灯")
+        time.sleep(5)
+
+
+def car(e: Event):
+    if e.is_set():
+        logging.info("通过路口")
+    else:
+        logging.info("在路口等待")
+        e.wait() 
+    
+
+
+if __name__ == '__main__':
+
+    event = Event()  # 创建等待事件
+    # 首先，创建红绿灯线程
+    t = Thread(target=light, args=(event, ), name="红绿灯")
+    t.start()
+
+    while True:
+        # 没 0.5 s 来一辆车
+        time.sleep(1)
+        Thread(target=car, args=(event, )).start()
+```
+
+
+
+
 
 ## 线程安全
 
@@ -608,6 +677,8 @@ class local:
 	    # 创建 _localimpl 类的实例
         impl = _localimpl()
         impl.localargs = (args, kw)
+        
+        # 多读-单写锁，保护 local.__dict__ 属性的操作
         impl.locallock = RLock()
         
         # 在 local 类的实例上添加一个 _local_impl 属性
@@ -734,3 +805,7 @@ def _patch(self):
         object.__setattr__(self, '__dict__', dct)
         yield
 ```
+
+## 定时任务：Timer
+
+
