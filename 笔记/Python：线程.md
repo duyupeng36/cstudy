@@ -808,4 +808,50 @@ def _patch(self):
 
 ## 定时任务：Timer
 
+`Timer` 用于执行 **定时任务**：某个任务应该在等待一定的时间之后运行。 `Timer` 类是 `Thread` 类的子类，因此可以像一个自定义线程一样工作。
+
+与线程一样，定时器也是通过调用其 `Timer.start()` 方法来启动的。 定时器可以通过调用 `cancel()` 方法来停止（在其动作开始之前）。 定时器在执行其任务之前要等待的 **时间间隔** 可能与用户指定的时间间隔不完全相同。
+
+```python
+def hello():
+    print("hello, world")
+
+t = Timer(30.0, hello)
+t.start()  # 30 秒之后，将执行一次 hello() 函数，执行完毕后整个线程就结束了
+```
+
+> [!tip] 
+> 
+> `Timer` 就是等待一定时间后执行一次任务，然后结束
+> 
+
+下面我们来看 `Timer` 类的实现。
++ 继承 `Thread` 类，并重写 `__init__()` 和 `run()` 方法
++ 为了实现 `cancle()` 操作，还应该有一个 `event` 对象
+
+```python
+class Timer(threading.Thread):
+
+    def __init__(self, interval, function, args=None, kwargs=None):
+        super().__init__()
+        self.interval = interval
+        self.function = function
+        self.args = args if args else ()
+        self.kwargs = kwargs if kwargs else {}
+        self.finished = threading.Event()
+    
+    def run(self):
+        """执行定时任务"""
+        self.finished.wait(self.interval)
+        if not self.finished.is_set():
+            self.function(*self.args, **self.kwargs)
+        self.finished.set()
+
+    def cacle(self):
+        """用于在任务开始前取消任务"""
+        self.finished.set()
+```
+
+
+
 
