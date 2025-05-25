@@ -154,7 +154,7 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);
 /* 成功返回 0；错误返回 errno */
 ```
 
-函数 `pthread_cond_timedwait()` 与函数 pthread_cond_`wait()` 几近相同，唯一的区别在于，由参数 `abstime` 来指定一个线程等待条件变量通知时休眠时间的上限
+函数 `pthread_cond_timedwait()` 与函数 `pthread_cond_wait()` 几近相同，唯一的区别在于，由参数 `abstime` 来指定一个线程等待条件变量通知时休眠时间的上限
 
 ```c
 #include <pthread.h>

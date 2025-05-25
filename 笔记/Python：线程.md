@@ -175,35 +175,38 @@ if __name__ == '__main__':
 
 **竞态条件可能在两个或多个线程访问共享数据或资源时发生**。在这个例子中，你将创建一个每次都会发生的巨大竞态条件，但请注意，大多数竞态条件并不这么明显。通常，它们只偶尔发生，并且可能会产生令人困惑的结果。正如你可以想象的那样，这使得它们相当难以调试
 
-```python
+> [!attention] 
+> 
+> 请注意：下面的例子，我们必须在 Python3.13 的实验版本，这个版本移除了 Python 的全局解释器锁，才能演示我们想要出现的效果
+> 
+
+```python hl:11
 import sys
 from threading import Thread
-import time
 
-glob = [0]
+
+glob = 0
 
 
 def incr(loops, name):
-
+    global glob
     while loops > 0:
-        loc = glob[0]
-        print(f"Thread {name} get loc={loc}")
-        loc += 1
-        glob[0] = loc
-        print(f"Thread {name} set glob[0]={loc}")
+        glob += 1   # 线程修改全局变量，竞争条件
         loops -= 1
     
     print(f"Thread {name} finished")
 
 
 def main():
-
-    if len(sys.argv) != 3:
-        print("Usage: python race.py <thread_number> <loops>", file=sys.stderr)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l", '--loops', type=int, default=100, help="循环次数")
+    parser.add_argument("-t", "--threads", type=int, default=10, help="线程数")
+    args = parser.parse_args()
     
     threads = []
-    for i in range(int(sys.argv[1])):
-        t = Thread(target=incr, args=(int(sys.argv[2]), i + 1))
+    for i in range(args.threads):
+        t = Thread(target=incr, args=(args.loops, i + 1))
         threads.append(t)
         t.start()
     
@@ -216,33 +219,46 @@ if __name__ == "__main__":
     main()
 ```
 
-执行上述代码输出的结果如下
+使用 Python3.13 实验版本执行上述代码输出的结果如下
 
-```
-$ python race.py 2 10 
-Thread 1 get loc=0
-Thread 1 set glob[0]=1
-Thread 2 get loc=1
-Thread 1 get loc=1
-Thread 1 set glob[0]=2
-Thread 2 set glob[0]=2
-Thread 1 get loc=2
-Thread 2 get loc=2
-Thread 1 set glob[0]=3
-....
-Thread 1 get loc=12
-Thread 2 set glob[0]=12
-Thread 1 set glob[0]=13
-Thread 2 finished
-Thread 1 get loc=13
-Thread 1 set glob[0]=14
+```shell
+# 两个线程，每个线程循环10次
+$ python3.13t race.py -l 10 -t 2
 Thread 1 finished
-All thread end! glob is [14]
+Thread 2 finished
+All thread end! glob is 20
+
+# 两个线程，每个线程循环100次
+$ python3.13t race.py -l 100 -t 2
+Thread 1 finished
+Thread 2 finished
+All thread end! glob is 200
+
+# 两个线程，每个线程循环1000次
+$ python3.13t  race.py -l 1000 -t 2
+Thread 1 finished
+Thread 2 finished
+All thread end! glob is 2000
+
+# 两个线程，每个线程循环10000次
+$ python3.13t race.py -l 10000 -t 2
+Thread 1 finished
+Thread 2 finished
+All thread end! glob is 14561
+
+$ python3.13t race.py -l 10000 -t 2
+Thread 1 finished
+Thread 2 finished
+All thread end! glob is 17177
 ```
+
+当循环次数增加到 $10000$ 时，每次执行的得到的结果均不相同，并且结果还是不正确的。执行到最后，`glob` 的值本应为 $2$ 万。问题的原因是由于线程的执行序列如下图导致的
+
+![[Pasted image 20241111203752.png]]
 
 为了解决上述问题，Python 提供了许多线程同步工具，下面我们将开始介绍 **线程同步工具**
 
-### 互斥锁
+### 互斥锁：Lock
 
 为了解决上面的竞态条件，我们需要找到一种方法，使得 **一次只允许一个线程进入** 您的代码的 **读-修改-写** 部分(这个部分称为 **临界区域**)。在 Python 中，最常见的方法称为锁。在有些其他语言中，这个概念被称为 **互斥锁**(`mutex`)。互斥锁来源于 `MUTual EXclusion`（互斥），这正是锁所做的事情
 
@@ -250,39 +266,37 @@ All thread end! glob is [14]
 
 在 Python 使用互斥锁非常简单，不用像 [[Linux 系统编程：互斥量]] 中那样进行复杂的初始化操作
 
-```python hl:2,7,13,19
+```python hl:2,11,13
 import sys
 from threading import Thread, Lock
-import time
 
-glob = [0]
 
-lock = Lock()
+glob = 0
 
-def incr(loops, name):
 
+def incr(loops, name, lock:Lock):
+    global glob
     while loops > 0:
-
-        lock.acquire()  # 获取互斥锁
-        loc = glob[0]
-        print(f"Thread {name} get loc={loc}")
-        loc += 1
-        glob[0] = loc
-        print(f"Thread {name} set glob[0]={loc}")
-        lock.release()  # 释放互斥锁
+        lock.acquire()  # 加锁
+        glob += 1
+        lock.release()  # 释放锁
         loops -= 1
     
     print(f"Thread {name} finished")
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l", '--loops', type=int, default=100, help="循环次数")
+    parser.add_argument("-t", "--threads", type=int, default=10, help="线程数")
+    args = parser.parse_args()
+    lock = Lock()
 
-    if len(sys.argv) != 3:
-        print("Usage: python race.py <thread_number> <loops>", file=sys.stderr)
-    
+
     threads = []
-    for i in range(int(sys.argv[1])):
-        t = Thread(target=incr, args=(int(sys.argv[2]), i + 1))
+    for i in range(args.threads):
+        t = Thread(target=incr, args=(args.loops, i + 1, lock))
         threads.append(t)
         t.start()
     
@@ -303,23 +317,17 @@ if __name__ == "__main__":
 `Lock` 类是支持上下文管理的，因此，我们可以使用 `with` 语句，这样可以自动在进入临界区之前获取锁，在离开临界区时释放锁
 
 ```python
-lock = Lock()
-
-def incr(loops, name):
-
+def incr(loops, name, lock:Lock):
+    global glob
     while loops > 0:
-
         with lock:
-            loc = glob[0]
-            print(f"Thread {name} get loc={loc}")
-            loc += 1
-            glob[0] = loc
-            print(f"Thread {name} set glob[0]={loc}")
-        
+            glob += 1
         loops -= 1
     
     print(f"Thread {name} finished")
 ```
+
+在使用互斥锁时一定要非常小心，并且仔细判断那些是临界区。**线程在执行临界区代码之前获取互斥锁，离开临界区代码时是否互斥锁**。必须按照这种要求使用互斥锁，否则可能造成 **死锁问题**！
 
 > [!tip] 
 > 
@@ -335,12 +343,159 @@ def incr(loops, name):
 > + **非抢占(no preemption)**：进程或线程持有的资源不能被抢占
 > + **循环等待(circular wait)**：有一组等待进程或线程$\{T_0, T_1, \cdots, T_{n}\}$，$T_0$ 等待的资源为 $T_1$ 占有，$T_1$ 等待的资源为 $T_2$ 占有，$\cdots$，$T_{n-1}$ 等待的资源为 $T_n$ 占有，$T_n$ 等待的资源为 $T_0$ 占有
 > 
+> 只要破坏其中一个死锁的必要条件，那么死锁就会被解除
+>
+
+### 条件变量：Condition
+
+互斥量防止多个线程同时访问同一共享变量。**条件变量** 允许一个线程就某个共享变量或其他共享资源的状态变化 **通知** 其他线程，并让其他线程等待 **阻塞** 于这一通知
+
+一个未使用条件变量的简单例子有助于展示条件变量的重要性。假设由若干线程生成一些 “产品单元” 供主线程消费。还使用了一个由互斥量保护的变量 `avail` 来代表待消费产品的数量
+
+```python hl:14,16
+import logging
+import threading
+import time
 
 
-### 可重入锁
+logging.basicConfig(
+    format="%(asctime)s %(threadName)s %(filename)s:%(lineno)s [%(message)s]", 
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO
+)
 
 
-### Event
+# 互斥锁
+mtx = threading.Lock()
+# 共享变量
+avail = 0
+
+def producer():
+    global avail
+    while True:
+	    # 生产者没 0.5 秒生产一个产品，然后释放锁
+        with mtx:
+            avail += 1
+            logging.info("生产一个产品")
+        time.sleep(0.5)
+
+
+def main():
+    threading.Thread(target=producer).start()
+    time.sleep(1)
+    global avail
+    while True:
+	    # 主线程获得锁
+        with mtx:
+	        # 循环检查 avail 是否大于 0
+            while avail > 0:
+                avail -= 1
+                logging.info("消费一个产品")
+                time.sleep(1)
+        
+
+if __name__ == "__main__":
+    main() 
+```
+
+> [!warning] 
+> 
+> 上述方案由于 **主线程不停地循环检查变量 `avail` 的状态**，故而造成 `CPU` 资源的浪费
+> 
+
+为了解决上述问题，采用 **条件变量**：**允许一个线程休眠（等待）直至接获另一线程的通知去执行某些操作**。出现一些“情况”后，等待者必须立即做出响应。
+
+也就是说，**条件变量总是与某种类型的锁对象相关联**，锁对象可以通过传入获得，或者在缺省的情况下自动创建。当多个条件变量需要共享同一个锁时，传入一个锁很有用。在 Python 中，**锁是条件对象的一部分，你不必单独地跟踪它**。
+
+> [!important] 
+> 
+> 条件变量遵循 上下文管理协议 ：使用 `with` 语句会在它包围的代码块内获取关联的锁。
+> 
+> + 此外，条件变量的 `acquire()` 和 `release()` 方法也能调用关联锁的相关方法
+> 
+
+其它方法必须在持有关联的锁的情况下调用。 `wait()` 方法释放锁，然后阻塞直到其它线程调用 `notify()` 方法或 `notify_all()` 方法唤醒它。一旦被唤醒， `wait()` 方法重新获取锁并返回。它也可以指定超时时间。
++ `notify()` 只唤醒一个线程，置于唤醒哪一个线程是不清楚的
++ `notify_all()` 唤醒所有线程 
+
+> [!warning] 
+> 
+> 注意： `notify()` 方法和 `notify_all()` 方法并不会释放锁，这意味着被唤醒的线程不会立即从它们的 `wait()` 方法调用中返回，而是会在调用了 `notify()` 方法或 `notify_all()` 方法的线程最终放弃了锁的所有权后返回。
+> 
+> 这意味着，我们必须先调用 `notify()` 或者 `notify_all()` 方法后才能释放锁。先释放锁，后调用 `notify()` 或者 `notify_all()` 方法将会引发异常
+> 
+
+使用条件变量的典型编程风格是将锁用于同步某些共享状态的权限，那些对状态的某些特定改变感兴趣的线程，它们重复调用 `wait()` 方法，直到看到所期望的改变发生；而对于修改状态的线程，它们将当前状态改变为可能是等待者所期待的新状态后，调用 `notify()` 方法或者 `notify_all()` 方法
+
+如下例程，展示条件变量的应用：生产者线程随机产生一些数据，然后通知消费者线程将这些数据消耗掉
+
+```python
+import logging
+import random
+import threading
+import time
+
+logging.basicConfig(
+    format="%(asctime)s %(threadName)s %(filename)s:%(lineno)s [%(message)s]", 
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO
+)
+
+lock = threading.Lock()
+condition = threading.Condition(lock=lock)
+avail = 0
+
+
+def producer(condition: threading.Condition):
+    global avail
+    while True:
+        time.sleep(random.random())
+        # 自动获取锁
+        with condition:
+            rand = random.randint(1, 10)
+            avail += rand
+            logging.info(f"生产 {rand} 个产品，目前产品数量为 {avail}")  
+            # 通知所有消费者线程，数据生产完毕
+            condition.notify_all()
+	    # 自动释放锁
+
+
+def consumer(condition: threading.Condition):
+    global avail
+
+    while True:
+        # 自动获取锁
+        with condition:
+            # 检查共享变量，等待生产者通知
+            while avail == 0:
+                # 释放锁，并让线程阻塞等待其他线程通知
+                condition.wait()
+                # 其他线程通知到来时，会重新加锁，然后从 wait() 返回
+        
+            # 消费数据
+            rand = random.randint(1, 10)
+            while avail - rand < 0:
+                rand = random.randint(0, 10)
+            avail -= rand
+            logging.info(f"消费者 {rand} 个产品，剩余 {avail} 个产品")
+            time.sleep(random.random())
+        # 自动释放锁
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--producer", type=int, default=10, help="生产者线程数")
+    parser.add_argument("-c", "--consumer", type=int, default=2, help="消费者线程数")
+    args = parser.parse_args()
+
+    for i in range(args.producer):
+        threading.Thread(target=producer, args=(condition, ), name=f"producer-{i}").start()
+    
+    for i in range(args.consumer):
+        threading.Thread(target=consumer, args=(condition, ), name=f"consumer-{i}").start()
+```
+
+### 事件：Event
 
 Event 是 Python 中线程同步工具中最简单工具之一：一个线程发出事件信号，而其他线程等待该信号
 
@@ -369,9 +524,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
     level=logging.INFO
 )
-
-
-
 
 def light(e: Event):
     while True:
@@ -406,9 +558,49 @@ if __name__ == '__main__':
         Thread(target=car, args=(event, )).start()
 ```
 
+### 信号量：Semaphore
+
+信号量是一个非常古老的同步源语。参加 [[Linux 系统编程：System V 信号量]]。在 Python 中，一个信号量管理一个内部计数器，该计数器因 `acquire()` 方法的调用而递减，因 `release()` 方法的调用而递增。 **计数器的值永远不会小于零**；当 `acquire()` 方法发现计数器为零时，将会阻塞，直到其它线程调用 `release()` 方法。
+
+> [!tip] 
+> 
+> 信号量通常用于保护有限资源。例如，打印机。当有多个线程要调用打印机打印数据时，首先应该检查打印机数量是否大于 $0$；只有在数量大于 $0$ 时才能打印数据。否则，线程就应该等待其他线程释放打印机
+> 
+
+```python
+import logging
+import random
+import threading
+import time
+
+logging.basicConfig(
+    format="%(asctime)s %(threadName)s %(filename)s:%(lineno)s [%(message)s]", 
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO
+)
 
 
+def routine(semaphore: threading.Semaphore):
+    # 自动调用 semaphore.acquire() 让信号量减少 1
+    with semaphore:
+        # 模拟打印耗时
+        time.sleep(1)
+        logging.info("打印完成")
+    # 自动调用 semaphore.release() 让信号量增加 1
 
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--printer", type=int, default=5, help="打印机数量")
+    parser.add_argument("-t", "--threads", type=int, default=20, help="线程数")
+    args = parser.parse_args()
+
+    # 信号量，用于保护打印机这种有限资源
+    sem = threading.Semaphore(value=args.printer)
+    
+    for i in range(args.threads):
+        threading.Thread(target=routine, args=(sem, ), name=f"routine-{i}").start()
+```
 
 ## 线程安全
 
@@ -851,7 +1043,3 @@ class Timer(threading.Thread):
         """用于在任务开始前取消任务"""
         self.finished.set()
 ```
-
-
-
-

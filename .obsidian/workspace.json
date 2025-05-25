@@ -38,17 +38,31 @@
             }
           },
           {
-            "id": "e2faa8ba16086a56",
+            "id": "a5d5568e7a59f3f6",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Linux 系统编程：线程安全.md",
+                "file": "笔记/Linux 系统编程：System V 信号量.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux 系统编程：线程安全"
+              "title": "Linux 系统编程：System V 信号量"
+            }
+          },
+          {
+            "id": "46b1c27274ad6c81",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/Linux 系统编程：条件变量.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Linux 系统编程：条件变量"
             }
           }
         ],
@@ -201,17 +215,20 @@
   },
   "active": "a592dd767a0914b6",
   "lastOpenFiles": [
-    "笔记/Linux 系统编程：线程安全.md",
+    "笔记/Linux 系统编程：System V 信号量.md",
+    "笔记/Linux 系统编程：条件变量.md",
     "笔记/Python：线程.md",
+    "README.md",
+    "笔记/Linux 系统编程：Pthreads API.md",
+    "笔记/Linux 系统编程：线程安全.md",
+    "笔记/Linux 系统编程：互斥量.md",
     "笔记/Python：基本概念.md",
     "笔记/C 语言：指针.md",
     "assets/attachments/Pasted image 20240926234808.png",
-    "README.md",
     "笔记/数据结构：线性表.md",
     "笔记/计算机组成：整数的表示与运算.md",
     "笔记/C 语言：基本概念.md",
     "笔记/Go 语言：开发环境搭建.md",
-    "笔记/Linux 系统编程：互斥量.md",
     "笔记/Python：进程.md",
     "笔记/操作系统：进程调度.md",
     "笔记/Go 语言：基本概念.md",
@@ -226,11 +243,9 @@
     "笔记/Linux 系统编程：服务器设计.md",
     "笔记/Linux 系统编程：SOCKET 概览.md",
     "笔记/Linux 系统编程：SOCKET 地址转换.md",
-    "笔记/Python：asyncio.md",
     "assets/attachments/chained.gif",
     "assets/attachments/Pasted image 20250504145212.png",
     "assets/attachments/Pasted image 20250502231230.png",
-    "笔记/Python：函数高级.md",
     "assets/attachments/spinner-process.gif",
     "assets/attachments/Pasted image 20250426154341.png",
     "assets/attachments/Pasted image 20250426152838.png",
