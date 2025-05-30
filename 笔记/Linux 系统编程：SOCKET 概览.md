@@ -30,7 +30,7 @@ fd = socket(domain, type, protocol);
 > [!tip] 参数 `domain`：指定通信域
 > 
 > `socket` 存在于一个通信 `domain` 中，它确定：**地址格式** 和 **通信范围**。现代操作系统支持下列 domain
-> + **UNIX domain(AF_UNIX)**： 同一主机上的进程之间进行通信。地址格式
+> + **UNIX domain(AF_UNIX)**： 同一主机上的进程之间进行通信
 > + **IPv4 domain(AF_INET)**：IPv4 网络连接起来的不同主机上的进程之间进行通信
 > + **IPv6 domain(AF_INET6)**：IPv6 网络连接起来的不同主机上的进程之间进行通信
 > 
@@ -229,13 +229,13 @@ int listen(int sockfd, int blocklog);
 
 > [!tip] 半连接队列：连接处于 SYN_RCVD 状态
 > 
->  + 客户端调用 `connect()`，会向服务端发送一个 SYN 报文段(第一次挥手)
->  + 服务端会向客户端发送 ACK+SYN 报文段作为响应(第二次挥手)，并将连接放入半连接队列，然后等待客户端的 ACK 报文段
+>  + 客户端调用 `connect()`，会向服务端发送一个 SYN 报文段(第一次握手)
+>  + 服务端会向客户端发送 ACK+SYN 报文段作为响应(第二次握手)，并将连接放入半连接队列，然后等待客户端的 ACK 报文段
 > 
 
 > [!tip] 全连接队列：连接处于 ESTABLISHED 状态
 > 
-> + 客户端收到服务端的 ACK+SYN 报文段之后，再次向服务端发送 ACK 报文段(第三次挥手)。此时，`connect()` 函数返回
+> + 客户端收到服务端的 ACK+SYN 报文段之后，再次向服务端发送 ACK 报文段(第三次握手)。此时，`connect()` 函数返回
 > + 收到客户端的 ACK 报文段之后，会将连接移入全连接队列
 > 
 

@@ -1043,3 +1043,19 @@ class Timer(threading.Thread):
         """用于在任务开始前取消任务"""
         self.finished.set()
 ```
+
+## 全局解释器锁: GIL
+
+Python 官方实现 CPython 解释器在进程级别有一把锁，称为 **全局解释器锁(Global Interpreter Lock, GIL)**。GIL 保证 CPython 进程中，只有一个线程执行字节码。即是在多核心 CPU 上，也只允许一个线程执行
+
+> [!important] 
+> 
+> 也就是说，在 CPython 解释器进程中，只能有一个线程运行
+> 
+> 由于 GIL 的存在，Python 中的内置类型就变成了线程安全的类型，
+> 
+
+
+在 CPython 中的多线程非常适合 **IO密集型任务(大量 IO 的任务)**。线程在执行 IO 操作时，线程会释放主动释放 GIL；此时，其他线程就可以获得 GIL 然后开始运行。
+
+如果在 CPython 中使用多线程执行 **CPU 密集型任务(大量计算的任务)**。此时，线程会长时间持有 GIL，从而导致其他线程无法得到允许。解释器会有一个专门 `ticks` 进行计数，每隔 $100$ 次或每隔一定时间($15 \ \text{ms}$)去释放 GIL，这时线程之间可以开始竞争 GIL。
