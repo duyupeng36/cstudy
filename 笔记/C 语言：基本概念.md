@@ -595,7 +595,7 @@ int main(int argc, char *argv[]) {
 
 _转换说明_ 包含 字符`%` 和跟随其后的最多 $5$ 个不同的选项构成。下图给出了转换说明的示例
 
-![[Pasted image 20240922005552.png|900]]
+![[Pasted image 20240922005552.png]]
 
 
 > [!hint] 标志，可选

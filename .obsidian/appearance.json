@@ -3,5 +3,6 @@
   "accentColor": "",
   "baseFontSize": 16,
   "theme": "moonstone",
-  "baseFontSizeAction": false
+  "baseFontSizeAction": true,
+  "monospaceFontFamily": "FiraCode Nerd Font Mono"
 }
