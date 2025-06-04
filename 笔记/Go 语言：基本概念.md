@@ -1475,6 +1475,30 @@ func main() {
 }
 ```
 
+### new 函数
+
+内置函数 `new(Type)` 返回一个指向 `Type` 类型对象的指针
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var pa *int
+	pa = new(int)
+	*pa = 10
+	fmt.Printf("&pa = %p\npa = %p\n*pa = %d\n", &pa, pa, *pa)
+}
+```
+
+> [!tip] 
+> 
+> `new(Type)` 函数会分配一片能够存储 `Type` 类型对象的内存空间，并返回其首地址。至于 Go 编译器会在栈区还是堆区分配完全由编译器决定
+> 
+
 ## 流程控制
 
 ### if 语句
