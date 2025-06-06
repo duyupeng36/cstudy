@@ -237,6 +237,260 @@ func main() {
 
 在循环中使用 `append()` 函数构建一个由九个 `rune` 字符构成的切，当然对应这个特殊的问题我们可以通过 Go 语言内置的 `[]rune("Hello, 世界")` 强制类型转换操作完成。
 
+上述实例中，切片 `s` 没有底层数组，当使用 `append()` 向切片 `s` 添加元素时，`append()` 触发切片扩容。下面我们介绍切片扩容策略
+
+#### 扩容策略
+
+我们使用如下函数 `appendInt()` 模拟 `append()` 函数的执行过程
++ 需要返回一个新切片
++ 根据添加元素个数判断是否需要扩容
++ 这里我们简单认为：扩容只是简单的容量翻倍
+
+```go
+func appendInt(x []int, y ...int) []int {
+
+	// 新切片：返回的切片
+	var z []int
+
+	zlen := len(x) + len(y) // 新切片的长度
+
+	// 判断是否还有容量可以存放元素
+	if zlen <= cap(x) {
+		// 我们还有成长的空间。扩展切片
+		z = x[:zlen]
+	} else {
+		// 需要扩容
+		// 重新分配空间
+		zcap := zlen
+		if zcap < 2*cap(x) {
+			zcap = 2 * cap(x)
+		}
+
+		z = make([]int, zlen, zcap)
+
+		// 将原来的元素复制到新的空间
+		copy(z, x)
+	}
+
+	// 添加元素
+	for i, v := range y {
+		z[len(x)+i] = v
+	}
+
+	return z
+}
+```
+
+
+> [!tip] 
+> 内置函数 `copy(dst, src)` 可以方便的把 `src` 切片中的元素复制到 `dst` 切片中 
+
+测试 `appendInt` 
+
+```go
+var a = make([]int, 3, 5)
+fmt.Printf("a: %p, %p, len=%d, cap=%d, %v\n", &a, &a[0], len(a), cap(a), a)
+
+b := appendInt(a, 1, 2)
+fmt.Println("---------------------------------------------------------------------")
+fmt.Printf("a: %p, %p, len=%d, cap=%d, %v\n", &a, &a[0], len(a), cap(a), a)
+fmt.Printf("b: %p, %p, len=%d, cap=%d, %v\n", &b, &b[0], len(b), cap(b), b)
+
+c := appendInt(b, 2, 3)
+fmt.Println("---------------------------------------------------------------------")
+fmt.Printf("a: %p, %p, len=%d, cap=%d, %v\n", &a, &a[0], len(a), cap(a), a)
+fmt.Printf("b: %p, %p, len=%d, cap=%d, %v\n", &b, &b[0], len(b), cap(b), b)
+fmt.Printf("c: %p, %p, len=%d, cap=%d, %v\n", &c, &c[0], len(c), cap(c), c)
+```
+
+输出结果为
+
+```
+a: 0xc000010018, 0xc00001c0c0, len=3, cap=5, [0 0 0]
+---------------------------------------------------------------------
+a: 0xc000010018, 0xc00001c0c0, len=3, cap=5, [0 0 0]
+b: 0xc000100000, 0xc00001c0c0, len=5, cap=5, [0 0 0 1 2]
+---------------------------------------------------------------------
+a: 0xc000010018, 0xc00001c0c0, len=3, cap=5, [0 0 0]
+b: 0xc000100000, 0xc00001c0c0, len=5, cap=5, [0 0 0 1 2]
+c: 0xc000100048, 0xc000106000, len=7, cap=10, [0 0 0 1 2 2 3]
+```
+
+---
+
+在 `$GOROOT/src/runtime/slice.go` 源码中，与扩容相关代码如下：
+
+```go
+// nextslicecap computes the next appropriate slice length.
+func nextslicecap(newLen, oldCap int) int {
+	newcap := oldCap
+	doublecap := newcap + newcap  // 首先将容量翻倍
+	// 如果申请的空间大于原来空间的两倍，则直接返回申请的容量
+	if newLen > doublecap {
+		return newLen
+	}
+	
+	// 设定一个阈值
+	const threshold = 256
+	// 申请的空间小于原来空间的两倍 并且 原始容量小于阈值，将容量翻倍
+	if oldCap < threshold {
+		return doublecap
+	}
+	// 申请的空间小于原来空间的两倍 并且 原始容量大于或等于阈值
+	for {
+		// 从小切片增长 2 倍过渡到大切片增长 1.25 倍。这个公式可以在两者之间实现平滑过渡
+		newcap += (newcap + 3*threshold) >> 2  // newcap = newcap + newcap / 4 + 3 * 256 / 4 => newcap = 1.25 * newcap + 192
+
+		// 我们需要检查 `newcap >= newLen` 和 `newcap` 是否溢出。
+		// newLen 保证大于零，因此当 newcap 溢出时，`uint(newcap) > uint(newLen)`。 
+		// 这样就可以通过相同的比较对两者进行检查。
+		if uint(newcap) >= uint(newLen) {
+			break
+		}
+	}
+
+	// 当 newcap 计算溢出时，将 newcap 设置为请求的上限。
+	if newcap <= 0 {
+		return newLen
+	}
+	return newcap
+}
+```
+
+(新版本1.18+) 阈值变成了 $256$，当扩容后的 `cap<256` 时，扩容翻倍，容量变成之前的 `2` 倍；当 `cap>=256` 时，`newcap +=(newcap + 3*threshold)/4` 计算后就是 `newcap = newcap + newcap/4 + 192`，即 `1.25` 倍后再加 `192`
+
+（老版本）实际上，当扩容后的 `cap<1024` 时，扩容翻倍，容量变成之前的 `2` 倍；当 `cap>=1024` 时，变成之前的 `1.25` 倍
+
+> [!warning] 
+> 
+> 扩容是耗时操作：因为需要将元素拷贝到新的内存空间
+> 
+> + **扩容是 _创建新的内部数组_**，把原内存数据 **_拷贝到新内存空间_**，然后在新内存空间上执行元素追加操作
+> 
+> + **切片频繁扩容成本非常高，所以尽量早估算出使用的大小，一次性给够**，建议使用 `make`。常用 `make([]int, 0, 100)` 
+
+思考一下：如果 `s1 := make([]int, 3, 100)` ，然后对 `s1` 进行 `append` 元素，会怎么样？添加元素个数少于 `97` 时，不会触发扩容策略；添加元素个数大于 `97` 时，触发扩容策略
+
+### 内存模型
+
+切片本质上只是一个 **结构体**，在 `${GOROOT}/src/runtime/slice.go` 中切片的定义如下
+
+```go
+type slice struct {
+    array unsafe.Pointer
+    len int
+    cap int
+}
+```
+
+通过 `array` 指向一个底层数组中的某些片段，使用 `len` 和 `cap` 管理这个底层数组片段中的元素。如下图所示
+
+![[Pasted image 20250605230620.png]]
+
+> [!tip] 
+> 
+> 长度(`len`)：切片管理的元素个数
+> 
+> 容量(`cap`)：切片底层数组能容纳的元素个数
+> 
+> 注意：Go 的结构体与 C 中的结构体类似。也就是说，**结构体是一个可比较的对象**
+> 
+
+这就是说明了 `append()` 函数为什么要返回一个新的切片：因为，`append()` 在追加元素到切片中时，如果切片的容量无法容纳新增的元素，则会重新申请内存空间，从而改变了指针(`array`) 的指向。因此，`append()` 需要将这个新的切片返回
+
+### 切片的比较
+
+请注意：Go 语言的切片唯一能进行的就是和 `nil` 比较，两个切片之间是不能比较的。因为，切片本质上是一个结构体，结构体之间的比较只是比较成员，无法比较指针(`array`) 引用的底层数组中的内容。
+
+```go
+package main
+
+func main() {
+	var s1 = []int{1, 2, 3}
+	var s2 = []int{1, 2, 3}
+
+	s1 == s2 // invalid operation: slice can only be compared to nil
+}
+```
+
+> [!tip] 
+> 
+> 切片只能与 `nil` 进行比较
+> 
+
+### 切片表达式
+
+**多个 `slice` 之间可以共享底层的数据，并且引用的数组部分区间可能重叠**。下面的代码声明了一个数组表示一年中每个月份名字的字符串数组
+
+```go
+months := [...]string{
+	1:  "January",
+	2:  "February",
+	3:  "March",
+	4:  "April",
+	5:  "May",
+	6:  "June",
+	7:  "July",
+	8:  "August",
+	9:  "September",
+	10: "October",
+	11: "November",
+	12: "December",
+}
+```
+
+这样，一月份是 `months[1]`，十二月份是 `months[12]`。数组的第一个元素从索引0开始，但是月份一般是从 `1` 开始的，因此我们声明数组时直接跳过第 `0` 个元素，第 `0` 个元素会被自动初始化为空字符串
+
+`slice` 的切片操作 `s[i:j]`，其中 `0 <= i <= j <= cap(s)`，用于创建一个新的 `slice`，引用 `s` 的从第 `i` 个元素开始到第 `j-1` 个元素的子序列。新的 `slice` 将只有 `j-i` 个元素
++ 如果`i` 位置的索引被省略的话将使用 `0` 代替
++ 如果 `j` 位置的索引被省略的话将使用 `len(s)` 代替
+
+因此，`months[1:13]` 切片操作将引用全部有效的月份，和 `months[1:]` 操作等价；`months[:]` 切片操作则是引用整个数组。让我们分别定义表示第二季度和北方夏天月份的 `slice`，它们有重叠部分
+
+```go
+Q2 := months[4:7]
+summer := months[6:9]
+fmt.Println(Q2, len(Q2), cap(Q2))             // [April May June] 3 9
+fmt.Println(summer, len(summer), cap(summer)) // [June July August] 3 7
+```
+
+![[Pasted image 20250605234500.png]]
+
+两个 `slice` 都包含了六月份，下面的代码是一个包含相同月份的测试（性能较低）
+
+```go
+for _, s := range summer {
+    for _, q := range Q2 {
+        if s == q {
+            fmt.Printf("%s appears in both\n", s)
+        }
+    }
+}
+```
+
+如果切片操作超出 `cap(s)` 的上限将导致一个 `panic` 异常，但是超出 `len(s)` 则是意味着扩展了 `slice`，因为新 `slice` 的长度会变大
+
+```go
+fmt.Println(summer[:20]) // panic: out of range
+endlessSummer := summer[:5] // extend a slice (within capacity)
+fmt.Println(endlessSummer)  // "[June July August September October]"
+```
+
+因为 `slice` 只包含指向第一个 `slice` 元素的指针，因此向函数传递 `slice` 将允许在函数内部修改底层数组的元素。换句话说，复制一个 `slice` 只是对底层的数组创建了一个新的 `slice` 别名。下面的 `reverse()` 函数在原内存空间将 `[]int` 类型的 `slice` 反转，而且它可以用于任意长度的 `slice`
+
+```go
+// reverse reverses a slice of ints in place.
+func reverse(s []int) {
+    for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+        s[i], s[j] = s[j], s[i]
+    }
+}
+```
+
+
+## Map
+
+
 
 
 
