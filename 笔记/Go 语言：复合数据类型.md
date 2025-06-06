@@ -487,8 +487,184 @@ func reverse(s []int) {
 }
 ```
 
-
 ## Map
+
+[[数据结构：散列表]] 是一种巧妙并且实用的数据结构。它是一个 **无序的 (key, value) 对的集合**，其中所有的 `key` 都是不同的，然后通过给定的 `key` 可以在 **常数时间复杂度** 内检索、更新或删除对应的 `value`
+
+在Go语言中，一个 Map 就是一个哈希表的引用，Map 类型可以写为 `map[K]V` ，其中 `K` 和 `V` 分别对应 `key` 和 `value` 的类型
+
+> [!important] 
+> 
+> `map` 中所有的 `key` 都有相同的类型，所有的 `value` 也有着相同的类型，但是 `key` 和 `value` 之间可以是不同的数据类型
+> 
+> 其中 `K` 必须是支持 `==` 比较运算符的数据类型，所以 `map` 可以通过测试 `key` 是否相等来判断是否已经存在
+> 
+> + 虽然浮点数类型也是支持相等运算符比较的，但是将浮点数用做 `key` 类型则是一个坏的想法，因为最坏的情况是可能出现的 `NaN` 和任何浮点数都不相等
+> 
+> 对于 `V` 则没有任何的限制
+> 
+
+### 创建 Map
+
+内置的 `make()` 函数可以创建一个 Map。用于创建 Map 时，`make()` 只需要指定两个参数，分别是类型( `map[K]V`) 和容量。容量可以提供，这样 Go 会创建一个比较小的哈希表
+
+```go
+ages := make(map[string]int) // mapping from strings to ints
+```
+
+我们也可以用 `map` 字面值的语法创建 Map，同时还可以指定一些最初的 `(key,value)` 对：
+
+```go
+ages := map[string]int{
+    "alice":   31,
+    "charlie": 34,
+}
+```
+
+上述代码相当于
+
+```go
+ages := make(map[string]int)
+ages["alice"] = 31
+ages["charlie"] = 34
+```
+
+### Map 的操作
+#### 访问 Value
+
+Map 中的通过 `key` 对应的下标语法访问 `value`：
+
+```go
+ages["alice"] = 32         // 增加或修改 (key,value) 键值对
+fmt.Println(ages["alice"]) // 访问 key 对应的 value："32"
+```
+
+通过 `key` 作为索引下标来访问 Map 将产生一个 `value`。如果 `key` 在 Map 中是存在的，那么将得到与 `key` 对应的 `value` ；如果 `key` 不存在，那么将得到 `value` 对应类型的零值
+
+这个规则很实用，但是有时候可能需要知道对应的元素是否真的是在 Map 之中。例如，如果元素类型是一个数字，你可以需要区分一个已经存在的 $0$，和不存在而返回零值的 $0$，可以像下面这样测试：
+
+```go
+age, ok := ages["bob"]
+if !ok { 
+	/* "bob" is not a key in this map; age == 0. */ 
+}
+```
+
+你会经常看到将这两个结合起来使用，像这样
+
+```go
+if age, ok := ages["bob"], !ok {
+	/* "bob" is not a key in this map; age == 0. */ 
+}
+```
+
+> [!hint] 
+> 
+> 在这种场景下，Map 的下标语法将产生两个值；第二个是一个布尔值，用于报告元素是否真的存在。布尔变量一般命名为 `ok`，特别适合马上用于 `if` 条件判断部分。
+> 
+
+#### 删除 key
+
+想要删除 Map 中的 `key`，需要使用内置函数 `delete()`
+
+```go
+delete(ages, "alice") // 删除元素 ages["alice"]
+```
+
+> [!important] 
+> 
+> 所有这些操作是安全的，即使这些元素不在 Map 中也没有关系；如果一个查找失败将返回 `value` 类型对应的零值
+
+例如，即使 Map 中不存在 `"bob"` 下面的代码也可以正常工作，因为 `ages["bob"]` 失败时将返回 $0$
+
+ ```go
+ ages["bob"] = ages["bob"] + 1 // happy birthday!
+```
+
+而且 `x += y` 和 `x++` 等简短赋值语法也可以用在 Map 上，所以上面的代码可以改写成
+
+```go
+ages["bob"] += 1
+ages["bob"]++ 
+```
+
+> [!warning] 
+> 
+> 但是 Map 中的元素并不是一个变量，因此我们不能对 Map 的元素进行取址操作
+> 
+> 禁止对 Map 元素取址的原因是 Map 可能随着元素数量的增长而重新分配更大的内存空间，从而可能导致之前的地址无效
+> 
+
+```go
+_ = &ages["bob"] // compile error: cannot take address of map element
+```
+
+#### 遍历
+
+要想遍历 Map 中全部的 `(key, value)` 对的话，可以使用 `range` 风格的 `for` 循环实现，和之前的 Slice 或数组遍历语法类似。下面的迭代语句将在每次迭代时设置 `name` 和 `age` 变量，它们对应下一个键/值对：
+
+```go
+for key, value := range ages {
+	fmt.Printf("%s\t%d\n", key, value)
+}
+```
+
+**Map 的迭代顺序是不确定的**，并且不同的哈希函数实现可能导致不同的遍历顺序。在实践中，遍历的顺序是随机的，每一次遍历的顺序都不相同。这是故意的，每次都使用随机的遍
+历顺序可以强制要求程序不会依赖具体的哈希函数实现
+
+如果要按顺序遍历 `(key, value)` 对，我们必须显式地对 `key` 进行排序，可以使用 `sort` 包的 `Strings` 函数对字符串 Slice 进行排序。下面是常见的处理方式：
+
+```go
+import "sort"
+
+var names []string
+
+for name := range ages {
+	names = append(names, name)
+}
+
+sort.Strings(names)
+
+for _, name := range names {
+	fmt.Printf("%s \t%d\n", name, ages[name])
+}
+```
+
+### 零值
+
+Map 的零值是 `nil`，也就是没有引用任何哈希表。对于 `nil` Map 大部分操作，包括查找、删除、`len` 和 `range` 循环都可以安全工作在 `nil` Map 上，它们的行为和一个空的 Map 类似
+
+>[!warning] 
+>
+>但是向一个 `nil` Map 存入元素将导致一个 `panic` 异常。因此，在向 Map 存数据前必须先创建 Map
+>
+
+```GO
+var ages map[string]int
+
+ages["carol"] = 21 // panic: assignment to entry in nil map
+```
+
+### 比较
+
+和切片一样，Map 唯一能进行 `==` 或 `!=` 比较操作的就是和 `nil` 比较，两个 Map 之间是不能进行比较的。要判断两个 Map 是否包含相同的 `key` 和 `value`，我们必须通过一个循环实现：
+
+```go
+func equal(x, y map[string]int) bool {
+    if len(x) != len(y) {
+        return false
+    }
+    for k, xv := range x {
+        if yv, ok := y[k]; !ok || yv != xv {
+            return false
+        }
+    }
+    return true
+}
+```
+
+## 结构体
+
 
 
 
