@@ -172,8 +172,9 @@
   },
   "active": "0782b6761c85e8aa",
   "lastOpenFiles": [
-    "笔记/Go 语言：泛型.md",
+    "笔记/Go 语言：sort 包.md",
     "README.md",
+    "笔记/Go 语言：泛型.md",
     "笔记/Go 语言：错误和异常.md",
     "笔记/Go 语言：面向对象.md",
     "笔记/Go 语言：接口.md",
@@ -208,7 +209,6 @@
     "笔记/计算机组成：浮点数表示与运算.md",
     "笔记/Go 语言：开发环境搭建.md",
     "笔记/Python：聊天服务器.md",
-    "笔记/Linux 系统编程：SOCKET 地址转换.md",
     "作业/05-Go",
     "作业/04-C++",
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
