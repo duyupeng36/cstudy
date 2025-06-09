@@ -22,8 +22,37 @@
               "icon": "lucide-file",
               "title": "README"
             }
+          },
+          {
+            "id": "4702020602540e7c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/Go 语言：序列化.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Go 语言：序列化"
+            }
+          },
+          {
+            "id": "830bb72be5e93db4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/Python：序列化.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Python：序列化"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -142,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
+                "file": "笔记/Go 语言：序列化.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "Go 语言：序列化 的大纲"
             }
           }
         ],
@@ -170,10 +199,21 @@
       "oz-clear-unused-images:Clear Unused Images": false
     }
   },
-  "active": "0782b6761c85e8aa",
+  "active": "4702020602540e7c",
   "lastOpenFiles": [
-    "笔记/Go 语言：sort 包.md",
+    "笔记/Python：序列化.md",
+    "笔记/Go 语言：序列化.md",
     "README.md",
+    "笔记/Go 语言：路径与目录.md",
+    "笔记/Go 语言：文件属性.md",
+    "笔记/Go 语言：字节缓冲.md",
+    "笔记/Go 语言：缓冲 IO.md",
+    "笔记/Go 语言：通用 IO 接口.md",
+    "笔记/Go 语言：时间.md",
+    "笔记/Go 语言：文件 IO.md",
+    "assets/attachments/Pasted image 20250609212132.png",
+    "assets/attachments/Pasted image 20250609211907.png",
+    "笔记/Go 语言：sort 包.md",
     "笔记/Go 语言：泛型.md",
     "笔记/Go 语言：错误和异常.md",
     "笔记/Go 语言：面向对象.md",
@@ -190,25 +230,14 @@
     "笔记/Go 语言：结构体.md",
     "笔记/Go 语言：函数高级.md",
     "笔记/Python：函数高级.md",
-    "assets/attachments/Pasted image 20240410223231.png",
     "笔记/Go 语言：函数基础.md",
     "笔记/X86-64汇编：过程.md",
     "笔记/Go 语言：字符串.md",
-    "assets/attachments/Pasted image 20250608000806.png",
     "笔记/Go 语言：复合数据类型.md",
     "assets/Excalidraw/Drawing 2025-06-05 22.47.00.excalidraw.md",
     "笔记/Go 语言：基本概念.md",
     "笔记/Python：网络编程.md",
-    "作业/01-C 语言/作业7：函数.md",
-    "作业/05-Go/作业47：Go 基本概念.md",
     "作业/05-Go",
-    "笔记/C 语言：基本概念.md",
-    "笔记/C 语言：指针.md",
-    "笔记/C 语言：指针与数组.md",
-    "笔记/C 语言：标准 IO 流.md",
-    "笔记/计算机组成：浮点数表示与运算.md",
-    "笔记/Go 语言：开发环境搭建.md",
-    "笔记/Python：聊天服务器.md",
     "作业/05-Go",
     "作业/04-C++",
     "assets/attachments/LIPIcs.ESA.2018.4.pdf",
