@@ -20,5 +20,7 @@
   "showIndentGuide": true,
   "propertiesInDocument": "hidden",
   "livePreview": true,
-  "vimMode": false
+  "vimMode": false,
+  "newLinkFormat": "relative",
+  "useMarkdownLinks": true
 }
