@@ -1,21 +1,21 @@
 {
   "main": {
-    "id": "6731dcedf5ec4ba2",
+    "id": "5324373015726ba8",
     "type": "split",
     "children": [
       {
-        "id": "0eea6f2d599d736e",
+        "id": "4509724f8bf84da7",
         "type": "tabs",
         "children": [
           {
-            "id": "0106b2416022a77e",
+            "id": "e7a7b303c61786dc",
             "type": "leaf",
             "pinned": true,
             "state": {
               "type": "markdown",
               "state": {
                 "file": "README.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               },
               "pinned": true,
@@ -24,21 +24,41 @@
             }
           },
           {
-            "id": "1563be0cc0f3de15",
+            "id": "406d9035b6f937b2",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Go 语言：开发环境搭建.md",
-                "mode": "preview",
+                "file": "笔记/Go 语言：函数.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Go 语言：开发环境搭建"
+              "title": "Go 语言：函数"
             }
           }
         ],
         "currentTab": 1
+      },
+      {
+        "id": "80492875ea68469f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "942b71c909577d57",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/C 语言：函数.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "C 语言：函数"
+            }
+          }
+        ]
       }
     ],
     "direction": "vertical"
@@ -112,7 +132,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "笔记/Go 语言：函数.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +142,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "README 的反向链接列表"
+              "title": "Go 语言：函数 的反向链接列表"
             }
           },
           {
@@ -158,13 +178,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/Go 语言：开发环境搭建.md",
+                "file": "笔记/Go 语言：函数.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Go 语言：开发环境搭建 的大纲"
+              "title": "Go 语言：函数 的大纲"
             }
           }
         ],
@@ -172,8 +192,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 321.5,
-    "collapsed": true
+    "width": 321.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -188,44 +207,44 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "1563be0cc0f3de15",
+  "active": "406d9035b6f937b2",
   "lastOpenFiles": [
-    "README.md",
-    "笔记/Linux 系统编程：虚拟内存操作.md",
+    "笔记/C 语言：函数.md",
+    "笔记/Go 语言：函数.md",
     "笔记/C 语言：基本概念.md",
-    "笔记/C 语言：环境安装.md",
-    "笔记/C++：string 的底层实现.md",
-    "笔记/Go 语言：开发环境搭建.md",
-    "笔记/Go 语言：基本概念.md",
-    "笔记/Go 语言：泛型.md",
-    "笔记/Go 语言：字符串.md",
-    "笔记/Python：线程.md",
-    "笔记/Python：进程.md",
-    "笔记/Python：asyncio.md",
-    "笔记/Python：进程池和线程池.md",
-    "笔记/计算机组成：计算机模型.md",
-    "笔记/Go 语言：sort 包.md",
+    "README.md",
+    "笔记/X86-64汇编：过程.md",
+    "笔记/Go 语言：内建数据结构.md",
     "笔记/Go 语言：结构体.md",
+    "笔记/数据结构：线性表.md",
+    "assets/attachments/Pasted image 20250615163951.png",
+    "assets/attachments/Pasted image 20250615161530.png",
+    "笔记/C 语言：数组.md",
+    "笔记/Untitled Diagram.svg",
+    "assets/attachments/Pasted image 20250615015722.png",
+    "笔记/Go 语言：基本概念.md",
+    "作业/05-Go/作业48：Go 复合数据类型.md",
+    "作业/05-Go/作业47：Go 基本概念.md",
+    "笔记/Go 语言：开发环境搭建.md",
+    "笔记/Python：网络编程.md",
+    "笔记/Python：继承.md",
+    "笔记/Python：CLI（argparse）.md",
+    "笔记/Python：目录.md",
+    "笔记/Python：文件 IO.md",
+    "笔记/Python：内置函数.md",
+    "笔记/Python：内建数据结构.md",
+    "笔记/Python：基本概念.md",
+    "笔记/Go 语言：序列化.md",
+    "笔记/Go 语言：字符串.md",
+    "笔记/Go 语言：函数基础.md",
+    "笔记/Go 语言：接口.md",
+    "笔记/Go 语言：方法.md",
     "assets/attachments/Pasted image 20250611203531.png",
-    "笔记/Go 语言：路径与目录.md",
-    "笔记/Go 语言：日志.md",
-    "笔记/Go 语言：文件 IO.md",
-    "笔记/Go 语言：文件属性.md",
-    "笔记/Go 语言：反射.md",
     "assets/attachments/Pasted image 20240721113750.png",
-    "笔记/Go 语言：模块化.md",
     "assets/attachments/Pasted image 20240720200531.png",
     "assets/attachments/Pasted image 20240720203434.png",
     "assets/attachments/Pasted image 20240720203327.png",
-    "笔记/Go 语言：加密与解密.md",
     "assets/attachments/Pasted image 20240721193810.png",
-    "assets/attachments/Pasted image 20240721193631.png",
-    "assets/attachments/Pasted image 20240721193605.png",
-    "assets/attachments/Pasted image 20240721193355.png",
-    "assets/attachments/Pasted image 20240721193250.png",
-    "笔记/Go 语言：序列化.md",
-    "笔记/Python：序列化.md",
-    "笔记/Go 语言：字节缓冲.md",
     "作业/05-Go",
     "作业/05-Go",
     "作业/04-C++",

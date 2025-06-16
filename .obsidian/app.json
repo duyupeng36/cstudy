@@ -21,6 +21,6 @@
   "propertiesInDocument": "hidden",
   "livePreview": true,
   "vimMode": false,
-  "newLinkFormat": "relative",
-  "useMarkdownLinks": true
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false
 }
