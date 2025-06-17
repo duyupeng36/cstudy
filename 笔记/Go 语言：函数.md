@@ -611,12 +611,410 @@ func pow(a, n int) int {
 }
 ```
 
+#### 汉诺塔
+
+汉诺塔是一个经典的递归问题，如下图所示
+
+![[Pasted image 20240926135946.png]]
+
+将 A 柱上的 $n$ 个盘片移动到 C 柱上，在移动过程中需要遵循以下规则：
+
+1. 一次只能移动一个盘子
+2. 任何时候较大的盘子不能放在较小的盘子上
+3. 可以使用一个辅助柱子(B 柱)
+
+问移动 $n$ 个盘片需要多少步？怎么移动？我们将盘片从上到下编号为 $1,2,3\cdots,n$
+
+> [!tip] $n=1$ 时
+> 
+> 此时，只有 $1$ 个盘片，只需要 $1$ 步即可移动到 C 柱上
+
+> [!tip] $n=2$ 时
+> 
+> 此时，有 $2$ 个盘片。首先将 $1$ 号盘片移动到 B 柱上，再将 $2$ 号盘片移动到 C 柱上，最后将 $1$ 号盘片移动到 C 柱上
+> 
+
+> [!tip] $n=3$ 时
+> 
+> 此时，有 $3$ 个盘片。首先要将前 $2$ 个盘片移动到 B 柱上，再将 $3$ 号盘片移动到 C 柱上，最后将前 $2$ 个盘片移动到 C 柱上
+> 
+
+如果需要移动 $n$ 个盘片，就需要将前 $n-1$ 个盘片移动到 B 柱上，再将 $n$ 号盘片移动到 C 柱上，最后将 B 柱上的 $n-1$ 个盘片移动到 C 柱上。
+
+> [!hint] 
+> 
+> 显然，这是一个递归过程
+> 
+
+移动 $n$ 个盘片需要的步骤的递推公式为
+
+$$
+F(n) = 2F(n-1) + 1 = 2^{n}-1
+$$
+
+下面的视频展示了汉诺塔的移动过程
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/KlY-A8gk5sA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+```go
+package main
+
+import "fmt"
+
+func hanoi(n int, source, target, auxiliary byte) {
+	if n == 1 {
+		fmt.Printf("Move disk 1 from %c to %c\n", source, target)
+		return
+	}
+
+	// Move n-1 disks from source to auxiliary peg
+	hanoi(n-1, source, auxiliary, target)
+	
+	// Move the nth disk from source to target
+	fmt.Printf("Move disk %d from %c to %c\n", n, source, target)
+	
+	// Move the n-1 disks from auxiliary to target
+	hanoi(n-1, auxiliary, target, source)
+}
+
+func main() {
+	var n int
+	fmt.Print("Enter number of disks: ")
+	fmt.Scan(&n)
+	
+	hanoi(n, 'A', 'C', 'B')
+}
+```
+
 ### 函数类型
 
+在 Go 语言中，**函数是一等公民**。所谓的一等公民，就是函数具有变量的性质。换句话说，**函数可以赋值给函数类型的变量**
+
+例如，如下定义的函数
+
+```go
+func average(a, b float64) float64 {
+	return a + b
+}
+```
+
+其类型为 `func(float64, float64) float64`
+
+> [!tip] 
+> 
+> 也就是说，函数类型与参数和返回值相关
+> 
+
+知道了函数类型，我们就可以声明函数类型的变量，并将函数赋值给该变量。后续就可以像使用函数一样使用函数变量
+
+```go
+package main
+
+import "fmt"
+
+func average(a, b float64) float64 {
+	return a + b
+}
+
+func main() {
+	avg := average
+	c := avg(10, 20)
+	fmt.Printf("%f\n", c)
+}
+```
+
+### 高阶函数
+
+如果一个函数需要另一个函数作为参数，或者返回一个函数，那么该函数称为高阶函数
+
+例如，在标准包 `sort` 中，就一个函数 `sort.Slice()` 用于给任何切片进行排序
+
+```go
+func Slice(x any, less func(i, j int) bool)
+```
+
+该函数需要一个类型 `func(int, int) bool` 的函数，根据函数的返回值确定切片 `x` 的排序规则
+
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+var s = []int{7, 9, 2, 1, 0, 8, 6, 5, 4}
+
+func less(i, j int) bool {
+	return s[i] < s[j]
+}
+
+func main() {
+
+	fmt.Printf("%#v\n", s)
+	sort.Slice(s, less)
+	fmt.Printf("%#v\n", s)
+}
+```
+
+### 匿名函数
+
+**匿名函数就是没有名字的函数**，直接使用 `func()` 的形式定义。继续上述例子中使用 `sort.Slice()` 函数，我们可以使用匿名函数作为其第二个参数
+
+```go hl:12-14
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+func main() {
+
+	var s = []int{7, 9, 2, 1, 0, 8, 6, 5, 4}
+	fmt.Printf("%#v\n", s)
+	sort.Slice(s, func(i, j int) bool {
+		return s[i] < s[j]
+	})
+	fmt.Printf("%#v\n", s)
+}
+```
+
+### 函数嵌套
+
+在 Go 语言中，**函数内部不能定义具名函数**；但是，可以定义匿名函数。这样就会存在函数嵌套的行为。
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func outer() {
+	c := 99
+	var inner = func() {
+		fmt.Printf("inner: c = %d\n", c)
+	}
+	inner()
+	fmt.Printf("outer: c = %d\n", c)
+}
+
+func main() {
+
+	outer()
+}
+```
+
+> [!important] 
+> 
+> 请注意：`inner` 只是一个函数类型的变量，并不是函数
+> 
+
+#### 嵌套作用域
+
+函数内部定义的匿名函数会形成另一个内嵌的局部作用域。同时适用于前面介绍的作用域规则
+
+> [!tip] 
+> 
+> 也就是，在内层函数中，可以引用外层函数的变量，前提是内层函数并未声明与外层函数中同名的变量
+> 
+
+下面的示例代码中，演示了内层函数如何引用外层函数的变量的
+
+```go
+func outer() {
+	c := 99
+	var inner = func() {
+		fmt.Printf("inner: c = %d\n", c) // c 的值是 100
+	}
+	c = 100
+	inner()
+	fmt.Printf("outer: c = %d\n", c) // c 的值是 99
+}
+```
+
+如果在内层函数中声明了同名的变量，那么内层函数将就近引用变量
+
+```go
+func outer() {
+	c := 99
+	var inner = func() {
+		var c = 100
+		fmt.Printf("inner: c = %d\n", c) // c 的值是 100
+	}
+	inner()
+	fmt.Printf("outer: c = %d\n", c) // c 的值是 99
+}
+```
+
+### 闭包
+
+在 [[Python：函数基础#闭包]] 中介绍了闭包的概念。所谓的闭包只是一种 **词法绑定** 技术，通常使用结构体将 **函数** 和 **函数的关联环境** 绑定在一起
+
+> [!tip] 函数的关联环境
+> 
+> 函数的环境里是 **符号和值的对应关系**，它既要包括 **约束变量**（该函数内部绑定的符号），也要包括 **自由变量**（在函数外部定义但在函数内被引用），有些函数也可能没有自由变量
+> 
+
+实现闭包的程序设计语言都必须允许函数嵌套，如果函数 `outer` 内定义了函数 `inner`，那么如果函数 `inner` 引用了自由变量，且这些自由变量没有被编译器优化掉，那么将产生闭包。
+
+> [!tip] 
+> 
+> 换句话说，产生闭包的必要条件就是：**函数嵌套** 并且 内层函数引用外层函数局部作用域中声明的变量
+> 
+
+如下示例，`outer` 中定义的变量 `non`，对于内层函数 `inner` 而言是非局部非全局变量
+
+```go
+package main
+
+import "fmt"
+
+// 返回一个函数
+func add() func(int) int {
+	var x int
+	return func(y int) int {
+		x += y
+		return x
+	}
+}
+
+func main() {
+	var f = add()
+	fmt.Println(f(10))
+	fmt.Println(f(20))
+	fmt.Println(f(30))
+	fmt.Println("-----------")
+	f1 := add()
+	fmt.Println(f1(40))
+	fmt.Println(f1(50))
+}
+```
+
+### defer
+
+Go 中的 `defer` 语句会将其后面跟随的语句进行 **延迟处理**。 在某函数中使用 `defer` 语句，会使得 `defer` 后跟的语句延迟到该函数 **即将返回** 时，或 **发生 panic** 时，`defer` 后语句开始执行
+
+同一个函数可以有多个 `defer` 语句，依次加入调用栈中（`LIFO`），函数返回或 `panic` 时，从栈顶依次执行 `defer` 后语句。**执行的先后顺序和注册的顺序正好相反，也就是后注册的先执行**。
+
+> [!attention] 
+> 
+> 请注意：`defer` 后的语句必须是一个函数或方法的调用语句
+> 
+
+下面演示了 `defer` 语句的使用案例
+
+```go
+func main() {
+	fmt.Println("start")
+	defer fmt.Println(1)
+	defer fmt.Println(2)
+	defer fmt.Println(3)
+	fmt.Println("end")
+}
+```
+
+执行上述代码片段的输出结果为
+
+```
+start
+end
+3
+2
+1
+```
 
 
+> [!tip] 
+> 
+> 由于`defer`语句延迟调用的特性，所以`defer`语句能非常方便的处理资源释放问题。比如：**资源清理**、**文件关闭**、**解锁** 及 **记录时间** 等
+> 
 
+再看下面的例子，猜猜结果是什么？
 
+```go
+package main
 
+import "fmt"
 
+func main() {
+	count := 1
+	fmt.Println("start")
 
+	defer fmt.Println(count) // defer fmt.Println(1)
+
+	count++
+	defer fmt.Println(count) // defer fmt.Println(2)
+
+	count++
+	defer fmt.Println(count) // defer fmt.Println(3)
+
+	fmt.Println("end")
+}
+
+// Out:
+// start
+// end
+// 3
+// 2
+// 1
+```
+
+> [!tip] 
+> 
+> 因为 `defer` 注册时就把其后语句的延迟执行的函数的参数准备好了，也就是 **注册时计算形参值**
+> 
+
+#### defer 的执行时机
+
+在 Go 的函数中 `return` 语句在底层并不是原子操作，它分为给 **返回值赋值** 和 执行 `RET` 指令两步。而 `defer` 语句执行的时机就在返回值赋值操作后，`RET` 指令执行前。具体如下图所示
+
+![[Pasted image 20240410223231.png]]
+
+下面的程序演示了 `defer` 语句的执行时机：**通过注释进行解释**
+
+```go
+package main
+
+import "fmt"
+
+func f1() int {
+	x := 5
+	
+	defer func() {
+		x++  // 2. 修改了 f1 中的局部变量 x 的值，不会影响返回值
+	}()
+	
+	return x // 1. 已经设置好了返回值为 5
+}
+
+func f2() (x int) {
+	defer func() {
+		x++ // 2. 有修改了 x 的值，x 是命名返回值
+	}()
+	return 5 // 1. 设置返回值 x 为 5
+}
+
+func f3() (y int) {
+	x := 5
+	defer func() {
+		x++ // 2. 修改的是 x 与 返回值 y 无关
+	}()
+	return x // 1. 设置返回值 y 为 5
+}
+
+func f4() (x int) {
+	defer func(x int) {
+		x++ // 2. 修改的是局部变量，不会影响 返回值
+	}(x)
+	return 5 // 1. 设置返回值 x 为 5
+}
+
+func main() {
+	fmt.Println(f1()) // 返回值：5
+	fmt.Println(f2()) // 返回值：6
+	fmt.Println(f3()) // 返回值：5
+	fmt.Println(f4()) // 返回值：5
+}
+```
