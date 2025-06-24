@@ -24,21 +24,20 @@
             }
           },
           {
-            "id": "06179c133843508a",
+            "id": "1c496229db7cc4f1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Go 语言：异常处理.md",
+                "file": "笔记/Go 语言：包.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Go 语言：异常处理"
+              "title": "Go 语言：包"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -111,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "笔记/Go 语言：异常处理.md",
+                "file": "README.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -121,7 +120,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Go 语言：异常处理 的反向链接列表"
+              "title": "README 的反向链接列表"
             }
           },
           {
@@ -157,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/Go 语言：异常处理.md",
+                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Go 语言：异常处理 的大纲"
+              "title": "README 的大纲"
             }
           }
         ],
@@ -186,8 +185,10 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "06179c133843508a",
+  "active": "e7a7b303c61786dc",
   "lastOpenFiles": [
+    "笔记/Go 语言：包.md",
+    "笔记/Go 语言：泛型.md",
     "README.md",
     "笔记/Go 语言：异常处理.md",
     "笔记/Go 语言：面向对象.md",
@@ -223,8 +224,6 @@
     "笔记/C 语言：函数.md",
     "笔记/C 语言：基本概念.md",
     "笔记/Go 语言：内建数据结构.md",
-    "笔记/数据结构：线性表.md",
-    "笔记/C 语言：数组.md",
     "作业/05-Go",
     "作业/05-Go",
     "作业/04-C++",
