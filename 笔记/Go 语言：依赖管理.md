@@ -632,7 +632,7 @@ go 1.24.4
 
 ```bash
 ➜  bitset git add .
-➜  bitset git commit -m "feat: SayHi现在支持给指定人打招呼啦"
+➜  bitset git commit -m "xxxxx"
 ➜  bitset git push
 ```
 
@@ -654,7 +654,7 @@ go get github.com/duyupeng36/bitset/v2@v2.0.0
 如果某个发布的版本存在致命缺陷不再想让用户使用时，我们可以使用 `retract` 声明废弃的版本。例如我们在 `hello/go.mod` 文件中按如下方式声明即可对外废弃 `v0.1.2` 版本。
 
 ```go
-module github.com/q1mi/hello
+module github.com/duyupeng36/example/hello
 
 go 1.16
 
