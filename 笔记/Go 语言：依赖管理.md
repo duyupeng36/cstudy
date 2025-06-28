@@ -93,7 +93,7 @@ type Student struct {
 
 ```
 
-### 导入包
+### import
 
 要在当前包中使用另外一个包的内容就需要使用 `import` 关键字引入这个包，并且 `import` 语句通常放在文件的开头，`package` 声明语句的下方。完整的引入声明语句格式如下:
 
@@ -649,7 +649,7 @@ go 1.24.4
 go get github.com/duyupeng36/bitset/v2@v2.0.0
 ```
 
-#### **废弃已发布版本**
+#### 废弃已发布版本
 
 如果某个发布的版本存在致命缺陷不再想让用户使用时，我们可以使用 `retract` 声明废弃的版本。例如我们在 `hello/go.mod` 文件中按如下方式声明即可对外废弃 `v0.1.2` 版本。
 
@@ -664,3 +664,31 @@ retract v0.1.2
 
 用户使用 `go get` 下载`v0.1.2`版本时就会收到提示，催促其升级到其他版本。
 
+## Go Work
+
+在 [[Go 语言：依赖管理#导入包#导入本地包]] 中，我们介绍了如何使用 Go Module 导入本地且尚未发布的包
+
+> [!attention] 
+> 
+> 然而，这样做却又一个缺陷，就是当我们想要发布包时，就需要将待发布包中的 `go.mod` 文件中的 `replace` 指令删除；否则，当其他用户使用我们发布的包时就会出现错误。
+> 
+
+针对上述问题，在 Go1.18 版本中引入了 **工作区** 模式。所谓的工作区就是一个存储 Go 包的文件，在这个工作区中，其他项目可以自由使用，无需在 `go.mod` 中使用 `replace` 指令
+
+例如，有如下工作区 `gostudy` 中存在两个包 `bitset` 和 `main`
+
+```shell
+➜  gostudy tree
+.
+├── bitset
+│   ├── README.md
+│   ├── bitset.go
+│   ├── bitset_test.go
+│   └── go.mod
+├── go.work
+└── main
+    ├── go.mod
+    └── main.go
+```
+
+要在 `main` 包中使用 `bitset` 包，Go Work 的存在，就可以直接在 `main` 包中使用了。
