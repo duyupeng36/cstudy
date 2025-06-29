@@ -100,27 +100,45 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"log"
+	"io"
 	"os"
 )
 
 func main() {
-	
-	file, err := os.Open("colon_21HT000006.csv")
+
+	// 打开文件
+	f, err := os.Open("test.txt")
+
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "Error opening file: %v\n", err)
+		return
 	}
-	
-	reader := bufio.NewReader(file)
-	
-	for {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			log.Println(err)
-			break
+
+	defer func(closer io.Closer) {
+		if err := closer.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error closing file: %v\n", err)
 		}
-		fmt.Printf("line: %s\n", line)
+	}(f)
+
+	// 创建 reader
+	reader := bufio.NewReader(f)
+	var line string
+	for {
+		// 读取一行
+		line, err = reader.ReadString('\n')
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				// EOF 结束
+				break
+			} else {
+				fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
+				return
+			}
+		}
+		// 打印读取的行
+		fmt.Print(line)
 	}
 }
 ```
@@ -188,21 +206,37 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
+	"io"
 	"os"
 )
 
 func main() {
-	file, err := os.Open("colon_21HT000006.csv")
+
+	// 打开文件
+	f, err := os.Open("test.txt")
+
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "Error opening file: %v\n", err)
+		return
 	}
-	scanner := bufio.NewScanner(file)
+
+	defer func(closer io.Closer) {
+		if err := closer.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error closing file: %v\n", err)
+		}
+	}(f)
+
+	// 创建 scanner
+	scanner := bufio.NewScanner(f)
+	// bufio.Scanner 默认按行读取
+	// 如果需要按字符读取，可以设置 Split 函数
+	scanner.Split(bufio.ScanRunes)
 	for scanner.Scan() {
 		fmt.Println(scanner.Text())
 	}
 	if err := scanner.Err(); err != nil {
-		log.Println(err)
+		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
+		return
 	}
 }
 ```
@@ -273,38 +307,61 @@ func (b *Writer) WriteRune(r rune) (size int, err error)
 func (b *Writer) WriteString(s string) (int, error)
 ```
 
-## 示例：`Scanner` 和 `Writer` 的使用
+## 示例：`bufio.Reader` 和 `bufio.Writer` 的使用
 
 ```go
 package main
 
 import (
 	"bufio"
-	"log"
+	"fmt"
+	"io"
 	"os"
 )
 
 func main() {
-	file, err := os.Open("colon_21HT000006.csv")
+
+	if len(os.Args) < 2 {
+		fmt.Fprintf(os.Stderr, "Usage: %s <src> <dst>\n", os.Args[0])
+		return
+	}
+
+	// 打开源文件
+	src, err := os.Open(os.Args[1])
+
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "Error opening file: %v\n", err)
+		return
 	}
-	
-	scanner := bufio.NewScanner(file)
 
-	newFile, err := os.Create("bak.csv")
+	defer func(closer io.Closer) {
+		if err := closer.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error closing file: %v\n", err)
+		}
+	}(src)
+	// 创建 reader
+	reader := bufio.NewReader(src)
+	// 打开目标文件
+	dst, err := os.Create(os.Args[2])
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "Error creating file: %v\n", err)
+		return
 	}
+	defer func(closer io.Closer) {
+		if err := closer.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "Error closing file: %v\n", err)
+		}
+	}(dst)
+	// 创建 writer
+	writer := bufio.NewWriter(dst)
 
-	writer := bufio.NewWriter(newFile)
-
-	for scanner.Scan() {
-		writer.WriteString(scanner.Text())
+	// 将 reader 的内容写入 writer
+	writer.ReadFrom(reader)
+	// 刷新 writer 缓冲区
+	if err := writer.Flush(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error flushing writer: %v\n", err)
+		return
 	}
-
-	if err := scanner.Err(); err != nil {
-		log.Println(err)
-	}
+	fmt.Printf("File copied from %s to %s successfully.\n", os.Args[1], os.Args[2])
 }
 ```
