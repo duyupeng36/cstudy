@@ -6,6 +6,7 @@
       {
         "id": "4509724f8bf84da7",
         "type": "tabs",
+        "dimension": 52.78207109737249,
         "children": [
           {
             "id": "e7a7b303c61786dc",
@@ -24,35 +25,58 @@
             }
           },
           {
-            "id": "89ea0383180277d7",
+            "id": "ab8e7c18bd8312e1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Python：序列化.md",
+                "file": "笔记/Python：日志处理.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Python：序列化"
+              "title": "Python：日志处理"
             }
           },
           {
-            "id": "32e7c36659c338b2",
+            "id": "86e8b23c1a0801be",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Go 语言：序列化.md",
+                "file": "笔记/Go 语言：日志.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Go 语言：序列化"
-            }
+              "title": "Go 语言：日志"
+            },
+            "group": "79cf1a2aff1b5f38"
           }
         ],
         "currentTab": 2
+      },
+      {
+        "id": "1e4a3418a8d49033",
+        "type": "tabs",
+        "dimension": 47.21792890262751,
+        "children": [
+          {
+            "id": "338bed5fc1fceb41",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/Go 语言：日志.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Go 语言：日志"
+            },
+            "group": "79cf1a2aff1b5f38"
+          }
+        ]
       }
     ],
     "direction": "vertical"
@@ -109,7 +133,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 237.5
+    "width": 237.5,
+    "collapsed": true
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -171,13 +196,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/Go 语言：序列化.md",
+                "file": "笔记/Go 语言：日志.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Go 语言：序列化 的大纲"
+              "title": "Go 语言：日志 的大纲"
             }
           }
         ],
@@ -196,14 +221,17 @@
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false,
-      "oz-clear-unused-images:Clear Unused Images": false
+      "oz-clear-unused-images:Clear Unused Images": false,
+      "workspaces:管理工作区布局": false
     }
   },
-  "active": "32e7c36659c338b2",
+  "active": "86e8b23c1a0801be",
   "lastOpenFiles": [
+    "笔记/Python：日志处理.md",
+    "笔记/Go 语言：日志.md",
+    "README.md",
     "笔记/Python：序列化.md",
     "笔记/Go 语言：序列化.md",
-    "README.md",
     "笔记/Go 语言：路径与目录.md",
     "笔记/Linux 系统编程：目录与链接.md",
     "笔记/Go 语言：字节缓冲.md",
@@ -235,8 +263,6 @@
     "作业/05-Go/作业50：Go 结构体和方法.md",
     "笔记/Python：网络编程.md",
     "笔记/Go 语言：结构体.md",
-    "笔记/C 语言：结构体.md",
-    "笔记/Go 语言：函数.md",
     "cstudy.py",
     "作业/05-Go",
     "作业/05-Go",

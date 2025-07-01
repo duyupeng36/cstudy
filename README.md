@@ -359,6 +359,11 @@
 | [[Go 语言：文件属性]]      | FileInfo接口和FileMode            |
 | [[Go 语言：路径与目录]]     | 目录操作                           |
 | [[Go 语言：序列化]]       | JSON MessagPack Base64         |
+| [[Go 语言：日志]]        | log包 zerolog                   |
+|                     |                                |
+|                     |                                |
+|                     |                                |
+|                     |                                |
 |                     |                                |
 | [[Go 语言：Groutines]] |                                |
 
