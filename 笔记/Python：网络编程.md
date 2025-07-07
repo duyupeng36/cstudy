@@ -156,7 +156,7 @@ Python 在操作系统提供的网络编程接口 SOCKET 上进一步封装，�
 
 #### 连接被动 SOCKET 对象
 
-方法 `socket.connect(address)` 用于向被动 SOCKET 对象发起连接请求，其中 `address` 参数是被动 SOCKET 对象所在的主机地址和端口号。参数 `address` 取决于地址簇，参加 [[#创建套接字对象]]
+方法 `socket.connect(address)` 用于向被动 SOCKET 对象发起连接请求，其中 `address` 参数是被动 SOCKET 对象所在的主机地址和端口号。参数 `address` 取决于地址簇，参考 [[#创建套接字对象]]
 
 > [!attention] 
 > 
@@ -370,4 +370,9 @@ DNS 中的域名都是用句点来分隔的，比如 `www.server.com `，这里�
 > + `NI_NUMERICSERV`：强制在 `service` 中返回一个十进制端口号字符串
 > 
 
-+ 在线词典下：01:31
+## 示例
+
+在下面的示例中，我们将实现一个群聊服务器及其客户端。
+
+### 版本1：服务单个客户端的回显服务器
+
