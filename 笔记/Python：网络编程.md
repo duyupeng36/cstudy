@@ -376,3 +376,296 @@ DNS 中的域名都是用句点来分隔的，比如 `www.server.com `，这里�
 
 ### 版本1：服务单个客户端的回显服务器
 
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import argparse
+import socket
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+class EchoServer:
+
+    def __init__(self):
+        self.__args = self.__parse_commandline()
+        family, socket_type, proto, _, sockaddr = self.__get_bind_address()
+        self.__server_socket = socket.socket(family, socket_type, proto)
+        self.__server_socket.bind(sockaddr)
+        self.__server_socket.listen(socket.SOMAXCONN)
+        self.__clients = []
+
+    def start(self):
+        # 启动服务：循环调用 accept() 方法等待客户端连接
+        logging.info(f"Echo server started on {self.__args.host}:{self.__args.port}")
+        while True:
+            logging.info("Waiting for a connection...")
+            # 接受客户端连接
+            client, addr = self.__server_socket.accept()  # 阻塞，等待客户端建立连接
+            logging.info(f"Connection from {addr} established.")
+            self.__clients.append(client)
+            try:
+                while True:
+                    # 接收数据
+                    data = client.recv(1024)  # 阻塞，等待客户端发来的消息
+                    if not data:
+                        break  # 客户端关闭连接
+                    logging.info(f"Received data: {data.decode()}")
+                    # 回显数据
+                    client.sendall(data) # 使用 sendall 否则可能会只发送部分数据
+            except Exception as e:
+                logging.error(f"Error during communication: {e}")
+            finally:
+                logging.info(f"Closing connection from {addr}.")
+                client.close()
+                self.__clients.remove(client)
+                
+    def __parse_commandline(self):
+        parser = argparse.ArgumentParser(description='Echo server')
+        parser.add_argument('-p', '--port', type=str, default="12345",
+                            help='Port to listen on (default: 12345)')
+        parser.add_argument('--host', type=str, default='localhost',
+                            help='Address to bind to (default: localhost)')
+        
+        # 从命令行参数中解析出端口和地址
+        return parser.parse_args()
+    
+    def __get_bind_address(self):
+        return socket.getaddrinfo(self.__args.host, self.__args.port, socket.AF_INET, socket.SOCK_STREAM, 0, socket.AI_PASSIVE|socket.AI_NUMERICSERV)[0]
+
+
+if __name__ == "__main__":
+    server = EchoServer()
+    server.start()
+```
+
+> [!attention] 
+> 
+> 注意，这段代码会在 `accept()` 和 `recv()` 两处调用的位置阻塞，在 `sendall()` 可能会阻塞。这就导致上述代码只能服务同时服务一个客户端的请求
+> 
+
+### 版本2：服务多个客户端的回显服务器(非阻塞IO)
+
+既然上述代码阻塞是因为 `accept()` 和 `recv()` 发送的阻塞，我们让它们不阻塞即可
+
+```python hl:17,35
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+
+import argparse
+import socket
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+class EchoServer:
+
+    def __init__(self):
+        self.__args = self.__parse_commandline()
+        family, socket_type, proto, _, sockaddr = self.__get_bind_address()
+        self.__server_socket = socket.socket(family, socket_type, proto)
+        self.__server_socket.setblocking(False)  # 设置非阻塞模式
+        self.__server_socket.bind(sockaddr)
+        self.__server_socket.listen(socket.SOMAXCONN)
+        self.__clients = []
+
+    def start(self):
+        # 启动服务：循环调用 accept() 方法等待客户端连接
+        logging.info(f"Echo server started on {self.__args.host}:{self.__args.port}")
+        while True:
+            logging.info("Waiting for a connection...")
+            # 接受客户端连接
+            try:
+                client, addr = self.__server_socket.accept()
+            except BlockingIOError as e:
+                pass  # 非阻塞模式下，如果没有连接则抛出 BlockingIOError
+            else:
+                # 成功接受连接
+                logging.info(f"Connection from {addr} established.")
+                client.setblocking(False)  # 设置客户端套接字为非阻塞模式
+                self.__clients.append(client)
+            finally:
+                # 每次循环都去遍历一遍已连接的客户端
+                for client in self.__clients.copy():        
+                    try:
+                        while True:
+                            data = client.recv(1024)
+                            # 没有数据，即客户端关闭连接
+                            if not data:
+                                logging.info(f"Client {client.getpeername()} disconnected.")
+                                self.__clients.remove(client)
+                                client.close()
+                                break
+                            # 回显数据
+                            logging.info(f"Received data from {client.getpeername()}: {data.decode()}")
+                            client.sendall(data)  # 回显数据
+                    except BlockingIOError as e:
+                        # 非阻塞模式下，如果没有数据则抛出 BlockingIOError
+                        continue
+                    
+
+    def __parse_commandline(self):
+        parser = argparse.ArgumentParser(description='Echo server')
+        parser.add_argument('-p', '--port', type=str, default="12345",
+                            help='Port to listen on (default: 12345)')
+        parser.add_argument('--host', type=str, default='localhost',
+                            help='Address to bind to (default: localhost)')
+        
+        # 从命令行参数中解析出端口和地址
+        return parser.parse_args()
+    
+    def __get_bind_address(self):
+        return socket.getaddrinfo(self.__args.host, self.__args.port, socket.AF_INET, socket.SOCK_STREAM, 0, socket.AI_PASSIVE|socket.AI_NUMERICSERV)[0]
+
+
+if __name__ == "__main__":
+    server = EchoServer()
+    server.start()
+```
+
+
+上述代码中，高亮的两行将 SOCKET 对象设置为非阻塞模式。当缓冲区没有数据时，读取数据就会抛出 `BlockingIOError`，此时就去处理其他的客户端连接。这样，就可以处理所有的客户端请求了。
+
+> [!attention] 
+> 
+> 请注意：上述代码会不停的循环，检查 SOCKET 对象是否可读。这会造成 CPU 资源的浪费
+> 
+
+### 版本3：服务多个客户端的回显服务器(基于线程)
+
+我们让主线程处理客户端的连接请求。当客户端连接成功之后，就将新创建的 SOCKET 交给一个线程负责处理
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+
+import argparse
+import socket
+import logging
+import threading
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+class EchoServer:
+
+    def __init__(self):
+        self.__args = self.__parse_commandline()
+        family, socket_type, proto, _, sockaddr = self.__get_bind_address()
+        self.__server_socket = socket.socket(family, socket_type, proto)
+        self.__server_socket.bind(sockaddr)
+        self.__server_socket.listen(socket.SOMAXCONN)
+
+    def start(self):
+        # 启动服务：循环调用 accept() 方法等待客户端连接
+        logging.info(f"Echo server started on {self.__args.host}:{self.__args.port}")
+        while True:
+            client, addr = self.__server_socket.accept()
+            logging.info(f"Accepted connection from {addr}")
+            threading.Thread(target=self.__handle_client, args=(client,)).start()
+    
+    def __handle_client(self, client_socket):
+        try:
+            while True:
+                data = client_socket.recv(1024)
+                if not data:
+                    break  # 客户端关闭连接
+                logging.info(f"Received data: '{data.decode('utf-8').strip()}', from {client_socket.getpeername()}")
+                client_socket.sendall(data)  # 回显数据
+        except Exception as e:
+            logging.error(f"Error handling client: {e}")
+        finally:
+            client_socket.close()
+            logging.info("Client connection closed")
+
+    def __parse_commandline(self):
+        parser = argparse.ArgumentParser(description='Echo server')
+        parser.add_argument('-p', '--port', type=str, default="12345",
+                            help='Port to listen on (default: 12345)')
+        parser.add_argument('--host', type=str, default='localhost',
+                            help='Address to bind to (default: localhost)')
+        
+        # 从命令行参数中解析出端口和地址
+        return parser.parse_args()
+    
+    def __get_bind_address(self):
+        return socket.getaddrinfo(self.__args.host, self.__args.port, socket.AF_INET, socket.SOCK_STREAM, 0, socket.AI_PASSIVE|socket.AI_NUMERICSERV)[0]
+
+
+if __name__ == "__main__":
+    server = EchoServer()
+    server.start()
+```
+
+> [!tip] 
+> 
+> 每当有一个客户端建立连接时，就需要创建一个线程。当客户端断开连接时，又需要回收线程。当客户端连接比较多时，这会导致创建线程和释放线程资源消耗大量的时间。因此，我们可以改用线程池
+> 
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+
+import argparse
+import socket
+import logging
+import os
+from multiprocessing.pool import ThreadPool
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+class EchoServer:
+
+    def __init__(self):
+        self.__args = self.__parse_commandline()
+        family, socket_type, proto, _, sockaddr = self.__get_bind_address()
+        self.__server_socket = socket.socket(family, socket_type, proto)
+        self.__server_socket.bind(sockaddr)
+        self.__server_socket.listen(socket.SOMAXCONN)
+        self.__thread_pool = ThreadPool(processes=os.cpu_count() * 2)  # 使用 CPU 核心数的两倍作为线程池大小
+
+    def start(self):
+        # 启动服务：循环调用 accept() 方法等待客户端连接
+        logging.info(f"Echo server started on {self.__args.host}:{self.__args.port}")
+        while True:
+            client, addr = self.__server_socket.accept()
+            logging.info(f"Accepted connection from {addr}")
+            self.__thread_pool.apply_async(self.__handle_client, (client,))
+    
+    def __handle_client(self, client_socket):
+        try:
+            while True:
+                data = client_socket.recv(1024)
+                if not data:
+                    break  # 客户端关闭连接
+                logging.info(f"Received data: '{data.decode('utf-8').strip()}', from {client_socket.getpeername()}")
+                client_socket.sendall(data)  # 回显数据
+        except Exception as e:
+            logging.error(f"Error handling client: {e}")
+        finally:
+            client_socket.close()
+            logging.info("Client connection closed")
+
+    def __parse_commandline(self):
+        parser = argparse.ArgumentParser(description='Echo server')
+        parser.add_argument('-p', '--port', type=str, default="12345",
+                            help='Port to listen on (default: 12345)')
+        parser.add_argument('--host', type=str, default='localhost',
+                            help='Address to bind to (default: localhost)')
+        
+        # 从命令行参数中解析出端口和地址
+        return parser.parse_args()
+    
+    def __get_bind_address(self):
+        return socket.getaddrinfo(self.__args.host, self.__args.port, socket.AF_INET, socket.SOCK_STREAM, 0, socket.AI_PASSIVE|socket.AI_NUMERICSERV)[0]
+
+
+if __name__ == "__main__":
+    server = EchoServer()
+    server.start()
+```
+
+

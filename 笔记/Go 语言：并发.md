@@ -172,7 +172,6 @@ CPU 的调度取决于进程的行为。程序执行包括 **周期** 进行的 
 
 我们在 [[操作系统：进程调度]] 中已经介绍了关于批处理和交互式系统的调度算法，这里我们不再介绍
 
-
 ### 多进程演示
 
 在 Go 语言中，并没有给我们提供创建进程的接口，因此下面的示例我们使用 Python 进行演示。
@@ -286,6 +285,82 @@ if __name__ == '__main__':
 下图展示了上述代码执行的结果
 
 ![[spinner-process.gif]]
+
+### 进程间通信
+
+因为操作系统必须保证进程不能修改其他进程使用的内存。因此，进程之间存在天然的内存壁垒。如下图所示，它展示使用系统调用 `fork()` 创建的进程之间的关系
+
+![[Pasted image 20241102210610.png]]
+
+当使用 `fork()` 创建子进程后，子进程完全复制父进程的所有内容。之后它们就会互不干扰的继续执行
+
+```c
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+
+#include <sys/types.h>    // 提供 pid_t 的定义
+#include <unistd.h>  // 提供 fork() 的函数原型
+
+
+static int idata = 111;  // 在进程的初始化数据段
+
+int main() {
+
+    int istack = 222;  // 在进程的 main 函数的栈帧中
+
+    pid_t child_pid;
+
+    switch (child_pid = fork())
+    {
+    case -1: // 创建子进程失败
+        fprintf(stderr, "fork failed: %s\n", strerror(errno));
+        break;
+    
+    case 0:  // fork 在子进程中返回 0
+        idata *= 3;
+        istack *= 3;
+        break;
+
+    default: // 在父进程中返回 子进程的 pid
+        sleep(3);
+        break;
+    }
+    // 父子进程都会执行此处的代码
+    printf("PID=%ld %s idata=%d istack=%d\n", (long)getpid(), (child_pid == 0) ? "(childe)": "(parent)", idata, istack);
+    return 0;
+}
+```
+
+使用 GCC 编译运行的结果为
+
+```shll
+$ gcc process.c 
+$ ./a.out 
+PID=78492 (childe) idata=333 istack=666
+PID=78491 (parent) idata=111 istack=222
+```
+
+> [!attention] 
+> 
+> 注意到：子进程中对全局遍历和局部变量的修改并没有影响到父进程中的全局变量和局部变量
+> 
+
+同一个虚拟内存地址，在不同的进程中，会被映射到不同的物理内存区域，因此在多个进程之间通过虚拟地址交换数据是不可能完成的。鉴于进程之间天然的内存壁垒，想要实现多个进程间交换数据，就必须提供一种专门的机制，也就是所谓的 **进程间通信机制**
+
+Linux 系统上提供了较为完整的 _通信_ 和 _同步_ 工具，他们被划分为了三类。如下图所示
+
+![[Pasted image 20241106000843.png]]
+
+> [!attention] 
+> 
+> 这些内容请参考
+> + [[Linux 系统编程：PIPE]]
+> + [[Linux 系统编程：FIFO]]
+> + [[Linux 系统编程：System V 消息队列]]
+> + [[Linux 系统编程：System V 共享内存]]
+> 
+> 
 
 ## 线程
 
@@ -439,6 +514,15 @@ if __name__ == '__main__':
 >在 Python 中，对于那些需要花费大量时间等待外部事件的任务，使用线程加速就非常合适
 >
 
+### 线程同步
+
+由于线程是同一个进程的不同执行流，因此线程共享整个进程的虚拟内存空间。多个线程争抢同一个资源时会导致得到的结果可能会出现错误
+
+> [!attention] 
+> 
+> 相关概念参考 [[Linux 系统编程：互斥量]]
+> 
+
 ## 协程
 
 我们已经知道 **线程是进程中的执行体**，拥有一个执行入口以及从进程虚拟地址空间中分配的栈(包括内核栈和用户栈)，操作系统会记录线程控制信息，当线程获得 CPU 时间片之后才可以执行
@@ -494,7 +578,4 @@ if __name__ == '__main__':
 > 关于 IO 多路复用参考 [[Linux 系统编程：IO 多路复用]] 和 [[Linux 系统编程： epoll]]
 > 
 
-
-
-
-
+Go 对 Coroutine 做了非常多的优化，提出了 Goroutine。Goroution 可以被自由移动到不同的线程中执行
