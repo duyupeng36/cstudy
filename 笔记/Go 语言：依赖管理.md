@@ -33,7 +33,7 @@ package bitset
 
 > [!tip] 
 > 
-> 关于 `main` 包的作用，我们在后续的 [[Go 语言：Goroutines]]  中介绍
+> 关于 `main` 包的作用，我们在后续的 [[Go 语言：Goroutines 与 Channels]]  中介绍
 > 
 
 ### 标识符可见性

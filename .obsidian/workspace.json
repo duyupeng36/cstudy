@@ -24,20 +24,21 @@
             }
           },
           {
-            "id": "66fee6b5ac10f0cc",
+            "id": "6f49e3a22c67f697",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Go 语言：Goroutines.md",
+                "file": "笔记/Go 语言：Goroutines 与 Channels.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Go 语言：Goroutines"
+              "title": "Go 语言：Goroutines 与 Channels"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -156,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
+                "file": "笔记/Go 语言：Goroutines 与 Channels.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "Go 语言：Goroutines 与 Channels 的大纲"
             }
           }
         ],
@@ -185,10 +186,26 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "e7a7b303c61786dc",
+  "active": "6f49e3a22c67f697",
   "lastOpenFiles": [
-    "笔记/Go 语言：Goroutines.md",
+    "assets/attachments/Pasted image 20250714222744.png",
+    "assets/attachments/Pasted image 20250714222545.png",
+    "assets/attachments/Pasted image 20250714222313.png",
+    "assets/attachments/Pasted image 20250714214152.png",
+    "assets/attachments/Pasted image 20240808002408.png",
     "README.md",
+    "笔记/Go 语言：Goroutines 与 Channels.md",
+    "assets/attachments/clock-go-concurrency.gif",
+    "assets/attachments/clock-go.gif",
+    "笔记/Go 语言：时间.md",
+    "assets/attachments/spinner-go.gif",
+    "笔记/C++：类与对象.md",
+    "笔记/C++：与 C 的差异.md",
+    "笔记/C 语言：基本概念.md",
+    "笔记/C++：特殊运算符.md",
+    "笔记/C++：资源管理技术.md",
+    "笔记/Linux 系统编程：深入文件 IO.md",
+    "笔记/Linux 系统编程：文件 IO.md",
     "笔记/Python：网络编程.md",
     "笔记/Python：协程.md",
     "笔记/Go 语言：网络编程.md",
@@ -202,27 +219,11 @@
     "笔记/Linux 系统编程： epoll.md",
     "笔记/Linux 系统编程：SOCKET 地址转换.md",
     "assets/attachments/Pasted image 20250709081227.png",
-    "笔记/Linux 系统编程：深入文件 IO.md",
-    "assets/attachments/Pasted image 20250708224149.png",
-    "assets/attachments/Pasted image 20250708223734.png",
     "笔记/Python：函数高级.md",
-    "assets/attachments/Pasted image 20250707235106.png",
-    "assets/attachments/Pasted image 20250707232633.png",
-    "assets/attachments/Pasted image 20250707232310.png",
-    "assets/attachments/Pasted image 20250707232030.png",
-    "assets/attachments/Pasted image 20250707232007.png",
     "笔记/Python：线程.md",
     "笔记/Linux 系统编程：Pthreads API.md",
     "笔记/操作系统：进程调度.md",
     "笔记/Python：进程.md",
-    "笔记/操作系统：进程概念.md",
-    "笔记/Linux 系统编程：SOCKET 高级主题.md",
-    "笔记/网络：链路层协议.md",
-    "笔记/Python：推导式.md",
-    "笔记/Go 语言：迭代器.md",
-    "笔记/Python：模拟容器.md",
-    "笔记/数据结构：线性表.md",
-    "笔记/Go 语言：线性表.md",
     "cstudy.py",
     "作业/05-Go",
     "作业/05-Go",
