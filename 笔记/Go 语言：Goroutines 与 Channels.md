@@ -789,3 +789,394 @@ fmt.Println(cap(ch))
 ```go
 fmt.Println(len(ch))
 ```
+
+## 示例：并发的 Web 爬虫
+
+在这个示例中，我们将从一个 URL(统一资源定位符) 开始提取该 URL 指向 HTML 页面中的所有的 URL，然后继续遍历这些找到的 URL
+
+首先，我们需要一个提取 HTML 页面中的 URL 的程序。下面给出了这个程序
+
+```go title:links
+package links
+
+import (
+	"fmt"
+	"net/http"
+
+	"golang.org/x/net/html"
+)
+
+// Extract 函数对特定的 url 发起 HTTP Get 请求，并解析返回的 HTML 中的链接
+func Extract(url string) ([]string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	// 响应体的状态码检查
+	defer resp.Body.Close() // 确保在函数结束时关闭响应体
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("parsing %s : %s", url, resp.Status)
+	}
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("parsing %s as HTML: %v", url, err)
+	}
+	var links []string
+	visitNode := func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "a" {
+			for _, a := range n.Attr {
+				if a.Key != "href" {
+					continue
+				}
+				link, err := resp.Request.URL.Parse(a.Val)
+				if err != nil {
+					continue
+				}
+				links = append(links, link.String())
+			}
+		}
+	}
+	forEachNode(doc, visitNode, nil) // 遍历 HTML 节点
+	return links, nil
+}
+
+func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+	if pre != nil {
+		pre(n) // 先执行 pre 函数
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		forEachNode(c, pre, post) // 递归遍历子节点
+	}
+	if post != nil {
+		post(n) // 后执行 post 函数
+	}
+}
+```
+
+准备好这个辅助程序后，我们可以开始编写我们的 Web 爬虫程序了。
+
+```go title:main.go
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/duyupeng36/links"
+)
+
+
+func crawl(url string) []string {
+	fmt.Println(url)
+	list, err := links.Extract(url)
+	if err != nil {
+		log.Println(err)
+	}
+	return list
+}
+
+func main() {
+	worklist := make(chan []string)
+
+	// 从命令行读取参数：由于我们使用无缓冲 Channel，这里我们应该将命令行参数房子一个独立的
+	// Goroutine 中，否则将阻塞 main Goroutine 的执行(is，接收者尚未准备好)
+	go func() {
+		worklist <- os.Args[1:]
+	}()
+	// 记录已经访问的网址
+	seen := make(map[string]bool)
+	for list := range worklist {
+		for _, link := range list {
+			if !seen[link] {
+				seen[link] = true
+				// 对于每个 URL 都开启一个 Goroutine 进行处理
+				go func(link string) {
+					worklist <- crawl(link)
+				}(link)
+			}
+		}
+	}
+}
+```
+
+这样这个程序就可以并发的抓取每个 URL 中的 URL，从而遍历完所有的 URL。然而，当 URL 越来越多，开启的 Goroutine 也会越来越多。然而，一个进程的打开文件描述符是有上限的。每次访问一个 URL 都会消耗一个打开文件描述符。从而导致某些 URL 会打开失败
+
+> [!attention] 
+> 
+> 上述例程并发量过大，无穷无尽地并发并不是什么好事情。因为计算机资源总是有限的
+> + CPU核心数会限制你的计算负载
+> + 硬盘转轴和磁头数限制了你的本地磁盘IO操作频率
+> + 网络带宽限制了你的下载速度上限
+> + 一个web服务的服务容量上限等等
+> 
+
+为了缓解这一个问题，我们需要限制并发的数量。对于我们的例子来说，最简单的方法就是限制对 `links.Extract()` 在同一时间最多不会有超过 $n$ 次调用，这里的 $n$ 是打开文件描述符的 `limit-20` 
+
+这里我们可以使用缓冲 Channel 来限制并发数量
+
+```go title:main.go
+
+var sem = make(chan struct{}, 20)
+
+func crawl(url string) []string {
+	fmt.Println(url)
+	// 获取信号量
+	sem <- struct{}{}
+	list, err := links.Extract(url)
+	// 释放信号量
+	<-sem
+	if err != nil {
+		log.Println(err)
+	}
+	return list
+}
+```
+
+函数 `crawl()` 进入时就像 `sem` Channel 发送一个值。如果 `sem` Channel 此时是满的，就证明限制已经有 `cap(sem)` 个 Goroutine 在执行了。此时，需要等待其他 Goroutine 执行完毕。当 Goroutine 执行完毕时，就会从 `sem` Channel 中读取一个值
+
+> [!tip] 
+> 
+> 这种限制并发数量的方法称为信号量。参考 [[Linux 系统编程：System V 信号量]] 和 [[Python：线程#信号量：Semaphore]]
+> 
+
+另一种限制并发数量的方式就是使用固定数量的 Goroutine
+
+```go
+func main() {
+	worklist := make(chan []string)
+	unseenLinks := make(chan string)
+
+	go func() {
+		worklist <- os.Args[1:]
+	}()
+
+	// 创建 20 个 Goroutine 用于执行 crawl 函数
+	for range 20 {
+		go func() {
+			for link := range unseenLinks {
+				// 执行 crawl() 获取 URL
+				links := crawl(link)
+				// 注意：
+				go func() {
+					worklist <- links
+				}()
+			}
+		}()
+	}
+
+	// 记录已经访问的网址
+	seen := make(map[string]bool)
+	for list := range worklist {
+		for _, link := range list {
+			if !seen[link] {
+				seen[link] = true
+				unseenLinks <- link
+			}
+		}
+	}
+}
+```
+
+
+## 定时器
+
+`time` 包中提供了两种类型定时器：`time.Timer` 和 `time.Ticker`
+
+### Timer 定时器
+
+`Timer` 类型表示 **单个事件**。定时器过期时，将在其通道 `C` 上发送当前时间，除非该定时器是用 `AfterFunc()` 创建的。必须使用 `NewTimer()` 或 `AfterFunc()` 创建定时器
+
+```go
+type Timer struct {
+	C <-chan Time
+	r runtimeTimer
+}
+```
+
+使用构造函数 `time.NewTimer(duration)` 和 `time.AfterFunc(duration, f func())` ，可以创建定时器。此外，`Timer` 还支持两个方法
+
+```go
+// Reset 将计时器更改为 d 后过期。如果计时器处于活动状态，则返回 true，如果计时器已过期或已停止，则返回 false。
+func (t *Timer) Reset(d Duration) bool
+
+// Stop 阻止计时器启动。如果调用停止了定时器，则返回 true；如果定时器已过期或被停止，则返回 false。Stop 不会关闭通道，以防止通道读取错误成功。
+func (t *Timer) Stop() bool
+```
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	fmt.Println(time.Now())
+	timer := time.NewTimer(time.Second)
+	fmt.Println(<-timer.C)
+
+	fmt.Println(timer.Reset(2 * time.Second)) // 重置定时器
+	fmt.Println(<-timer.C)
+}
+```
+
+### Ticker 周期定时器
+
+**`Ticker` 持有一个通道**，每隔一段时间就向通道中写入一个 **“滴答声”**
+
+```go
+type Ticker struct {
+	C <-chan Time // 传送 时钟滴答 的通道
+	r runtimeTimer
+}
+```
+
+`NewTicker()` 返回一个新的 `Ticker`，其中包含一个通道，每个 `tick` 之后都会发送通道上的当前时间。刻度的周期由持续时间参数指定
+
+```go
+func NewTicker(d Duration) *Ticker
+```
+
+`Ticker` 会调整时间间隔或放弃刻度，以弥补接收速度慢的问题。持续时间 `d` 必须大于零；否则，`NewTicker` 就会崩溃。停止滴答器以释放相关资源
+
+```go
+// Reset 会停止一个刻度线，并将其周期重置为指定的持续时间 d
+// 下一个刻度将在新的周期结束后到达
+// 持续时间 d 必须大于零；否则，Reset 就会出错。
+func (t *Ticker) Reset(d Duration)
+
+// Stop 关闭 ticker。停止后，将不再发送 "tick"
+// Stop 不会关闭通道，以防止同时从通道读取数据的程序看到错误的 "tick"
+func (t *Ticker) Stop()
+```
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	fmt.Println(time.Now())
+	ticker := time.NewTicker(time.Second)
+	for {
+		fmt.Println(<-ticker.C) // 通道每阻塞 1 秒就接收一次
+	}
+}
+
+```
+
+## 通道多路复用
+
+Go语言提供了 `select` 来监听多个 Channels，它会随机挑选已就绪的通道进行操作
+
+下面的程序会进行火箭发射的倒计时。`time.Tick` 函数返回一个 Channel，程序会周期性地像一个节拍器一样向这个 Channel 发送事件。每一个事件的值是一个时间戳，不过更有意思的是其传送方式
+
+现在我们让这个程序支持在倒计时中，用户按下 `enter` 键时直接中断发射流程。首先，我们启动一个 `goroutine`，这个 `goroutine` 会尝试从标准输入中调入一个单独的 `byte` 并且，如果成功了，会向名为 `abort` 的 Channel 发送一个值
+
+```go
+abort := make(chan struct{})
+go func() {
+	os.Stdin.Read(make([]byte, 1)) // 读入一个 byte
+	abort <- struct{}{}
+}()
+```
+
+现在每一次计数循环的迭代都需要等待两个 Channel 中的其中一个返回事件了：`ticker channel` 当一切正常时或者异常时返回的 `abort` 事件
+
+我们 **无法做到从每一个 Channel 中接收信息**，如果我们这么做的话，如果 **第一个Channel 中没有事件发过来那么程序就会立刻被阻塞**，这样我们就 **无法收到第二个 Channel 中发过来的事件**
+
+这时候我们需要 **多路复用**(`multiplex`)这些操作了，为了能够多路复用，我们使用了 `select` 语句。`select` 的使用方式类似于之前学到的 `switch` 语句，它也有一系列 `case` 分支和一个默认的分支。每个 `case` 分支会对应一个通道的通信（接收或发送）过程。`select` 会一直等待，直到其中的某个 `case` 的通信操作完成时，就会执行该 `case` 分支对应的语句
+
+```go
+select {
+case <-ch1:
+    // ...
+case x := <-ch2:
+    // ...use x...
+case ch3 <- y:
+    // ...
+default:
+    // ...
+}
+```
+
+在一个 `select` 语句中，Go 语言会按顺序从头至尾评估每一个发送和接收的语句。如果其中的任意一语句可以继续执行(即没有被阻塞)，那么就从那些可以执行的语句中 **任意选择** 一条来使用。
+
+如果没有任意一条语句可以执行(**即所有的通道都被阻塞**)，那么有两种可能的情况
+
+> [!tip] 
+> 如果给出了`default`语句，那么就会执行 `default`语句，同时程序的执行会从`select`语句后的语句中恢复。这样 **出现忙轮询**，造成 CPU 资源浪费。使用`select`时，一般不写`default`
+> 
+>  如果没有 `default` 语句，那么 `select` 语句将被阻塞，直到至少有一个通信可以进行下去
+>  
+
+让我们回到我们的火箭发射程序。`time.After` 函数会立即返回一个 Channel，并起一个新的 Goroutine 在经过特定的时间后向该 Channel 发送一个独立的值。下面的 `select` 语句会会一直等待到两个事件中的一个到达，无论是 `abort` 事件或者一个 $10$ 秒经过的事件。如果 $10$ 秒经过了还没有 `abort` 事件进入，那么火箭就会发射
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+	"time"
+)
+
+func main() {
+
+	abort := make(chan struct{})
+	go func() {
+		os.Stdin.Read(make([]byte, 1)) // 读入一个 byte
+		abort <- struct{}{}
+	}()
+
+	fmt.Println("Commencing countdown.  Press return to abort.")
+	select {
+	case <-time.After(10 * time.Second):
+		// Do nothing.
+	case <-abort:
+		fmt.Println("Launch aborted!")
+		return
+	}
+	fmt.Println("Launch complete.")
+}
+```
+
+下面让我们的发射程序打印倒计时。这里的 `select` 语句会使每次循环迭代等待一秒来执行退出操作
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+	"time"
+)
+
+func main() {
+	abort := make(chan struct{})
+	// 定时器：每隔指定时间就会向通道写入一个值
+	ticker := time.Tick(1 * time.Second)
+
+	go func() {
+		os.Stdin.Read(make([]byte, 1))
+		abort <- struct{}{}
+	}()
+
+	fmt.Println("Commencing countdown.  Press return to abort.")
+	for countdown := 10; countdown > 0; countdown-- {
+		fmt.Printf("\rcountdown %02v", countdown)
+		select {
+		case <-ticker:
+		case <-abort:
+			fmt.Println("Launch aborted!")
+			return
+		}
+	}
+	fmt.Println("\nLaunch Success!")
+}
+```

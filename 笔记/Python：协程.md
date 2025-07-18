@@ -23,14 +23,14 @@
 
 ### 协程的概念
 
-线程也可以创建自己的执行体，它们也拥有自己的执行入口和自己的执行栈。这样线程就可以按需调度自己的执行体了。为了切换这些执行体，线程就需要记录这些执行体的控制信息，包括
+**线程也可以创建自己的执行体**，它们也拥有自己的 **执行入口** 和 **自己的执行栈**。这样线程就可以按需调度自己的执行体了。为了切换这些执行体，线程就需要记录这些执行体的控制信息，包括
 + 执行体标识符
 + 执行栈的位置
 + 执行入口地址
 + 执行s上下文
 + ...
 
-线程可以选择一个执行体来执行，此时 CPU 中的程序计数器(`%rip`) 就会执行这个执行体的执行入口，栈指针寄存器(`%rsp`)和栈基寄存器(`%rbp`) 也会指向线程给它分配的执行栈。
+线程可以选择一个执行体来执行，此时 CPU 中的程序计数器(`%rip`) 就会指向这个执行体的执行入口，栈指针寄存器(`%rsp`)和栈基寄存器(`%rbp`) 也会指向线程给它分配的执行栈。
 
 ![[Pasted image 20250707232030.png]]
 
@@ -229,7 +229,7 @@ if __name__ == "__main__":
 > 如果是其他文件描述符就绪时，就只需要恢复其关联的协程即可
 > 
 
-## 生成器
+## 生成器协程
 
 我们知道 **让出和恢复控制流** 是实现协程的核心思想。在 Python 中，我们可以使用 `yield` 关键字让出控制流，并且使用内置函数 `next()` 或者生成器对象的 `send()` 方法恢复控制。因此，在 Python 我们可以使用 `yield` 和 `next()` 来实现协程。如下示例，展示了两个函数通过 `yield` 和 `next()` 交替执行的例子
 
@@ -330,158 +330,403 @@ while True:
 
 ## 原生协程
 
-**异步 IO** 是一种并发编程设计，在 Python 中获得了专门的支持，从 Python 3.4 到 3.7 迅速发展。我们之前介绍协程的概念时提到，将协程与某个文件描述符绑定，当文件描述符就绪时恢复协程，当需要等待文件描述符就绪时就挂起协程。这种处理 IO 的方式称为 **异步** 处理，简称为 **异步 IO**。这也是 Python 中提供了一个 `asyncio` 的标准库用于处理异步IO原因
+在 [[操作系统：进程调度#进程执行(进程行为)]] 我们知道进程执行的任务分为两种：**CPU/GPU 密集型任务** 和 **IO 密集型任务**。下表列出了常见的任务分类
 
-您可能会害怕地想，“并发、并行、多线程、多进程“，这已经有很多东西需要掌握了。 **异步 IO 适合在哪里？**
+| CPU/GPU bound | I/O bound |
+| :------------ | :-------- |
+| 哈希计算          | 网络        |
+| 加密            | 操作数据库     |
+| 解密            | 读写磁盘      |
+| 压缩            |           |
+| 语义分析          |           |
+| 音频渲染          |           |
+| ...           |           |
+
+我们知道计算机执行指令是顺序执行的。下图展示了 $3$ 个函数的调用，如果 `func2()` 需要消耗 $3$ 小时，那么 `func3()` 只有在 `func2()` 返回后才能被调用。
+
+![[Pasted image 20250716195347.png]]
 
 
 > [!attention] 
 > 
-> 请注意：在正式学习异步 IO 之前，我们需要将安装 Python3.7 及其之上的解释器版本
-> 
+> 无论是 CPU/GPU 密集型任务还是 I/O 密集性任务，对于函数而言，本质上都是阻塞的
 > 
 
-这里，我们将再次回顾并发与并行的概念。虽然现在我们重点关注的是 **异步IO** 及其在 Python 中的实现，但有必要花点时间将异步IO与其他同类进行比较，以便了解异步IO如何适应更大的、有时令人眼花缭乱的难题。
+如下示例代码，它演示了函数顺序调用的过程
+
+```python
+def fib(n):
+    if n <= 2:
+        return 1
+    return fib(n-1) + fib(n-2)
+
+
+def main():
+    res = fib(43)
+    print("hello, world!")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+![[all-function-blocking.gif]]
+
+执行上述代码时，需要等待很长一段时间才会输出 `"hello, world!"`。程序实际上是在等待函数 `fib(43)` 的返回。在这个例子中，我们在进行斐波拉契数列的计算，这是一个 CPU 密集型任务。同样的，即使我们在执行从远端服务器获取结果的任务也会等待。
+
+> [!attention] 
+> 
+> 所有的函数调用本质上都是阻塞的，需要等待函数的返回
+> 
+
+例如，我们请求一个服务器响应结果，但是服务器并不会立即响应。因为，它可能在处理其他任务，或者正在查询数据库并且需要消耗一定的时间才能返回我们需要的结果。
+
+> [!attention] 
+> 
+> 就像之前介绍的那样，我们可以 **阻塞等待**，也可以 **不停的轮询(非阻塞)**。更优雅的解决方式就是让操作系统通知我们结果是否到达(IO多路复用)
+> 
+
+**异步 IO** 的出现就是为了解决 **IO 密集型** 任务中的输入输出之间的平衡问题。在一个线程中，当一个任务执行时遇见了 IO 操作，如果 IO 操作会导致线程阻塞时，线程并不等待 IO 操作完成，而是切换到另一个任务继续执行。
+
+> [!attention] 
+> 
+> 这种切换就是我们之前介绍的协程。在 Python 中，我们称为异步IO
+> 
+
+从 Python3.4 开始，Python 引入了 `asyncio` 标准库，并在 Python3.5 版本开始引入 `async/await` 两个关键字。关键字 `async` 用于定义异步函数，或者称为 **协程函数**。而关键字 `await` 用于调用协程函数。所有的协程函数在一个 **事件循环(event loop)** 中执行
 
 > [!tip] 
 > 
-> 并行(**Parallelism**)包括 **同时执行** 多个动作。在 Python 中使用 `multiprocessing` 标准库实现并行。它需要将任务分散到计算机的 CPU 上。 它非常适合 CPU 密集型任务：紧密绑定的 for 循环和数学计算通常属于这一类
+> 事件循环本质上就是任务执行的管理器，或者称为任务调度器。当协程使用 `await` 等待另一个协程函数执行时，此时当前协程就会暂停执行，并将控制流交还给事件循环。事件循环获得控制流之后，就会挑选一个协程并将控制流交给它
 > 
 
-> [!tip] 
+### 协程：async/await
+
+从 Python3.5 版本开始，我们使用 `async def` 定义协程，使用 `await` 等待一个协程执行完毕。例如 
+
+```python
+import asyncio
+
+async def counter():
+    print("one")
+    await asyncio.sleep(1)
+    print("two")
+
+
+if __name__ == "__main__":
+    print("type(counter): ", type(counter))    # type(counter):  <class 'function'>
+    print("type(counter()): ",type(counter())) # <class 'coroutine'>
+```
+
+执行上述代码时会抛出 `RuntimeWarning:  coroutine 'counter' was never awaited` 警告，提示我们协程 `counter()` 没有被等待
+
+> [!attention] 
 > 
-> 并发(**Concurrency**) 多个任务能够以重叠的方式运行。并发的概念比并行更宽泛。线程是一种并发执行模型，其中多个线程轮流执行任务。 一个进程可以包含多个线程。
+> 执行上述代码的输出表明，使用 `async def` 定义是一个函数，当该函数调用时不会立即执行，而是返回一个对象，其类型为 `coroutine`
+> 
+> 换句话说，调用由 `async def` 定义的函数会返回一个协程对象
 > 
 
-在过去的几年里，一个独立的设计已经被更全面地内置到 CPython 中：**异步IO**，通过标准库 `asyncio` 和新的 `async` 和 `await` 关键字实现
+调用协程函数仅仅只是返回一个协程对象，如何才能让协程函数执行呢？我们之前就已经提过，**协程仅仅在事件循环中执行**。为此，在 `asyncio` 标准库中提供了一些简便的执行协程对象的函数。例如 `asyncio.run()`
+
+```python
+import asyncio
+
+async def counter():
+    print("one")
+    await asyncio.sleep(1)
+    print("two")
+
+
+if __name__ == "__main__":
+    c = counter()
+    asyncio.run(c)
+```
+
+函数 `asyncio.run(counter())` 会在当前创建一个事件循环，并将控制流交给协程 `counter()`，这样协程就可以在事件循环中执行了
+
+> [!attention] 
+> 
+> 请注意：每个线程只能有一个事件循环
+> 
+
+关键字 `await` 可以用于在协程中调用其他的协程函数。关键字 `await` 需要做两件事情。首先，**将协程放入事件循环中**；然后，**暂停使用它的协程**。显然，这会导致使用 `await` 的协程等待，直到 `await` 后面的协程执行完毕。
+
+下面的示例代码演示了 `await` 暂停使用它的协程的例子
+
+```python
+import asyncio
+
+
+async def one():
+    return 1
+
+
+async def green(timeout):
+    await asyncio.sleep(timeout)
+    return "hello, world!"
+
+
+async def main():
+	res_one = await one()
+	res_green1 = await green(2)  # 等 2 秒
+	res_green2 = await green(3)  # 等 3 描述
+    print(res_one)
+    print(res_green1)
+    print(res_green2)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+可以遇见的是，上述代码执行时最少需要 $5$ 秒。显然，我们的异步函数并没有异步执行
+
+```shell
+➜  pystudy time python3.14 coroutine.py 
+1
+hello, world!
+hello, world!
+
+real    0m6.711s
+user    0m0.053s
+sys     0m0.013s
+```
+
+### 任务：Task
+
+上一节中最后一个例子我们观察到我们的协程并没有异步执行。想要异步的执行协程，我们需要使用 **任务(tasks)**。任务类(task class)是对协程的一层包装，它安排协程在事件循环中执行，同时也运行取消任务
 
 > [!hint] 
 > 
-> 需要明确的是，异步IO 并不是一个新发明的概念，它已经存在或正在被构建到其他语言和运行时环境中，如 Go、C# 或 Scala
+> 协程是不能被取消的。
 > 
 
-异步 IO 是一种单线程、单进程设计：它使用 **协作式多任务处理**。 换句话说，尽管在单个进程中使用单个线程，但异步 IO 仍会给人一种并发的感觉。异步 IO 的调度单元是 **协程**，它可以并发调度
+下面代码展示了一个协程对象具有的属性
 
-> [!tip] 
+```python
+>>> async def coroutine():
+...     return 1
+... 
+>>> dir(coroutine())
+<stdin>:1: RuntimeWarning: coroutine 'coroutine' was never awaited
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+['__await__', '__class__', '__del__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__name__', '__ne__', '__new__', '__qualname__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'close', 'cr_await', 'cr_code', 'cr_frame', 'cr_origin', 'cr_running', 'cr_suspended', 'send', 'throw']
+```
+
+> [!hint] 
 > 
-> 协程可以在需要等待 IO 时候让出执行控制流，事件循环将控制流交给其他的协程
+> 我们看见了几个熟悉的属性： `send` 和 `close` 和 `throw`。生成器对象也具有这些属性
 > 
 
-异步意味着什么？ 这不是一个严格的定义，但出于我们在这里的目的，我可以想到两个属性：
-+ 异步例程能够在等待其最终结果时 “暂停” ，并让其他例程同时运行
-+ 异步代码通过上述机制促进了并发执行。 换句话说，**异步代码提供了并发的外观和感觉**
+下面我们来看一下 `task` 对象具有的属性
 
-下图将并发与并行放在了一起。 白色术语表示概念，绿色术语表示概念的实现或影响方式：
+```python
+>>> import asyncio
+>>> task = asyncio.create_task(coroutine())
+Traceback (most recent call last):
+  File "<python-input-7>", line 1, in <module>
+    task = asyncio.create_task(coroutine())
+  File "/usr/lib/python3.13/asyncio/tasks.py", line 407, in create_task
+    loop = events.get_running_loop()
+RuntimeError: no running event loop
+```
 
-![[Pasted image 20250711000333.png]]
+> [!attention] 
+> 
+> `task` 不仅仅只是一个 `task` 对象，它会安排协程在事件循环上执行。由于这里我们还没有创建事件循环，所有 Python 抛出 `RuntimeError` 异常
+> 
 
-### async/await
+```python
+>>> async def main():
+...     task = asyncio.create_task(coroutine())
+...     print(dir(task))
+...
+>>> asyncio.run(main())
+['__await__', '__class__', '__class_getitem__', '__del__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '_asyncio_future_blocking', '_callbacks', '_cancel_message', '_coro', '_exception', '_fut_waiter', '_log_destroy_pending', '_log_traceback', '_loop', '_make_cancelled_error', '_must_cancel', '_result', '_source_traceback', '_state', 'add_done_callback', 'cancel', 'cancelled', 'cancelling', 'done', 'exception', 'get_context', 'get_coro', 'get_loop', 'get_name', 'get_stack', 'print_stack', 'remove_done_callback', 'result', 'set_exception', 'set_name', 'set_result', 'uncancel']
+```
 
-**异步IO的核心是协程**。协程是 Python 生成器函数的专用版本。让我们从一个基线定义开始，然后在此基础上进行构建：**协程是一个可以在返回之前暂停执行的函数**，它可以在一段时间内 **间接地将控制传递给另一个协程**。
-
-在 Python 中，使用关键字 `async def` 定义一个协程，一个协程想要运行这个协程必须在关键字 `await` 或者事件循环中。
+很显然，`task` 对象具有更多的属性。这些属性在后续的学习中我们都会介绍。下面我们来看如何让上一小节的两个任务并发执行
 
 ```python
 import asyncio
 
-async def count():
-    print("One")
-    await asyncio.sleep(1)
-    print("Two")
+
+async def one():
+    return 1
+
+
+async def green(timeout):
+    await asyncio.sleep(timeout)
+    return "hello, world!"
 
 
 async def main():
-    await asyncio.gather(count(), count(), count())
+    one_task = asyncio.create_task(one())
+    green_task1 = asyncio.create_task(green(2))
+    green_task2 = asyncio.create_task(green(3))
 
+    print(await one_task)
+    print(await green_task1)
+    print(await green_task2)
 
 if __name__ == "__main__":
-    import time
-    start = time.perf_counter()
     asyncio.run(main())
-    elapsed = time.perf_counter() - start
-    print(f"executed in {elapsed:0.2f} seconds.")
 ```
 
-上述代码中，我们总共执行了 $4$ 个协程，其中一个 `main()` 协程和 $3$ 个 `count()` 协程。`main()` 协程的只要作用就是将 $3$ 个 `count()` 协程执行起来。如下给出了上述代码执行时的输出
+这里我们将 `await` 一个协程替换为 `await()` 一个 `Task` 对象，由于在创建 `Ttask` 对象时，协程就已经被放入事件循环了，而不是在 `await` 时才放入事件循环。因此，所有的任务在 `main coroutine` 暂停时都会得到执行。因此，上述代码最终执行事件时耗时最长的任务
 
 ```shell
-➜  pystudy python coroutine.py
-One
-One
-One
-Two
-Two
-Two
-executed in 1.00 seconds.
+➜  pystudy time python3.14 coroutine.py 
+1
+hello, world!
+hello, world!
+
+real    0m3.098s
+user    0m0.046s
+sys     0m0.023s
 ```
 
-> [!tip] 
-> 
-> 输出顺序是异步I/O的核心。与每个 `count()` 调用的交互是一个独立 **事件循环**。当每个任务达到 `await asyncio.sleep(1)` 时，`count()` 会将控制交换给事件循环 ，并告知事件循环我需要等待。在等待期间，事件循环调度其他协程执行
-> 
-
-使用 `async def` 定义的协程函数中，可以使用 `await` `yield` 和 `return` 关键字
-
-```python
-# 在协程函数中，允许 await 和 return 关键字
-async def f(x):
-    y = await z(x)  # OK - `await` and `return` allowed in coroutines
-    return y
-
-# 在协程函数中，允许 yield 关键字：这是一个异步生成器
-async def g(x):
-    yield x  # OK - this is an async generator
-
-# 在协程函数中，禁止使用 yield from
-async def m(x):
-    yield from gen(x)  # No - SyntaxError
-
-# await 后面的必须是 async def 定义的协程函数
-def m(x):
-    y = await z(x)  # Still no - SyntaxError (no `async def` here)
-    return y
-```
-
-下面是异步IO如何减少等待时间的一个示例：给定一个协程 `makerandom()`，它不断生成 `[0,10]` 范围内的随机整数，直到其中一个超过阈值，您希望该协程的多个调用不需要等待彼此连续完成。您可以大致遵循上述两个脚本的模式，并进行轻微更改：
+请注意：不要像下面的方式创建并等待 `Task` 对象完成。这样与直接等待协程对象并没有区别
 
 ```python
 import asyncio
-import random
-import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
-c = (
-    "\033[0m",
-    "\033[36m",  # cyan
-    "\033[32m",  # green
-    "\033[33m",  # yellow
-)
+async def one():
+    return 1
 
-async def make_random(idx: int, threshold: int = 6) -> int:
-    print(c[idx+1] + f"initiated make_random({idx})")
-    i = random.randint(0, 10)
-    while i <= threshold:
-        print(c[idx+1] + f"make_random({idx}) == {i} too low, retrying...")
-        await asyncio.sleep(idx + 1)
-        i = random.randint(0, 10)
-    print(c[idx+1] + f"make_random({idx}) == {i} done" + c[0])
-    return i
+
+async def green(timeout):
+    await asyncio.sleep(timeout)
+    return "hello, world!"
 
 
 async def main():
-    res = await asyncio.gather(*(make_random(i, 10 - i - 1) for i in range(3)))
-    return res
+
+    print(await asyncio.create_task(one()))
+    print(await asyncio.create_task(green(2)))
+    print(await asyncio.create_task(green(3)))
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+> [!summary] 
+> 
+> 函数 `asyncio.create_task(coroutine)` 将一个协程 `coroutine` 包装成一个任务并将 `coroutine` 放入当前线程的事件循环中执行，然后该函数会返回一个可等待的 `task` 对象
+> 
+> 当我们使用 `await` 关键字等待 `Task` 对象时，就可以获取 `Task` 对象关联的协程的返回值
+> 
+
+#### 任务状态
+
+`Task` 对象提供了一些获取其状态的方法。例如，检查任务是否完成可以使用方法 `task.done()`；检查任务是否取消可以使用方法 `task.cancelled()`。下表列出了几个获取 `Task` 对象状态的方法
+
+| 方法                 | 描述                        |
+| :----------------- | :------------------------ |
+| `task.done()`      | `Task` 对象处于完成状态时返回 `True` |
+| `task.canclled()`  | `Task` 对象被取消了返回 `True`    |
+| `task.canclling()` | `Task` 对象在正在被取消时返回 `True` |
+
+#### 任务取消
+
+大多数的异步任务涉及网络 IO。由于网络环境的原因，任务什么时候完成时不可预知的，可能会持续很久的时间。因此，当任务等待过长的时间时，我们应该能够让任务取消。
+
+`Task` 对象提供了一个 `task.canclle()` 方法用于取消任务。当我们等待一个被取消的任务时会抛出 `asyncio.CancelledError` 异常，我们必须处理这个异常
+
+```python
+import asyncio
+
+
+async def green(timeout):
+    await asyncio.sleep(timeout)
+    return "hello, world!"
+
+
+async def main():
+    green_task = asyncio.create_task(green(20))
+
+    seconds = 0
+    while not green_task.done():
+        await asyncio.sleep(1)
+        seconds += 1
+        print("任务执行 %d 秒" % seconds)
+        # 5 秒后取消任务
+        if seconds == 5:
+            # 取消任务
+            green_task.cancel()
+
+    try:
+        res = await green_task
+    except asyncio.CancelledError as e:
+        print(e)
+    
+    print(res)
 
 
 if __name__ == "__main__":
-    random.seed(444)  # For reproducibility
-    r1, r2, r3 = asyncio.run(main())
-    print()
-    print(f"Results: {r1}, {r2}, {r3}")
+    asyncio.run(main())
 ```
 
-该程序使用一个主协程函数 `make_random()`，并在 $3$ 个不同输入上并发运行。大多数程序通常由小型模块化协程构成，并通过一个包装函数将这些小型协程串联起来。程序入口函数 `main()` 则负责通过将核心协程映射到某个可迭代对象或池中，来收集任务（futures）
+让任务等待固定的时间是常见的，因此 `asyncio` 为我们提供了封装好的函数 `asyncio.wait_for()` 用于设置任务的等待时间，当超时时会将任务取消
 
-![[asyncio.gif]]
+```python
+import asyncio
+
+
+async def green(timeout):
+    await asyncio.sleep(timeout)
+    return "hello, world!"
+
+
+async def main():
+    green_task = asyncio.create_task(green(20))
+
+    try:
+        res = await asyncio.wait_for(green_task, timeout=5)
+        print(res)
+    except asyncio.exceptions.TimeoutError as e:
+        print("timeout: task has canclled")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+> [!attention] 
+> 
+> `asyncio.wait_for()` 将等待一个任务 `timeout` 秒，如果超时后任务没有结束，就会将任务取消。超时会抛出 `asyncio.execptions.TimeoutError` 异常
+> 
+
+有时候任务超时并不意味着要取消，引起超时的原因可能是技术原因。在 `asyncio` 标准库中提供了一个函数 `asyncio.shield(task)`，它会屏蔽 `task` 的取消操作
+
+```python
+import asyncio
+
+
+async def green(timeout):
+    await asyncio.sleep(timeout)
+    return "hello, world!"
+
+
+async def main():
+    green_task = asyncio.create_task(green(20))
+
+    try:
+        res = await asyncio.wait_for(asyncio.shield(green_task), timeout=5)
+        print(res)
+    except asyncio.exceptions.TimeoutError as e:
+        print("timeout with other reasion")
+	    res = await green_task
+	    print(res)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 任务组：TaskGroup
+
+
+
 
