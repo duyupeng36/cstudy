@@ -1,5 +1,9 @@
 # Goroutines 与 Channels
 
+Go 语言中的并发程序可以用两种手段来实现。Goroutine 和 Channel 支持 **顺序通信进程** (Communicating Sequential Processes)或被简称为 **CSP**。CSP 是一种现代的并发编程模型，在这种编程模型中值会在不同的运行实例(Goroutine)中传递，尽管大多数情况下仍然是被限制在单一实例中。
+
+此外，Go 语言也支持传统的基于共享内存的并发模型(多线程共享内存)，这部分的内容我们在下一部分介绍
+
 ## Goroutines
 
 在 Go 语言中，并发执行的单元叫作一个 Goroutine。Goroutine 是对协程的改进，让协程可以自由移动到不同的线程中执行。

@@ -725,7 +725,426 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+### async with 语句
+
+在 [[Python：文件 IO#上下文管理器]] 中我们介绍了 `with` 语句并且在 [[Python：上下文管理器]] 中介绍 `with` 语句的原理。
+
+异步上下文管理器也是非常有用的。例如，当我们在进行数据库操作时，我们必须执行 `commit` 才能将数据真正的存储到数据库中。对于像数据库中 IO 操作，非常适合使用异步IO，因此有必要支持异步上下文管理器
+
+用于支持异步上下文管理的魔术方法有两个
+
+| 魔术方法           | 描述                  |
+| :------------- | :------------------ |
+| `__aenter__()` | `__enter__()` 的异步版本 |
+| `__aexit__()`  | `__exit__()` 的异步版本  |
+
+```python
+import asyncio
+import aiohttp
+
+
+class AsyncSession:
+    def __init__(self, url):
+        self.url = url
+
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        response = await self.session.get(self.url)
+        return response
+
+    async def __aexit__(self, excep_type, execp_vale, traceback):
+        await self.session.close()
+    
+
+async def chech(url):
+    async with AsyncSession(url) as response:
+        html = await response.text()
+        print(f"{url}: {html[:20]}")
+
+
+async def main():
+    chech1 = asyncio.create_task(chech("https://www.baidu.com"))
+    chech2 = asyncio.create_task(chech("https://duoke360.com"))
+    chech3 = asyncio.create_task(chech("https://liwenzhou.com"))
+
+    await chech1
+    await chech2
+    await chech3
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### asyncio.gather()
+
+上述示例中，我们创建了 $3$ 个任务，为了获得这些任务的结果，我们需要 `await` $3$ 次。标准库 `asyncio` 中提供了一个函数 `asyncio.gather()` 它可以收集 `coroutine` 并将它们放入事件循环中执行。当所有任务执行完毕后，任务的结果以列表形式返回
+
+```python
+import asyncio
+import aiohttp
+
+
+class AsyncSession:
+    def __init__(self, url):
+        self.url = url
+
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        response = await self.session.get(self.url)
+        return response
+
+    async def __aexit__(self, excep_type, execp_vale, traceback):
+        await self.session.close()
+    
+
+async def chech(url):
+    async with AsyncSession(url) as response:
+        html = await response.text()
+    return f"url: {url}, html: {html[:16].strip()}"
+
+
+async def main():
+    results = await asyncio.gather(chech("https://www.baidu.com"), chech("https://duoke360.com"), chech("https://liwenzhou.com"))
+
+    for res in results:
+        print(res)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+#### 异常
+
+如果任务执行过程中出现了异常，那么将导致程序崩溃。在 `gather()` 中有一个参数 `return_exceptions` 默认为 `False`，我们可以将其设置为 `True`，这样就可以允许将任务的异常加入结果列表中
+
+```python
+import asyncio
+import aiohttp
+
+
+class AsyncSession:
+    def __init__(self, url):
+        self.url = url
+
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        response = await self.session.get(self.url)
+        return response
+
+    async def __aexit__(self, excep_type, execp_vale, traceback):
+        await self.session.close()
+    
+
+async def chech(url):
+    async with AsyncSession(url) as response:
+        html = await response.text()
+    return f"url: {url}, html: {html[:16].strip()}"
+
+async def raise_exceptions():
+    raise ValueError("测试错误")
+
+
+async def main():
+    results = await asyncio.gather(
+        chech("https://www.baidu.com"), 
+        chech("https://duoke360.com"), 
+        chech("https://liwenzhou.com"), 
+        raise_exceptions(),  # 抛出一个 ValueError
+        return_exceptions=True # 允许任务返回异常。异常会被放入结果列表中
+        )
+
+    for res in results:
+        print(res)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### asyncio.as_completed()
+
+> [!attention] 
+> 
+> 请注意，使用 `asyncio.gather()` 时只有在所有任务结束之后才能开始处理结果。如果我们想要任务完成后即使处理任务结果 `gather()` 是无法做到的
+
+在标准库 `asyncio` 中提供了 `asyncio.as_completed(*tasks)` 函数，它将返回一个生成器，当任务完成后会将任务从生成器中返回
+
+```python
+import asyncio
+import aiohttp
+
+
+class AsyncSession:
+    def __init__(self, url):
+        self.url = url
+
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        response = await self.session.get(self.url)
+        return response
+
+    async def __aexit__(self, excep_type, execp_vale, traceback):
+        await self.session.close()
+    
+
+async def chech(url):
+    async with AsyncSession(url) as response:
+        html = await response.text()
+    return f"url: {url}, html: {html[:16].strip()}"
+
+
+async def main():
+    tasks = [chech("https://www.baidu.com"), 
+             chech("https://duoke360.com"), 
+             chech("https://liwenzhou.com")
+            ]
+            
+    for task in asyncio.as_completed(tasks):
+        res = await task
+        print(res)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### 问题：await 不会切换到其他 coroutine
+
+下面将演示一个不明显的问题！当我们使用 `await` 等待一个立即返回的 `coroutine` 时，并不会导致协程的切换
+
+```python
+import asyncio
+import time
+
+
+async def nothing():
+    print("Busy")
+
+
+async def busy_loop():
+    for i in range(10):
+        await nothing()  # 等待一个立即返回的 coroutine
+		time.sleep(1)
+
+
+async def normal():
+    for i in range(10):
+        print("Normal coroutine")
+
+async def main():
+    await asyncio.gather(busy_loop(), normal())
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+下图展示了上述代码的执行流程。在 `busy_loop()` 协程中的 `await` 并没有通知事件循环将控制流切换到 `normal()` 协程
+
+![[await-issue.gif]]
+
+为了解决这种占用控制流的问题，我们可以使用 `asyncio.sleep(0)`，当我们使用 `await` 等待 `asyncio.sleep()` 时会发生控制流的切换。同时，通知事件循环等待 $0$ 秒，因此在形式上不会阻塞
+
+```python
+import asyncio
+import time
+
+
+async def nothing():
+    await asyncio.sleep(0)
+    print("Busy")
+
+
+async def busy_loop():
+    for i in range(10):
+        await nothing()  # 等待一个立即返回的 coroutine
+
+
+async def normal():
+    for i in range(10):
+        await asyncio.sleep(0)
+        print("Normal coroutine")
+
+async def main():
+    await asyncio.gather(busy_loop(), normal())
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
 ### 任务组：TaskGroup
+
+从 Python3.11 版本开始，推荐使用 `TaskGroup` 收集多个任务，`TaskGroup` 是一个异步上下文管理器类
+
+```python
+import asyncio
+import aiohttp
+import time
+
+
+class AsyncSession:
+    def __init__(self, url):
+        self.url = url
+
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        response = await self.session.get(self.url)
+        return response
+
+    async def __aexit__(self, excep_type, execp_vale, traceback):
+        await self.session.close()
+    
+
+async def chech(url):
+    async with AsyncSession(url) as response:
+        html = await response.text()
+    return f"url: {url}, html: {html[:16].strip()}"
+
+
+
+async def main():
+    async with asyncio.TaskGroup() as tg:
+        # create_task() 会将任务放入事件循环中进行调度
+        chech1 = tg.create_task(chech("https://www.baidu.com"))
+        chech2 = tg.create_task(chech("https://duoke360.com"))
+        chech3 = tg.create_task(chech("https://www.python.org/"))
+    # 退出异步上下文管理区域时，所有的任务都将被等待
+    
+    # 使用 Task 对象 result() 方法获取任务的结果
+    print(chech1.result())
+    print(chech2.result())
+    print(chech3.result())
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+#### 异常
+
+下面的示例代码演示了在任务组中的任务抛出了多个异常，Python 会将这些异常打包成一个 **异常组**
+
+```python
+import asyncio
+
+
+async def coro_normal():
+    return "Hello, world!"
+
+async def coro_value_error():
+    raise ValueError
+
+async def coro_type_error():
+    raise TypeError
+
+
+async def main():
+    try:  
+        async with asyncio.TaskGroup() as tg:
+            # create_task() 会将任务放入事件循环中进行调度
+            chech1 = tg.create_task(coro_normal())
+            chech2 = tg.create_task(coro_value_error())
+            chech3 = tg.create_task(coro_type_error())
+    except ExceptionGroup as eg:
+        print(f"{eg=}")  
+        # eg=ExceptionGroup('unhandled errors in a TaskGroup', [ValueError(), TypeError()])
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+> [!attention] 
+> 
+> 对于异常组概念，参考 [[Python：异常处理#引发和处理多个不相关的异常]]
+> 
+
+为了处理异常组中特定的异常，我们可以使用 `except*` 语句
+
+```python
+import asyncio
+
+
+async def coro_normal():
+    return "Hello, world!"
+
+async def coro_value_error():
+    raise ValueError
+
+async def coro_type_error():
+    raise TypeError
+
+
+async def main():
+    try:  
+        async with asyncio.TaskGroup() as tg:
+            # create_task() 会将任务放入事件循环中进行调度
+            chech1 = tg.create_task(coro_normal())
+            chech2 = tg.create_task(coro_value_error())
+            chech3 = tg.create_task(coro_type_error())
+
+        results = (chech1.result(), chech2.result(), chech3.result())
+    except* ValueError as ve:
+        print(f"{ve=}")
+    except* TypeError as te:
+        print(f"{te=}")
+    else:
+        print(f"{results=}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## 异步迭代器
+
+在 [[Python：模拟容器]] 中我们介绍了迭代器的含义及其实现方式。现在，我们语句了一个问题：如果 `__next__()` 方法或其内部私用的是协程；换句话说，使用 `async def` 定义 `__next__()` 方法，将允许使用 `await` 调用其他协程。例如，我们在数据库中读取数据。
+
+因此，Python 引入了 **异步迭代器** 的概念，这个概念使用两个魔术方法: `__aiter__()` 和 `__anext__()` 实现
+
+```python
+import asyncio
+
+from redis import asyncio as aioredis
+
+class RedisReader:
+
+    def __init__(self, redis, keys):
+        self.redis = redis
+        self.keys = keys
+
+    def __aiter__(self):
+        self.ikeys = iter(self.keys)
+        return self
+    
+    async def __anext__(self):
+        try:
+            key = next(self.ikeys)
+        except StopIteration:
+            raise StopAsyncIteration
+        
+        async with self.redis.client() as connection:
+            value = await connection.get(key)
+        return value
+
+
+async def main():
+    redis = await aioredis.from_url("redis://localhost")
+    keys = ["name", "age", "gender"]
+    
+    async for value in RedisReader(redis=redis, keys=keys):
+        print(value.decode("utf-8"))
+
+
+if __name__ == "__main__":
+	asyncio.run(main())
+```
+
+## 异步生成器
+
+
+
 
 
 
