@@ -1143,9 +1143,127 @@ if __name__ == "__main__":
 
 ## 异步生成器
 
+和 [[Python：函数高级#生成器函数]] 一样，定义异步生成器函数需要使用 `async def` 和 `yield` 关键字
+
+```python
+import asyncio
 
 
+async def async_range(start=0, end=0, step=1):
+    if start != 0 and end == 0:
+        start, end = 0, start
+    
+    for i in range(start, end, step):
+        yield i
+
+async def pow(x, y):
+    return x ** y
 
 
+async def main():
+    async for i in async_range(0, 10, 2):
+        res = await pow(i, 2)
+        print(res)
+
+asyncio.run(main())
+```
+
+## asyncio.Queue
+
+标准库 `asyncio`  中提供了一个用于 `coroutine` 之间交换数据的类 `Queue`，它提供了与 [[Python：进程#队列]] 相似的接口
+
+```python
+import asyncio
+import random
+
+async def producer(queue, name):
+    timeout = random.randint(1, 5)
+    await queue.put(timeout)
+    print(f"Producer-{name} put{timeout} into th queue", queue)
 
 
+async def consumer(queue):
+    while not queue.empty():
+        timeout = await queue.get()
+        await asyncio.sleep(timeout)
+        print(f"Consumer ate {timeout}", queue)
+
+
+async def main():
+    queue = asyncio.Queue()
+    producers = []
+    for i in range(10):
+        task = asyncio.create_task(producer(queue, i))
+        producers.append(task)
+    
+    await asyncio.gather(*producers, consumer(queue))
+
+asyncio.run(main())
+```
+
+下面是执行上述代码的输出
+
+```shell
+➜  ((py3.12) ) pystudy python coroutine.py 
+Producer-0 put2 into th queue <Queue maxsize=0 _queue=[2] tasks=1>
+Producer-1 put5 into th queue <Queue maxsize=0 _queue=[2, 5] tasks=2>
+Producer-2 put4 into th queue <Queue maxsize=0 _queue=[2, 5, 4] tasks=3>
+Producer-3 put2 into th queue <Queue maxsize=0 _queue=[2, 5, 4, 2] tasks=4>
+Producer-4 put1 into th queue <Queue maxsize=0 _queue=[2, 5, 4, 2, 1] tasks=5>
+Producer-5 put1 into th queue <Queue maxsize=0 _queue=[2, 5, 4, 2, 1, 1] tasks=6>
+Producer-6 put3 into th queue <Queue maxsize=0 _queue=[2, 5, 4, 2, 1, 1, 3] tasks=7>
+Producer-7 put5 into th queue <Queue maxsize=0 _queue=[2, 5, 4, 2, 1, 1, 3, 5] tasks=8>
+Producer-8 put4 into th queue <Queue maxsize=0 _queue=[2, 5, 4, 2, 1, 1, 3, 5, 4] tasks=9>
+Producer-9 put2 into th queue <Queue maxsize=0 _queue=[2, 5, 4, 2, 1, 1, 3, 5, 4, 2] tasks=10>
+Consumer ate 2 <Queue maxsize=0 _queue=[5, 4, 2, 1, 1, 3, 5, 4, 2] tasks=10>
+Consumer ate 5 <Queue maxsize=0 _queue=[4, 2, 1, 1, 3, 5, 4, 2] tasks=10>
+Consumer ate 4 <Queue maxsize=0 _queue=[2, 1, 1, 3, 5, 4, 2] tasks=10>
+Consumer ate 2 <Queue maxsize=0 _queue=[1, 1, 3, 5, 4, 2] tasks=10>
+Consumer ate 1 <Queue maxsize=0 _queue=[1, 3, 5, 4, 2] tasks=10>
+Consumer ate 1 <Queue maxsize=0 _queue=[3, 5, 4, 2] tasks=10>
+Consumer ate 3 <Queue maxsize=0 _queue=[5, 4, 2] tasks=10>
+Consumer ate 5 <Queue maxsize=0 _queue=[4, 2] tasks=10>
+Consumer ate 4 <Queue maxsize=0 _queue=[2] tasks=10>
+Consumer ate 2 <Queue maxsize=0 tasks=10>
+```
+
+我们观察到 `await queue.put(value)` 并不会与事件循环交互，这是我们之前介绍的问题。因为，这里我们使用的是无限长的队列，`queue.put()` 并不会阻塞并且 `queue.put()` 没有返回值，这就是它不与事件循环交换的原因。
+
+> [!attention] 
+> 
+> 请注意：在使用 `asyncio.Queue()` 时最好指定 `queue` 的大小
+> 
+
+```python
+import asyncio
+import random
+
+async def producer(queue, name):
+    timeout = random.randint(1, 5)
+    await queue.put(timeout)
+    print(f"Producer-{name} put{timeout} into th queue", queue)
+
+
+async def consumer(queue, name):
+    while not queue.empty():
+        timeout = await queue.get()
+        await asyncio.sleep(timeout)
+        print(f"Consumer-{name} ate {timeout}", queue)
+
+
+async def main():
+    queue = asyncio.Queue(3)
+    producers = []
+    for i in range(20):
+        task = asyncio.create_task(producer(queue, i))
+        producers.append(task)
+    
+    consumers = []
+    for i in range(2):
+        task = asyncio.create_task(consumer(queue, i))
+        consumers.append(task)
+
+    await asyncio.gather(*producers, *consumers)
+
+asyncio.run(main())
+```
