@@ -24,31 +24,87 @@
             }
           },
           {
-            "id": "e112c3073d79319b",
+            "id": "7f15cce9d1dfabb8",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Python：协程.md",
+                "file": "笔记/Go 语言：网络通信.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Python：协程"
+              "title": "Go 语言：网络通信"
             }
           },
           {
-            "id": "579842a09804836a",
+            "id": "4577c5e3f39e9934",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/Python：异常处理.md",
+                "file": "笔记/Linux 系统编程：SOCKET 概览.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Python：异常处理"
+              "title": "Linux 系统编程：SOCKET 概览"
+            }
+          },
+          {
+            "id": "f2f87980d5993f73",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/Linux 系统编程：SOCKET 概览.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Linux 系统编程：SOCKET 概览"
+            }
+          },
+          {
+            "id": "7a73255d8d635373",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/网络：网络层协议.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "网络：网络层协议"
+            }
+          },
+          {
+            "id": "0d82197ac7d77e8a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/网络：链路层协议.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "网络：链路层协议"
+            }
+          },
+          {
+            "id": "c12a779cabe025c3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/Python：网络编程.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Python：网络编程"
             }
           }
         ],
@@ -84,7 +140,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "queue",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -105,8 +161,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -172,13 +227,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/Python：协程.md",
+                "file": "笔记/Go 语言：网络通信.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Python：协程 的大纲"
+              "title": "Go 语言：网络通信 的大纲"
             }
           }
         ],
@@ -201,44 +256,43 @@
       "workspaces:管理工作区布局": false
     }
   },
-  "active": "e112c3073d79319b",
+  "active": "7f15cce9d1dfabb8",
   "lastOpenFiles": [
-    "笔记/Python：线程.md",
+    "笔记/Linux 系统编程：SOCKET 概览.md",
+    "笔记/Go 语言：网络通信.md",
+    "assets/attachments/Pasted image 20250728220722.png",
+    "笔记/Python：网络编程.md",
+    "README.md",
+    "笔记/网络：链路层协议.md",
+    "笔记/Go 语言：Goroutines 与 Channels.md",
+    "笔记/网络：网络层协议.md",
+    "笔记/Go 语言：并发.md",
+    "笔记/Go 语言：数据结构.md",
+    "笔记/数据结构：优先队列.md",
+    "笔记/数据结构：二叉查找树.md",
+    "笔记/数据结构：树与二叉树.md",
+    "笔记/数据结构：散列表.md",
+    "笔记/数据结构：栈和队列.md",
+    "笔记/数据结构：线性表.md",
+    "笔记/Go 语言：加密与解密.md",
+    "笔记/Go 语言：反射.md",
+    "笔记/Go 语言：基本概念.md",
+    "笔记/Go 语言：函数.md",
+    "笔记/Go 语言：基于共享变量的并发.md",
+    "笔记/Go 语言：开发环境搭建.md",
     "笔记/Python：协程.md",
     "笔记/Python：异常处理.md",
+    "笔记/Python：线程.md",
     "笔记/Python：上下文管理器.md",
-    "README.md",
-    "笔记/Python：推导式.md",
-    "笔记/Python：模拟容器.md",
     "assets/attachments/await-issue.gif",
-    "笔记/Go 语言：基于共享变量的并发.md",
-    "笔记/Go 语言：Goroutines 与 Channels.md",
-    "笔记/Go 语言：结构体.md",
-    "笔记/Go 语言：字符串.md",
-    "笔记/Go 语言：内建数据结构.md",
-    "笔记/Go 语言：基本概念.md",
-    "笔记/C++：string 的底层实现.md",
-    "笔记/C++：类与对象.md",
     "assets/attachments/all-function-blocking.gif",
     "assets/attachments/Pasted image 20250716195347.png",
-    "assets/Excalidraw/Drawing 2025-07-16 19.51.28.excalidraw.md",
     "assets/attachments/Pasted image 20250714222744.png",
     "assets/attachments/Pasted image 20250714222545.png",
     "assets/attachments/Pasted image 20250714222313.png",
     "assets/attachments/Pasted image 20250714214152.png",
     "assets/attachments/Pasted image 20240808002408.png",
     "assets/attachments/clock-go-concurrency.gif",
-    "assets/attachments/clock-go.gif",
-    "笔记/Go 语言：时间.md",
-    "笔记/C++：与 C 的差异.md",
-    "笔记/C 语言：基本概念.md",
-    "笔记/C++：特殊运算符.md",
-    "笔记/C++：资源管理技术.md",
-    "笔记/Linux 系统编程：深入文件 IO.md",
-    "笔记/Linux 系统编程：文件 IO.md",
-    "笔记/Python：网络编程.md",
-    "笔记/Go 语言：网络编程.md",
-    "笔记/Go 语言：并发.md",
     "cstudy.py",
     "作业/05-Go",
     "作业/05-Go",

@@ -2,7 +2,7 @@
   "cssTheme": "Border",
   "accentColor": "",
   "baseFontSize": 14,
-  "theme": "system",
+  "theme": "moonstone",
   "baseFontSizeAction": true,
   "monospaceFontFamily": "FiraCode Nerd Font Mono"
 }
