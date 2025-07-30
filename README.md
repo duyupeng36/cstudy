@@ -373,8 +373,8 @@
 | [[Go 语言：并发]]                    | 进程 线程 协程                       |
 | [[Go 语言：网络通信]]                  | TCP粘包问题                        |
 | [[Go 语言：Goroutines 与 Channels]] | Goroutines 和 Channels          |
-| [[Go 语言：同步]]             | 基于共享内存的并发                      |
-|                                 |                                |
+| [[Go 语言：同步]]                    | 基于共享内存的并发                      |
+| [[Go 语言：GMP 调度策略]]              | GMP 调度模型                       |
 
 
 
