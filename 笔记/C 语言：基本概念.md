@@ -12,18 +12,17 @@ C 语言是 `Dennis Ritchie` 和 `Ken Thompson` 于 1972 年在贝尔电话实�
 - `ISO/IEC `正在编制一个新的主要修订版，即为 `C23`，于 2024 年发布(`ISO/IEC 9899：2024`)
 
 
-**C 语言标准**(`ISO/IEC 9899：2024`)**定义了该语言**，**是语言行为的最终权威**。尽管标准晦涩难懂，但如果打算编写 **可移植**、**安全** 且 **可靠** 的代码，就必须理解标准。C 语言标准为实现提供了很大的自由度，使其在各种硬件平台上都能实现最佳效率。
+C 语言标准(`ISO/IEC 9899：2024`) 定义了该语言，是语言行为的最终权威。尽管标准晦涩难懂，但如果打算编写 **可移植**、**安全** 且 **可靠** 的代码，就必须理解标准。C 语言标准为实现提供了很大的自由度，使其在各种硬件平台上都能实现最佳效率。
 
-> [!tip] 实现
+> [!tip] 
 > **实现**(`implementation`) 是 C 语言标准中用来 **指代编译器的术语**，定义为：特定的一组软件，运行在特定控制选项下的特定翻译环境中，为特定的执行环境翻译程序，并支持在特定的执行环境中执行函数
 > + 这个定义表明，每个具有 **特定命令行选项的编译器和 C 标准库**，都被认为是一个 **独立的实现**，不同的实现可以有明显不同的由实现定义的行为
 > + `GCC`（GNU Compiler Collection, GNU 编译器合集）中很明显，它使用 `-std=` 选项来指定语言标准：可能取值包括 `c89`、`c90`、`c99`、 `c11`、`c17`、`c18` 和 `c23`
+> 
 
 ## 第一个 C 程序
 
-学习任何一门编程语言的最好的方式就是使用它编写程序。经典教程《C 程序设计语言》中的入门程序就是在控制台输出 `"Hello, world!"`
-
-要编写这个程序，需要一个 **文本编辑器** 或 **集成式开发环境**（Integrated Development Environment，**IDE**），这些工具有很多，现在我们使用 vscode 来编写我们的程序
+学习任何一门编程语言的最好的方式就是使用它编写程序。经典教程《C 程序设计语言》中的入门程序就是在控制台输出 `"Hello, world!"`。要编写这个程序，需要一个 **文本编辑器** 或 **集成式开发环境**（Integrated Development Environment，**IDE**），这些工具有很多，现在我们使用 vscode 来编写我们的程序
 
 ```c title:hello.c
 #include <stdio.h>
@@ -139,8 +138,9 @@ int main(int argc, char *argv[]) {
 
 ### 程序是如何生成的
 
+下图给出了 GCC 编译 C 程序的完整过程。我们会详细介绍每个过程
 
-![[Pasted image 20241004004518.png]]
+![Pasted image 20241004004518|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755700369838-945ea452d7554dab975f4e20a5033fc5.png)
 
 #### 预处理
 
@@ -180,11 +180,18 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-可见，`#include <stdio.h>` 被替换为了 `<stdio.h>` 中的内容
+> [!hint] 
+> 
+> `#include <file>` 指令是我们经常使用的预处理指令之一，它的作用就是拷贝 `file` 文件到当前文件中。
+>  
+>  例如，上述 `#include <stdio.h>` 被替换为了 `<stdio.h>` 中的内容
+> 
 
 ##### 宏定义
 
-宏定义分为两种: **对象式宏** 和 **函数式宏**
+C 语言中，宏定义分为两种: **对象式宏** 和 **函数式宏**。下面我们首先介绍对象式宏
+
+###### 对象式宏
 
 **对象式宏** 本质上就是 **替换文本**，用于替换某些字面值或符号，以提高可读性。例如，在 C89 标准中，没有提供布尔类型，而是采用整数表达布尔值
 
@@ -211,6 +218,8 @@ int main(int argc, char *argv[]) {
 > 
 > 宏定义在预处理时只进行 **简单替换**。代码中的 `True`(表达式的操作数) 会被替换为 `1`，并不做额外处理
 > 
+
+###### 函数式宏
 
 **函数式宏** 是 _带参数_ 的宏，替换文本可以提供一些参数，被替换的文本可以动态变化。例如，函数式宏 `max` 定义了一个获取两个元素中最大值的宏
 
@@ -257,7 +266,12 @@ int main(int argc, char *argv[]) {
 
 #### 编译
 
-将 `*.i` 文件中的代码(预处理之后的代码)翻译为对应平台的 **汇编代码**。[godbolt](https://godbolt.org/) 是一个在线的编译器平台
+将 `*.i` 文件中的代码(预处理之后的代码)翻译为对应平台的 **汇编代码**
+
+> [!hint] 
+> 
+> [godbolt](https://godbolt.org/) 是一个在线的编译器平台。可以方便的观察 C 代码生成的汇编指令
+> 
 
 #### 汇编 和 链接
 
@@ -265,11 +279,9 @@ int main(int argc, char *argv[]) {
 
 ### 程序是如何执行的
 
-程序仅仅只是一个可执行的文件。在 Linux/Unix 中采用的是 **ELF(Executable and Linkable Format) 格式文件**；Windows中采用 **PE 格式文件**
+程序仅仅只是一个可执行的文件。在 Linux/Unix 中采用的是 **ELF(Executable and Linkable Format) 格式文件**；Windows中采用 **PE 格式文件**。我们以 ELF 文件为例子介绍。ELF 文件包含 $4$ 部分，如下图所示
 
-ELF 文件包含 $4$ 部分： **ELF 头(ELF header)** **程序头表(Program header table)** **节(Sections)** 和 **节头表(Section header table)**
-
-![[Pasted image 20241004004451.png]]
+![Pasted image 20241004004451|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755700751059-33bad709b68f4dfea0a296f9c107fa0e.png)
 
 > [!tip] 
 > ELF 文件中 **不一定包含全部内容**，而且它们的位置 **只有ELF头是固定的**，其余各部分的位置、大小等信息由 ELF 头中的各项值来决定
@@ -288,7 +300,7 @@ ELF 文件包含 $4$ 部分： **ELF 头(ELF header)** **程序头表(Program he
 
 操作系统采用 **虚拟内存**，提供了 **进程独占所有物理内存** 的假象。在进程中看见的地址都是虚拟内存地址。下图展示了 **进程虚拟内存地址的结构**
 
-![[Pasted image 20241013130418.png]]
+![Pasted image 20241013130418|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755700888676-0975388a1ad74852b746c12312df74c1.png)
 
 > [!tip] 非标准特性
 > 
@@ -307,27 +319,25 @@ ELF 文件包含 $4$ 部分： **ELF 头(ELF header)** **程序头表(Program he
 
 > [!tip] ISO/IEC 9899:2018 标准定义的对象
 > 
-> 执行环境中的 **数据存储区域**，其 **内容可用于表示值**
+> 执行环境中的 **数据存储区域**，其内容可用于表示值。 在被引用时，对象可以具有特定的类型
 > 
-> **在被引用时，对象可以具有特定的类型**
+> 变量就是对象的一个例子
 > 
-
-变量就是对象的一个例子
 
 ### 变量
 
-变量本质上就是一块 **_数据存储区域_**，**其中存储的 _位模式_ 可用于表示 _值_**。变量 _被引用_ 时，会 **根据特定的 _类型_ 解释其内容**(位模式)
+变量本质上就是一块 **数据存储区域**，其中存储的 **位模式** 可用于表示值。变量被引用时，会根据特定的 **类型** 解释位模式的含义
 
-> [!tip] **类型** 决定了存储区域的尺寸
+> [!tip] **类型** 决定了存储区域的尺寸和其存储的位模式的含义
 > 
 > 类型决定了存储区域的 **尺寸**，以及其中存储的 **位模式表示的内容**
 > 
 
 如何引用一个变量呢？C 语言(大部分语言)中采用 **变量名** 引用一块内存区域(对象)。下图形象的表示一个变量
 
-![[Pasted image 20241004004409.png]]
+![Pasted image 20241004004409|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701028908-7ea8e39e6b714242932d5ac139e2edb1.png)
 
-**变量 _使用前_ 要 _先声明_** 。声明一个变量的语法 
+**变量在使用前要先声明** 。在 C 语言中，声明一个变量的语法如下
 
 ```c
 <类型> <变量名> [= 初始值] [, <变量名>[= 初始值], ...]
@@ -348,8 +358,12 @@ ELF 文件包含 $4$ 部分： **ELF 头(ELF header)** **程序头表(Program he
 > 这里的 **对象** 是一个表示 **数据存储区域**。当这块数据存储区域被引用时，保存在此的位模式就会按照 **类型** 进行解释
 > 
 
-> [!tip] 初始值：指定数据存储区域中最开始的位模式
+> [!tip] 初始值
 > 
+> 指定数据存储区域中最开始的位模式
+> 
+
+如下示例代码片段，演示了如何什么一组变量。由于我们没有提供初始值，这个变量的值是不可信的
 
 ```c
 // 声明几个相同类型的变量
@@ -357,7 +371,7 @@ int height, length, width, volume;
 float profit, loss;
 ```
 
-变量通过 **赋值** 的方式获得值
+变量通过 **赋值** 的方式获得值。如下所示，赋值运算符(`=`)表示将其右边的值写入到左边变量中 
 
 ```c
 height = 8; 
@@ -365,12 +379,18 @@ length = 12;
 width = 10;
 ```
 
+> [!attention] 
+> 
+> 请注意，赋值运算符(`=`)的左侧必须是一块存储区域
+> 
+
 变量一旦被赋值，就可以用它来辅助计算其他变量的值
 
 ```c
 height = 8; 
 length = 12; 
 width = 10; 
+
 /* 通过变量名引用对象的值 */
 volume = height * length * width; /* volume 现在是 960 */
 ```
@@ -379,7 +399,7 @@ volume = height * length * width; /* volume 现在是 960 */
 
 常量本质和变量一样，唯一不同的就是 **数据存储区域中的 _位模式不能被修改_**
 
-C 语言中提供了三种常量：**字面值常量** **符号常量** **const 常量**
+C 语言中提供了三种常量：**字面值常量**、**符号常量** 和 **const 常量**
 
 > [!tip] 
 > 
@@ -434,10 +454,15 @@ constexpr int M = 10;
 
 ```c
 #define N 10
-int num[10] = {};
-int num[N] = {};
-constexpr int M = 10; 
+
+int num[10] = {};  // 使用字面值常量
+int num[N] = {};   // 使用符号常量
+
+constexpr int M = 10; // 使用 constexpr 常量
 int num[M] = {};
+
+const Z = 10;
+int num[Z] = {0}; // error：const 常量不是编译时求值的
 ```
 
 > [!tip] 
@@ -551,7 +576,7 @@ int main(int argc, char *argv[]) {
 
 在 **存储器层次结构** 中，_距离 CPU 越近的存储器工作频率越高_，这种存储器在存储器层次结构的金字塔中处于的位置越越高
 
-![[Pasted image 20240922002317.png|900]]
+![Pasted image 20240922002317|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701482895-d5e6eec7fa1e4095abdcdc9cf1d52627.png)
 
 
 上层的存储器通常作为下层存储器的 **缓冲**。这里，我们需要注意区分 **缓冲(buffer)** 和 **缓存(cache)**
@@ -572,7 +597,7 @@ int main(int argc, char *argv[]) {
 
 因此，进程在执行输入输出时，都需要经过 **缓冲区**。因此从输入到输出的流程如下图
 
-![[Pasted image 20240922003312.png]]
+![Pasted image 20240922003312|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701495667-4c113b4fdf1340be9985b7ecbd80d166.png)
 
 ### 格式化输出
 
@@ -595,7 +620,7 @@ int main(int argc, char *argv[]) {
 
 _转换说明_ 包含 字符`%` 和跟随其后的最多 $5$ 个不同的选项构成。下图给出了转换说明的示例
 
-![[Pasted image 20240922005552.png]]
+![Pasted image 20240922005552|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701509953-85a95eaac0ab47afb5982deb12c3b19b.png)
 
 
 > [!hint] 标志，可选
@@ -968,7 +993,7 @@ $$
 
 IEEE 754 binary 编码的位模式在计算机的布局如下图
 
-![[Pasted image 20240923162144.png]]
+![Pasted image 20240923162144|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701532020-06a81b552d2a413088f1299fbf61fb28.png)
 
 + 指数位(`Exponent`) 采用 **移码** 表示
 + 尾数位(`Fraction`) 位采用 **无符号** 表示(规格化的) 
@@ -1017,7 +1042,7 @@ IEEE 754 binary 编码的位模式在计算机的布局如下图
 >  
 >  指数位全为 $0$，尾数为全为 $0$，即
 >  
->  ![[Pasted image 20240923170006.png]]
+>  ![Pasted image 20240923170006|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701542777-ce684310349a48e9baf570caf8a433d6.png)
 >  
 >  符号位为 $1$ 表示为 $-0$；符号位为 $0$ 表示为 $0$
 >  
@@ -1026,7 +1051,7 @@ IEEE 754 binary 编码的位模式在计算机的布局如下图
 > 
 > 指数为全为 $1$，尾数位全为 $0$
 > 
-> ![[Pasted image 20240923170317.png]]
+> ![Pasted image 20240923170317|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701550681-61e5bfbedf61472b87087962e3ff907d.png)
 > 
 > 符号位为 $1$ 表示为 $-\infty$；符号位为 $0$ 表示为 $+\infty$
 > 
@@ -1035,7 +1060,7 @@ IEEE 754 binary 编码的位模式在计算机的布局如下图
 > 
 > 指数全为 $1$，尾数不全为 $0$ 
 > 
-> ![[Pasted image 20240923170704.png]]
+> ![Pasted image 20240923170704|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701562148-2d27aaea3b54425796a4430cb07c2c16.png)
 > 
 
 ###### 浮点值计算
@@ -1044,7 +1069,7 @@ IEEE 754 binary 编码的位模式在计算机的布局如下图
 > 
 > IEEE 754 binary 表示中，指数位为 $[000\cdots 0001, 111\cdots,1110]$
 > 
-> ![[Pasted image 20240923183024.png]]
+> ![Pasted image 20240923183024|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701572961-afabaa2d8fdb412aa43a045ee47a7cda.png)
 > 
 > 以 binary32 表示的位模式 $[b_{31}, \Vert b_{30}, \cdots, b_{23}\Vert,  b_{22},\cdots,b_2,b_1,b_0]$。其中 $b_{31}$ 表示符号位，$b_{30} \sim b_{22}$ 表示指数位，$b_{22} \sim b_{0}$ 表示尾数位。因此，该位模式在 IEEE 754 binary32 编码下的值为
 > $$
@@ -1056,7 +1081,7 @@ IEEE 754 binary 编码的位模式在计算机的布局如下图
 > 
 > IEEE 754 binary 表示中，**指数位全为 $0$**，尾数位非零，那么这个浮点数将被称为**非规约形式的浮点数** 
 > 
-> ![[Pasted image 20240923183223.png]]
+> ![Pasted image 20240923183223|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701580421-5e30c283865a442e93f959aa3726df5a.png)
 >  
 >  IEEE 754标准规定：**非规约形式的浮点数的指数偏移值比规约形式的浮点数的指数偏移值小 1**
 >  
@@ -1073,7 +1098,7 @@ IEEE 754 binary 编码的位模式在计算机的布局如下图
 
 对于 **规约数**，取 **最大正值** 时，符号位为 $0$，指数位为 $111....110$，尾数位全为 $1$；取 **最小正值** 时，符号位 $0$，指数位为 $000....0001$，尾数位全为 $0$ 
 
-![[Pasted image 20240923190519.png]]
+![Pasted image 20240923190519|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701587411-b15da3c539364222afc459d09fa073f2.png)
 
 | 类别     | binary32                                                                                                                           | binary64                                                                                                                              |
 | :----- | :--------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
@@ -1083,7 +1108,7 @@ IEEE 754 binary 编码的位模式在计算机的布局如下图
 
 对于 **非规约数**，取最大正值时，符号位为 $0$，指数位全为 $0$，尾数位全为 $1$；取最小正值时，符号位为 $0$，指数位全为 $0$，尾数位为 $000....0001$
 
-![[Pasted image 20240923191116.png]]
+![Pasted image 20240923191116|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701603135-5dd89c38eb0d470ea20d6f176aebd402.png)
 
 
 | 类别      | binary32                                                                                                                                              | binary64                                                                                                                                               |
@@ -1519,7 +1544,7 @@ C89/C90 标准中，隐式类型转换按照下面两条规则进行
 
 C89/C90 标准中的类型转换规则如下图
 
-![[Pasted image 20240924115450.png]]
+![Pasted image 20240924115450|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701631957-e95e4ddb3e784e42aecbc4474444a8e6.png)
 
 
 C99 标准起，由于 C99 新增了一些类型，导致隐式类型转换的行为发生改变
@@ -1756,7 +1781,7 @@ typeof(a) b;
 
 运算符有两个重要的属性：**优先级** 和 **结合性**。下表列出 C 运算符的优先级和结合性。运算符从上到下以降序列出
 
-![[Pasted image 20240924150611.png]]
+![Pasted image 20240924150611|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701648083-d5856a240a67452b9988932ef98ad8bb.png)
 
 #### 算术运算符
 
@@ -2854,4 +2879,3 @@ C 语言提供另一种控制转移语句 `goto`，它是无条件控制转移�
 > 
 
 在 C99 标准中对它新增了一个限制，不能越过 [[C 语言：数组#变长数组]]
-

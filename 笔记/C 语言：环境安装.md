@@ -4,18 +4,21 @@
 
 ### scoop
 
-在 Windows 上安装 [Scoop](https://scoop.sh/) 包管理器。根据官网的提示，我们使用下面的命令进行安装
+在 Windows 上安装 [Scoop](https://gitee.com/scoop-installer/scoop) 包管理器。根据官网的提示，我们使用下面的命令进行安装
 
 ```powershell
-> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-> irm get.scoop.sh | iex
+# 设置 powershell 的权限
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# 安装 scoop
+iwr -useb scoop.201704.xyz | iex
 ```
 
 如果需要修改安装路径等配置信息，使用离线安装脚本进行安装
 
 ```powershell
 # 下载安装脚本
-irm get.scoop.sh -outfile 'install.ps1'
+iwr scoop.201704.xyz -outfile 'install.ps1'
 # 安装到指定目录
 .\install.ps1 -ScoopDir 'C:\scoop' -ScoopGlobalDir 'C:\scoop\global' -NoProxy
 ```
@@ -75,7 +78,7 @@ pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-clang-x8
 
 访问 [visual studio](https://visualstudio.microsoft.com/zh-hans/) 现在安装器。安装器启动之后，选择 `使用 C++ 的桌面开发`， 然后点击安装
 
-![[Pasted image 20240908163108.png|900]]
+![Pasted image 20240908163108|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755700235852-81c0b7ae50ca4ede8383f28137f8aa61.png)
 
 等待安装完成即可
 

@@ -47,10 +47,10 @@
 
 字面串 `"abc"` 是作为有 $4$ 个字符的数组来存储的（`'a'` `'b'` `'c'` 和`\0`）
 
-![[Pasted image 20240928115934.png]]
-**字面串可以为空**。字符串 `""` 作为单独一个空字符来存储
+![Pasted image 20240928115934|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702049228-dc0b27e794204f29bf7eb2f791dca4e8.png)
 
-![[Pasted image 20240928115955.png]]
+**字面串可以为空**。字符串 `""` 作为单独一个空字符来存储
+![Pasted image 20240928115955|100](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702057003-bae400e721b94ca5840b4986691a3e7e.png)
 
 > [!summary] 
 > 
@@ -123,7 +123,7 @@ char name[10] = {'A', 'l', 'l', 'e', 'n'};
 
 所以，`name` 如下图所示
 
-![[Pasted image 20240928152307.png]]
+![Pasted image 20240928152307|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702121471-cd97577d6e544c47b5ac43b8c977d6ac.png)
 
 > [!attention] 
 > 
@@ -142,7 +142,7 @@ char *pmessage = "now is the time";
 
 注意，字符串作为字符指针的初始化器和作为字符数组的初始化器时，它们之间的差别非常巨大。下图展示了它们之间的区别
 
-![[Pasted image 20240928155714.png]]
+![Pasted image 20240928155714|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702127791-860a37484fa84c28b3db7ac1b5e0b8a5.png)
 
 
 
@@ -499,7 +499,7 @@ char planets[][8] = {"Mercury", "Venus", "Earth",
 
 下面给出了 `planets` 数组的可能形式。并非所有的字符串都足以填满数组的一整行，所以C 语言用空字符来填补。因为只有 $3$ 个行星的名字需要用满 $8$ 个字符（包括末尾的空字符），所以 **这样的数组有一点浪费空间**
 
-![[Pasted image 20240928184624.png]]
+![Pasted image 20240928184624|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702147885-7cbc8b471970490dad956e78d638e96b.png)
 
 > [!question] 
 > 
@@ -559,7 +559,7 @@ char *planets[] = {"Mercury", "Venus", "Earth",
 
 上述声明，对 `planets` 存储方式产生的影响却很大：`planets` 数组中存储的是 **字面串的指针**
 
-![[Pasted image 20240928190521.png]]
+![Pasted image 20240928190521|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702162763-bc7bb530f6da4f31aedf4090f1f78655.png)
 
 `planets` 的每一个元素都是指向以空字符结尾的字符串的指针。虽然必须为 `planets` 数组中的指针分配空间，但是 **字符串中不再有任何浪费的字符**
 
@@ -614,7 +614,7 @@ ls -l remind.c
 
 那么 `argc` 将为 $3$，`argv[0]` 将指向含有程序名的字符串，`argv[1]` 将指向字符串`"-l"`，`argv[2]` 将指向字符串 `"remind.c"`，而 `argv[3]`将为空指针
 
-![[Pasted image 20240928191049.png]]
+![Pasted image 20240928191049|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702172165-a7434b0d0df449f6a75204d54526c449.png)
 
 根据操作系统的不同，程序名可能会包括路径或其他信息。如果程序名不可用，那么 `argv[0]`会指向空字符串
 

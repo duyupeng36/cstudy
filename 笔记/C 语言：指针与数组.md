@@ -9,7 +9,7 @@ p = &a[0]; // p 指向数组的第 0 个元素
 
 上述代码执行后的结果可以由下图表示
 
-![[Pasted image 20240927212737.png]]
+![Pasted image 20240927212737|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701899129-57ddf5b0c7e144d2a596b1236278a8ea.png)
 
 在可以通过 `p` 访问 `a[0]`。例如，可以通过下列写法把值 `5` 存入 `a[0]` 中
 
@@ -17,7 +17,7 @@ p = &a[0]; // p 指向数组的第 0 个元素
 *p = 5;
 ```
 
-![[Pasted image 20240927212823.png]]
+![Pasted image 20240927212823|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701905880-de915c1c98254c8a9301a8529419145d.png)
 
 > [!hint] 
 > 
@@ -42,7 +42,7 @@ p += 6; // p 指向 a 的第 8 给元素
 下图显示了上述代码的执行结果
 
 
-![[Pasted image 20240927213918.png]]
+![Pasted image 20240927213918|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701915041-805cf177cf6f41b785656f2f457f2bcf.png)
 
 > [!tip]
 > 
@@ -70,7 +70,7 @@ p -= 6; // p 指向 a 中第 2 个元素
 
 下图显示了上述代码的执行结果
 
-![[Pasted image 20240927215523.png]]
+![Pasted image 20240927215523|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701922659-097b549f9ef14bb1ada2db7a84c4a7eb.png)
 
 ### 两个指针相减
 
@@ -91,7 +91,7 @@ i = p - q;  // i = 4
 j = q - p;  // j = -4
 ```
 
-![[Pasted image 20240927215838.png]]
+![Pasted image 20240927215838|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701932376-5205d330e4304920a60bf8fa8ee80d3b.png)
 
 ### 指针比较
 

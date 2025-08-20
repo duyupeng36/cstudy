@@ -351,7 +351,7 @@ int main() {
 
 如下图所示，显示了函数调用的过程的 **栈帧变化**
 
-![[Pasted image 20240925220821.png]]
+![Pasted image 20240925220821|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701770881-565068f6793640d58eac9a31d2744858.png)
 
 > [!tip]
 > 
@@ -672,7 +672,7 @@ unsigned int fib(const unsigned int n) {
 
 这个实现存在性能问题，**每次计算的 `fib(n)` 结果在函数返回后就被丢弃了**，当第二次计算 `fib(n)` 时，又会再次执行递归
 
-![[Pasted image 20240926104051.png]]
+![Pasted image 20240926104051|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701790320-62d1482b3bd5455c90b1e0fa30f27ec3.png)
 
 **左分支的计算包含了右分支的值**，我只需要记录左分支的结果即可加速这个算法
 
@@ -740,7 +740,7 @@ int main() {
 
 计算过程如下图
 
-![[Pasted image 20241004004337.png]]
+![Pasted image 20241004004337|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701803856-5ceb1b41fbd8492da915f39a7ccc810c.png)
 
 利用线性代数的知识，斐波拉契数列可以使用矩阵该表示
 
@@ -784,7 +784,7 @@ $$
 
 汉诺塔是一个经典的递归问题，如下图所示
 
-![[Pasted image 20240926135946.png]]
+![Pasted image 20240926135946|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701810528-5b74fe69444a47d2ab22db1829b9d849.png)
 
 将 A 柱上的 $n$ 个盘片移动到 C 柱上，在移动过程中需要遵循以下规则：
 

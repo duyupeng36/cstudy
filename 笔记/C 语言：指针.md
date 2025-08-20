@@ -13,7 +13,7 @@
 
 > [!tip] 第一个字节的地址：对象占用的所有字节中，编号最小的地址
 > 
-> ![[Pasted image 20240926234808.png]]
+> ![Pasted image 20240926234808|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701836893-ec3243e0864f47dabe636488d7447dc7.png)
 > 
 
 > [!important] 
@@ -90,7 +90,7 @@ int i, *p;
 p = &i;
 ```
 
-![[Pasted image 20240927160423.png]]
+![Pasted image 20240927160423|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701847497-a3877a9a2a174ea0bac9084f96a6fb4c.png)
 
 在声明指针变量的同时对它进行初始化是可行的
 
@@ -151,7 +151,7 @@ int main() {
 }
 ```
 
-![[Pasted image 20240927161535.png]]
+![Pasted image 20240927161535|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701858476-ab3e4a94aacd46f9a32e2480bbdd5bfb.png)
 
 > [!tip] 直接访问和间接访问
 > 
@@ -178,7 +178,7 @@ q = p; // 把 p 的值复制给 q
 
 上述三条语句的执行过程如下图
 
-![[Pasted image 20240927185738.png]]
+![Pasted image 20240927185738|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701866241-749cf833909944f1981bceaf751d3afa.png)
 
 现在，使用 `*p` 或者 `*q` 都能修改变量 `j` 的值
 
@@ -278,7 +278,7 @@ int main() {
 }
 ```
 
-![[Pasted image 20240927190519.png]]
+![Pasted image 20240927190519|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701878409-681235051bfc4c59a66be7f03bb381ab.png)
 
 > [!attention] 
 > 

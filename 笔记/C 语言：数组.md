@@ -48,7 +48,7 @@ int a[10]
 
 定义一个长度为 $10$ 的数组 `a`
 
-![[Pasted image 20240925002338.png]]
+![Pasted image 20240925002338|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701710088-fc093639d0a84ed79b34389f17164ed0.png)
 
 换句话说它 **定义了一个由 $10$ 个对象组成的集合**，它们的 **名字分别为 `a[0], a[1], a[2], ..., a[9]`**
 
@@ -202,7 +202,7 @@ int m[5][10];
 
 数组 `m` 有 $5$ 行 $10$ 列。如下所示，数组的行和列下标都从 $0$ 开始索引
 
-![[Pasted image 20240925111411.png]]
+![Pasted image 20240925111411|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701729506-f6e356e6210146c0bf5f1a81cecad270.png)
 
 为了访问 $i$ 行 $j$ 列的元素，表达式需要写成 $m[i][j]$。表达式 $m[i]$ 指明了数组 `m` 的第 $i$ 行，而 $m[i][j]$ 则选择了此行中的第 $j$ 个元素
 
@@ -213,7 +213,7 @@ int m[5][10];
 
 虽然我们以表格形式显示二维数组，但是实际上它们在计算机内存中的存储方式和一维数组相同。C 语言是按照 **行主序** 存储数组的，也就是从第 $0$ 行开始，接着是第 $1$ 行，以此类推。例如，下面显示了数组 `m` 的存储
 
-![[Pasted image 20240925111050.png]]
+![Pasted image 20240925111050|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701735578-b60d3d6bf826481c9905c2497e84cc0a.png)
 
 > [!tip]
 > 

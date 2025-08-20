@@ -62,11 +62,11 @@ p = q;
 
 在执行完前两条语句后，`p` 和 `q` 分别指向两个内存块
 
-![[Pasted image 20240930131302.png]]
+![Pasted image 20240930131302|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702392606-3d05c0865209436a8766a9e0ab01c2c0.png)
 
 在把 `q` 赋值给 `p` 之后，两个指针现在都指向了第二个内存块
 
-![[Pasted image 20240930131348.png]]
+![Pasted image 20240930131348|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755702404123-35fb63fa05fd43b38b44cffbfcd684cf.png)
 
 > [!tip] 
 > 
