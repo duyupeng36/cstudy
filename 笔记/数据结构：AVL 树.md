@@ -24,7 +24,7 @@
 > + 空树的高度定义为 $-1$
 > 
 
-![[Pasted image 20241001221809.png]]
+![Pasted image 20241001221809|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989104-e3ed6de7419f4a7a93307a220934c562.png)
 
 一棵有 $N$ 个节点的 AVL 树的高度最多为 $1.44 \log(N+1) - 1.328$，实际上的高度只比 $\log N$ 稍微多一些
 
@@ -35,7 +35,7 @@
 
 **插入操作时，需要更新通向根节点路径上的那些节点的平衡信息**。插入操作的难点就是插入可能会破坏 AVL 树的平衡条件。例如，在上图描述的 AVL 树中插入 $6$，就会破坏节点 $8$ 的平衡条件
 
-![[Pasted image 20241001221953.png]]
+![Pasted image 20241001221953|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989104-824e7bb03fc2427e93b9d4caae219bd3.png)
 
 ## 旋转
 
@@ -64,7 +64,7 @@
 
 插入发生在失衡结点的左子结点的左子树上，通过一次 **右旋** 就能修复该失衡问题。如下图所示
 
-![[Pasted image 20240728231121.png]]
+![Pasted image 20240728231121|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989105-cf170d97f51b4c60a56d15f6b70496a7.png)
 
 下面我们来看看你具体是如何操作的。节点 $k_2$ 不满足 AVL 平衡条件，因为它的左子树比右子树深 $2$ 层
 
@@ -92,7 +92,7 @@
 
 插入发生在失衡结点的右子结点的右子树上，通过一次 **左旋** 就能修复该失衡问题。如下图所示
 
-![[Pasted image 20240728233720.png]]
+![Pasted image 20240728233720|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989105-45562eef052a448198d74d5d8ee541cc.png)
 
 > [!tip] 右-右情形：左旋转
 > $k_2$ 变为新的 root。由于 AVL 树是一棵二叉查找树，所以 $k_2 \gt k_1$，于是新树中，$k_1$ 变成了 $k_2$ 的左子树
@@ -110,7 +110,7 @@
 
 插入发生在失衡结点的左子结点的右子树上，通过一次 **左旋-右旋** 就能修复该失衡问题。如下图所示
 
-![[Pasted image 20240729011221.png]]
+![Pasted image 20240729011221|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989105-4b918531233640aea360ab1f5ec85662.png)
 
 由于子树 $Y$ 已经有一项插入，这就保证了 $Y$ 非空。因此，可以假设它有一个根和两棵子树
 
@@ -127,7 +127,7 @@
 
 插入发生在失衡结点的右子结点的左子树上，通过一次 **右旋-左旋** 就能修复该失衡问题。如下图所示
 
-![[Pasted image 20240729013445.png]]
+![Pasted image 20240729013445|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989106-0d4908b61012434087eda9e92f044776.png)
 
 > [!tip] 右-左情形：先右旋后左旋
 
@@ -137,19 +137,19 @@
 
 插入关键字 $1$ 时，第一个不平衡问题出现了，AVL 特性在根处被破坏
 
-![[Pasted image 20241001223456.png]]
+![Pasted image 20241001223456|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989106-8c8904575f624002bcd841b66ceee504.png)
 
 插入 $4$ 没有任何问题，但是插入 $5$ 又会导致 AVL 树在节点 $3$ 处失去平衡
 
-![[Pasted image 20241001223530.png]]
+![Pasted image 20241001223530|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989106-36461ee6b1664f1e90df782340a970b1.png)
 
 接着插入 $6$ 会导致 AVL 树在节点 $2$ 处失去平衡
 
-![[Pasted image 20241001223558.png]]
+![Pasted image 20241001223558|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989106-21c4c6041f7e445792f2bc291865c31f.png)
 
 接着插入 $7$ 会导致 AVL 树在节点 $5$ 处失去平衡
 
-![[Pasted image 20241001223642.png]]
+![Pasted image 20241001223642|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989106-2741cd531cc94b1e8b7f9a9c17dcd5f2.png)
 
 ---
 
@@ -157,31 +157,31 @@
 
 插入 $16$ 没有任何问题，当插入 $15$ 时会导致 AVL 树在节点 $7$ 处失去平衡
 
-![[Pasted image 20241001223702.png]]
+![Pasted image 20241001223702|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989106-66b718ff0dd646018d40bba31e199092.png)
 
 继续插入 $14$，导致 AVL 树在节点 $6$ 处失去平衡
 
-![[Pasted image 20241001223740.png]]
+![Pasted image 20241001223740|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989106-d9c16da55ee9407085a71d58e0e80545.png)
 
 继续插入 $13$，导致 AVL 树在节点 $4$ 处失去平衡
 
-![[Pasted image 20241001223848.png]]
+![Pasted image 20241001223848|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989107-02182c9e0c1b4e669c3429fbcbfec65d.png)
 
 插入 $12$ ，导致 AVL 树在节点 $14$ 处失去平衡
 
-![[Pasted image 20241001223927.png]]
+![Pasted image 20241001223927|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989107-7e194fbb074d4b8ebe13e8e35f727d87.png)
 
 插入 $11$ ，导致 AVL 树在节点 $15$ 失去平衡
 
-![[Pasted image 20241001224004.png]]
+![Pasted image 20241001224004|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989107-ebd2e38cc613458ba799330acc0cd8bd.png)
 
 继续插入 $10$，导致 AVL 树在节点 $12$ 处失去平衡
 
-![[Pasted image 20241001224033.png]]
+![Pasted image 20241001224033|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989107-c266e4aacdf340f7ae3404d7c27e1f51.png)
 
 插入 $8$ 不会破坏节点的平衡情况。最后插入 $9$ 导致 AVL 树在节点 $10$ 失去平衡
 
-![[Pasted image 20241001224053.png]]
+![Pasted image 20241001224053|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755703989107-4adc5b01e33948cfa73a6ebb2c48bba0.png)
 
 ## 实现
 
