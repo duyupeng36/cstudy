@@ -9,7 +9,7 @@
  
 `make` 构建工具采用 **"目标-依赖"** 这样的树形结构，分析那些目标需要重新编译
 
-![[Pasted image 20241008232911.png]]
+![Pasted image 20241008232911|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755704538822-cafffd7ecd214021b0737445d2c5791a.png)
 
 > [!tip] make 编译规则
 > 
