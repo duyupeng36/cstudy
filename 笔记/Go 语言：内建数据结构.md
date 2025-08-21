@@ -73,7 +73,7 @@ $$
 
 下图展示了数组的内存结构
 
-![[Pasted image 20250615015722.png]]
+![Pasted image 20250615015722|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786809255-96db4a77a09a4b7587a0e12030d368b5.png)
 
 ### 一维数组
 
@@ -220,9 +220,9 @@ var m [5][10]int
 
 一个切片是一个轻量级的数据结构，提供了访问数组子序列（或者全部）元素的功能，而且 **切片的底层确实引用一个数组对象**。切片由三个部分构成：**指针**、**长度** 和 **容量**。如下图展示了 Go 语言切片的内存模型
 
-![[Pasted image 20250615161530.png]]
+![Pasted image 20250615161530|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786809256-b6e4c274a61f4481b2c855d8cb27799f.png)
 
-![[Pasted image 20250615163951.png]]
+![Pasted image 20250615163951|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786809256-af66fa9e21e945cdbffe6ec385903405.png)
 
 > [!tip] 
 > 
@@ -491,7 +491,7 @@ type slice struct {
 
 通过 `array` 指向一个底层数组中的某些片段，使用 `len` 和 `cap` 管理这个底层数组片段中的元素。如下图所示
 
-![[Pasted image 20250605230620.png]]
+![Pasted image 20250605230620|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786809256-16c453a1ca574510806c477ed40b583b.png)
 
 > [!tip] 
 > 
@@ -561,7 +561,7 @@ fmt.Println(Q2, len(Q2), cap(Q2))             // [April May June] 3 9
 fmt.Println(summer, len(summer), cap(summer)) // [June July August] 3 7
 ```
 
-![[Pasted image 20250605234500.png]]
+![Pasted image 20250605234500|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786809257-47cd988213ad4523af63df42e2a4797c.png)
 
 两个 `slice` 都包含了六月份，下面的代码是一个包含相同月份的测试（性能较低）
 

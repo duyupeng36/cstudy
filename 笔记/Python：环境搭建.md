@@ -8,23 +8,23 @@ Python 以其简洁、易读和可扩展性而闻名。它提供了丰富的标�
 
 首先，我们需要访问 [Python 官网](https://python.org)，点击 `Downloads` 进入 Python 解释器的下载页面。点击 `Download Python 3.13.2` 下载最新版本的 Python 解释器安装程序。等待下载完成
 
-![[Pasted image 20250322154232.png]]
+![Pasted image 20250322154232|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785850307-d76c2853921843aa8040ef6a62669ca6.png)
 
 然后，双击 `python-3.13.2-amd64.exe` 文件启动 Python 解释器安装程序
 
-![[Pasted image 20250322154843.png]]
+![Pasted image 20250322154843|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785850310-bee6fc14b4464be8b85ad2f0d5861948.png)
 
 然后点击 `Customize installation` 自定义安装。选项 `for all users` 需要勾选。然后点击 `Next`
 
-![[Pasted image 20250322154954.png]]
+![Pasted image 20250322154954|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785850311-df89187395f34137970c313add8a6f87.png)
 
 下图给出了需要选择的高级选项。红框选中的选项必须勾选
 
-![[Pasted image 20250322155234.png]]
+![Pasted image 20250322155234|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785850313-1587949b09ee4c16993e08fbba04c9aa.png)
 
 点击 `Install`，等待安装结束，点击 `Close` 即可
 
-![[Pasted image 20250322155633.png]]
+![Pasted image 20250322155633|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785850313-4e6d865bba4346679ad5b9ee4ab222da.png)
 
 ## Linux 下安装 Python 解释器
 

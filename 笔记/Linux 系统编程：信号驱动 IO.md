@@ -173,7 +173,7 @@
 
 下表列出了结构体 `siginfo_t` 中 `si_code` 和 `si_band` 字段的可能值
 
-![[Pasted image 20241129220601.png]]
+![Pasted image 20241129220601|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784929936-df3dabbcea5f4c1fa891b69a0775bf20.png)
 
 下面的代码展示了信号驱动 IO 的一个示例。例程 A 和例程 B 通过 [[Linux 系统编程：FIFO]] 相互发送消息
 

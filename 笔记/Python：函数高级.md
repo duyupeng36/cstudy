@@ -128,7 +128,7 @@ fib(5)
 
 当我们要计算 `fib(5)` 时，首先需要计算 `fib(4)` 和 `fib(3)`；在计算 `fib(4)` 时，需要计算`fib(3)` 和 `fib(2)`，**但是 `fib(3)` 在计算 `fib(5)` 时就已经计算出来了**，但是被丢弃。如下图
 
-![[Pasted image 20250402220045.png]]
+![Pasted image 20250402220045|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786002442-6b51f078893d476bad08bfe0a9786461.png)
 
 因此，需要保存第一次计算的结果，后续再次计算直接返回即可。
 
@@ -177,7 +177,7 @@ def fib(n: int, /,first=1, second=1) -> int:
 
 下图描述了模拟循环版本的 `fib(5)` 的调用过程
 
-![[Pasted image 20250402220453.png]]
+![Pasted image 20250402220453|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786002442-5920fded44bb41c7b30b1420e6f27ab9.png)
 
 ## 生成器函数
 
@@ -314,7 +314,7 @@ def counter(base):
 
 两次调用 `f1 = counter(5)` 和 `f2 = counter(5)` 的内存空间引用变化
 
-![[Pasted image 20250402224303.png]]
+![Pasted image 20250402224303|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786002442-324a8af84a1442dcbc227a73bc4f0547.png)
 
 ### 高阶函数的应用：实现内置函数 `sorted` 
 

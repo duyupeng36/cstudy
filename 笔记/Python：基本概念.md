@@ -193,7 +193,7 @@ m = 28  # 创建一个整数对象，其值为 20
 
 当 Python 解释器语句这样的语句之后，就会新建一个整数对象，并让标识符 `m` 指向该对象。变量 `m` 类似于 C/C++ 中的指针，它指向了一个对象所在的内存空间。下图展示了这种关系
 
-![[Pasted image 20250322184027.png]]
+![Pasted image 20250322184027|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785888325-c0cf182c54e2482dbe0eccb3b146a4d3.png)
 
 与 C/C++ 不同的时，这个变量 `m` 可以指向另一个类型的对象。换句话说，Python 中的变量是无类型的
 
@@ -203,7 +203,7 @@ m = 3.14
 
 此时，内存关系图如下
 
-![[Pasted image 20250322194326.png]]
+![Pasted image 20250322194326|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785888325-7859046a65654eba82b3e541bcb6cd05.png)
 
 > [!tip] 
 > 

@@ -295,12 +295,12 @@ int initgroups(const char *user, gid_t group);
 
 下表对修改进程凭证的各种系统调用及库函数的效果进行了总结
 
-![[Pasted image 20241025170634.png]]
+![Pasted image 20241025170634|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707457951-682577982a0248ff94fa9fc5807e872f.png)
 
 
 下图为表中信息的概括图示
 
-![[Pasted image 20241025170608.png]]
+![Pasted image 20241025170608|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707457953-b697b15bb0ab4d90b57538b30cf208d9.png)
 
 ## 示例：显示进程凭证
 

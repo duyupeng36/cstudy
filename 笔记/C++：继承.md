@@ -84,7 +84,7 @@ struct Manager: public Employee
 
 通常，我们称一个派生类继承了来自基类的成员，因此这种关系也称为 **继承**。派生类概念的一种流行且高效的实现就是将派生类对象表示为基类对象，再加上哪些专属于派生类的信息放在末尾
 
-![[Pasted image 20250215222922.png]]
+![Pasted image 20250215222922|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652663-252454d0308447609887d220c53e831d.png)
 
 > [!attention] 
 > 
@@ -337,7 +337,7 @@ Derived(long derived)     # 派生类的构造函数
 
 创建派生类对象时，在对象的内存布局开始位置会存在一个基类子对象，在基类子对象之后存储派生类对象自己的数据成员
 
-![[Pasted image 20250216144240.png]]
+![Pasted image 20250216144240|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652663-cf1e4ee5312e4d0dacfbacfe43a67668.png)
 
 下面的代码演示了基类没有无参构造函数时，派生类必须显式调用基类的构造函数，否则无法创建派生类对象
 
@@ -585,7 +585,7 @@ C++ 除了支持单继承外，**还支持多重继承**。那为什么要引入
 > 在前面的学习中，我们知道继承表达的是 `IS A` 的关系。例如， `Manager` 是一个 `Employee`
 > 
 
-![[Pasted image 20250216163009.png]]
+![Pasted image 20250216163009|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652663-01a17e37c5a94678a9cd8a2823bdf874.png)
 
 ### 派生类的构造和析构
 
@@ -713,13 +713,13 @@ D()                       # 派生类 D
 
 下图展示了多重继承的派生类对象的内存布局图
 
-![[Pasted image 20250216165231.png]]
+![Pasted image 20250216165231|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652663-76566fc6ae8345a2af1e841566345c8b.png)
 
 ### 成员名访问的二义性
 
 发生多继承时，不同的基类可能提供了同名的成员。派生类如果没有定义同名的成员，通过派生类对象访问时，应该选择哪个基类提供的同名成员呢？
 
-![[Pasted image 20250216170805.png]]
+![Pasted image 20250216170805|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652663-0963f826d3ab4153a0e91727c8eb94d5.png)
 
 ```cpp hl:68
 #include <iostream>
@@ -874,18 +874,18 @@ int main() {
 }
 ```
 
-![[Pasted image 20250216192337.png]]
+![Pasted image 20250216192337|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652663-7f88d0f94f0f484a8ed4759d2e21ac31.png)
 
 > [!attention] 
 > 
 > 它产生了一种歧义，这是由于复制公共基类而产生的，这在调用重复的成员时导致了模棱两可的行为。
 > 
-> ![[Pasted image 20250216195108.png]]
+> ![Pasted image 20250216195108|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652663-f04639943baa4cd0b0f80cc2653036d9.png)
 > 
 
 除了成员访问的二义性外，还存在存储方面的二义性。由于 `D` 类继承了 `B` 和 `C`，而 `B` 和 `C` 又继承自 `A`。因此，对于类 `D` 对象在内存中存储如下下图
 
-![[Pasted image 20250216195905.png]]
+![Pasted image 20250216195905|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652664-3e66dacf866f4344aeecf375262ff6ef.png)
 
 > [!warning] 
 > 
@@ -946,7 +946,7 @@ int main() {
 
 下图展示了的 **msvc 编译器** 对多继承类对象的内存布局的组织。
 
-![[Pasted image 20250216201206.png]]
+![Pasted image 20250216201206|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652664-5bca791ef79a4a24a54c9a6020cf12c1.png)
 
 使用 **g++ 编译器**，然后使用 GDB 查看对象派生类 `D` 的对象(`d`) 的内存布局
 
@@ -1018,7 +1018,7 @@ Derived & rderived = base; // error
 
 下图说明了为什么派生类的指针能转换为基类的指针，而基类的指针不能转换为派生类的指针
 
-![[Pasted image 20250216233527.png]]
+![Pasted image 20250216233527|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652664-6dee8c4f335e413d86b27cf7fa1ecb76.png)
 
 > [!tip] 
 > 
@@ -1029,7 +1029,7 @@ Derived & rderived = base; // error
 
 当 `Base` 类的指针指向的就是 `Derived` 类的对象时，可以将 `Base` 类的指针转换为 `Derived` 的指针。这是合理的，需要使用 `dynamic_cast` 强制类型转换进行
 
-![[Pasted image 20250216233903.png]]
+![Pasted image 20250216233903|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652665-94fe68c2aec040878f8beacd536c6d1f.png)
 
 ```cpp hl:5
 Derived d1;
@@ -1076,7 +1076,7 @@ if(pd){
 
 从拷贝的目的来看，**一个基类等价于一个成员**：为了拷贝派生类的一个对象，必须拷贝其基类子对象
 
-![[Pasted image 20250217123040.png]]
+![Pasted image 20250217123040|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785652665-bd4d1c40999849f5adc3f56a7cb356e2.png)
 
 > [!important] 
 > 

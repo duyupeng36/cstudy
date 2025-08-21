@@ -69,7 +69,7 @@ time_t time(time_t *timep);
 
 下图所示为用于 `time_t` 值和其他时间格式之间的转换函数
 
-![[Pasted image 20241025173549.png]]
+![Pasted image 20241025173549|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755706017916-4316a110f1bd4d498a4ef9daaf3e9132.png)
 
 这些函数屏蔽了因 **时区**、**夏令时**（DST）制和 **本地化** 等问题给转换所带来的种种复杂性
 
@@ -274,7 +274,7 @@ size_t strftime(char *buffer, size_t buffer_size, const char * format, const str
 
 时区文件位于目录 `/usr/share/zoneinfo` 中。该目录下的每个文件都包含了一个特定国家或地区内时区制度的相关信息，且往往根据其所描述的时区来加以命名。此外，可以利用子目录对相关时区进行有层次的分组
 
-![[Pasted image 20241025185334.png]]
+![Pasted image 20241025185334|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755706017916-0f77c7ce300d4c529eb4e6bd90228f2c.png)
 
 
 > [!tip] 

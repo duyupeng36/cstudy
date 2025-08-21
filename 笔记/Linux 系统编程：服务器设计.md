@@ -125,7 +125,7 @@ while(true) {
 
 我们让 **主进程/线程监控每个客户端的连接套接字**，当客户端发送来消息时，**产生一个任务**，然后，**唤醒** 一个 **空闲** 的进程/线程来处理这个任务
 
-![[Pasted image 20241206235626.png]]
+![Pasted image 20241206235626|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784817077-27f8717a3d0e4b59aaea7abd78d453f3.png)
 
 这样 主进程/线程 的职责就是 **创建和管理 worker** 和 **event loop 处理客户端连接**。工作进程/线程就负责与客户端保持通信即可
 

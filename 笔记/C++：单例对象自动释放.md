@@ -11,7 +11,7 @@
 
 如下图所示，使用 `AutoRelease` 类的对象管理单例对象的生命周期。这里，我们让 `AutoRelease` 类的对象存储在静态存储区，这样当程序结束时，`AutoRelease` 对象就会被销毁，我们定义 `AutoRelease` 的析构函数区释放单例对象
 
-![[Pasted image 20250209130343.png]]
+![Pasted image 20250209130343|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785608651-3f12e92df0ae45dc9a068df19c2f2abd.png)
 
 下面的代码展示了 `AutoRelease` 的实现方式。由于 `AutoRelease` 只是用于释放单例对象，因此，我们让 `AutoRelease` 成为为 `Singleton` 的嵌套类
 

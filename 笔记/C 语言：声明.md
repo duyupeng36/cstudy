@@ -97,12 +97,12 @@ C11 开始可以指定对象的 **对齐边界**
 
 下列声明既有存储类型也有类型限定符。此外，它还有 $3$ 个类型指定符，当然它们的顺序并不重要
 
-![[Pasted image 20240930161027.png]]
+![Pasted image 20240930161027|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788765815-cc5b7de8788d4b8ea3e127e5a7228a46.png)
 
 
 和变量声明一样，**函数声明也有存储类型、类型限定符和类型指定符**。下列声明具有存储类型和类型指定符
 
-![[Pasted image 20240930161210.png]]
+![Pasted image 20240930161210|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788765815-afe4dc46109b4e03afc7e157bc57ea87.png)
 
 ## 存储类型
 

@@ -316,7 +316,7 @@ var _ io.Writer = (*bytes.Buffer)(nil)
 
 对于像 Go 语言这种静态类型的语言，**类型是编译期的概念**。因此，类型不是值。为了在运行时描述类型这一概念，Go 语言为每个类型都设置了 **类型描述符**，比如类型的名称和方法。在一个接口值中，**类型部分代表与之相关类型的描述符**。如下图，展示接口类型的值的结构
 
-![[Pasted image 20250622222821.png]]
+![Pasted image 20250622222821|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787251988-79cebceb09e9452a9f72757325803605.png)
 
 下面 $4$ 个语句中，变量 `w` 得到了 $3$ 个不同的值。（开始和最后的值是相同的）
 
@@ -337,7 +337,7 @@ var w io.Writer
 
 在 Go 语言中，**变总是被一个定义明确的值初始化_**，即使接口类型也不例外。对于一个接口的零值就是它的 **类型** 和 **值** 两部分都是 `nil`。如下图所示
 
-![[Pasted image 20250622223223.png]]
+![Pasted image 20250622223223|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787251989-10abe92fb86f48438a65e5e5cd6a8122.png)
 
 在 Go 语言中，接口变量通过其动态类型是否为 `nil`，来确定接口值是否为 `nil`
 
@@ -367,7 +367,7 @@ w = os.Stdout
 
 对接口类型的变量赋值时，会将这个接口变量的 动态类型被设为 `*os.Stdout` 的类型描述符，动态值持有 `os.Stdout` 的拷贝。下图代表处理标准输出的 `os.File` 类型变量的指针
 
-![[Pasted image 20250622223815.png]]
+![Pasted image 20250622223815|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787251989-c4e059db2cd84bffbcf57f4fee412b8e.png)
 
 第三个语句给接口值赋了一个 `*bytes.Buffer` 类型的值
 
@@ -377,7 +377,7 @@ w = new(bytes.Buffer)
 
 现在动态类型是`*bytes.Buffer`并且动态值是一个指向新分配的缓冲区的指针
 
-![[Pasted image 20250622223921.png]]
+![Pasted image 20250622223921|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787251989-ff82841357204770bfd408fe78d8721b.png)
 
 ### 动态值尺寸是任意的
 
@@ -389,7 +389,7 @@ var x interface{} = time.Now()
 
 从概念上讲，不论接口值多大，动态值总是可以容下它。（这只是一个概念上的模型；具体的实现可能会非常不同）
 
-![[Pasted image 20250622224049.png]]
+![Pasted image 20250622224049|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787251989-3d07dfa98b46495483c75afe69362ea6.png)
 
 ### 动态值为 nil 的接口不是 nil 接口
 

@@ -37,7 +37,7 @@
 
 下图展示了进程池版本的网盘结构
 
-![[Pasted image 20241207210443.png]]
+![Pasted image 20241207210443|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784956660-fcba0320934f4ce699a7e56b3cacfdba.png)
 
 首先，就需要布局好代码
 
@@ -402,7 +402,7 @@ int main(int argc, char *argv[]) {
 
 由于连接 SOCKET 需要递交给子进程使用。然而，**父进程和子进程之间的地址空间是隔离的**。又由于 **提前创建子进程**，连接 SOCKET 不在父子进程之间共享。我们需要某种方式 **将连接 SOCKET 发送给子进程**
 
-![[Pasted image 20241207234647.png]]
+![Pasted image 20241207234647|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784956661-96b5de20ea004e408b9be130c1e88d2c.png)
 
 > [!tip] 父子进程之间传递 **打开文件描述**
 > 
@@ -1010,7 +1010,7 @@ int recvn(int sockfd, hdr_t *hdr);
 > 
 > 在接收数据的时，`recv(...,...,len, 0)` 的第三个参数 `len` 是缓冲区的最大长度。该次 `recv()` 接收的字节数可能不足 `len`。导致，下一次接收出现问题。如下图所示
 > 
-> ![[Pasted image 20241210233618.png]]
+> ![Pasted image 20241210233618|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784956661-53daff3125db4168adae860e41cf9ca5.png)
 > 
 > 解决该问题可以使用 [[Linux 系统编程：SOCKET 高级主题]] 中介绍的 `recv()` 的第 $4$ 个参数，将其设置为 `MSG_WAITALL`，这样可以让 `recv()`  等待所有数据到达之后才返回。
 > 

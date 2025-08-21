@@ -156,7 +156,7 @@ cout << endl;
 > + `begin()` 函数返回容器中首元素的地址
 > + `end()` 函数返回容器中最后一个元素后的地址
 > 
-> ![[Pasted image 20250205131448.png]]
+> ![Pasted image 20250205131448|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785526355-3f34dc4b3e2c4db9b528bdc9505829b1.png)
 > 
 
 如指针一样，迭代器也有其固定的形式。
@@ -265,7 +265,7 @@ int main() {
 
 显然， `vector` 对象仅仅只保存了指向元素的指，元素存储在堆空间中。在 $64$ 位环境中，由于一个 `vector` 对象占用了 $24$ 字节，因此一个 `vector` 对象持有 $3$ 个指针成员。`vector` 的具体实现如下图
 
-![[Pasted image 20250205134140.png]]
+![Pasted image 20250205134140|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785526355-2f3b897667eb4e6bb78fbc21b15ced11.png)
 
 成员 `_start` 指向第一个元素；成员 `_finish` 指向最后一个元素的后一个位置；成员 `_end_of_storage` 指向当前 `vector` 管理的堆空间中的下一个位置
 
@@ -275,5 +275,5 @@ int main() {
 
 下图展示了 `vector` 扩容的整个过程
 
-![[Pasted image 20250205134834.png]]
+![Pasted image 20250205134834|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785526355-1c700021976a4d74bebb720008c224dd.png)
 

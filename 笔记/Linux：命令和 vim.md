@@ -582,7 +582,7 @@ dyp@dyp-AliYun:~$ wc test.txt
 
 Linux 系统中，文件的类型和权限采用 $16$ 位二进制表示，高 $4$ 位表示文件类型，低 $12$ 位表示文件权限
 
-![[Pasted image 20241003220239.png]]
+![Pasted image 20241003220239|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788746177-fb4f64c6c85544c6ba0555a253fc3f1e.png)
 
 
 > [!tip] 每个位置为 $1$ 代表具有对应的权限

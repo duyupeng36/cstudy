@@ -11,7 +11,7 @@
 
 下图展示了流式 SOCKET 的编程模型。Go 语言对 SOCKET 的操作进行了一层封装，提供了更简洁的编程接口
 
-![[Pasted image 20241120225128.png]]
+![Pasted image 20241120225128|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784569447-e7122f12ae3944b9a9fae078daa1eb51.png)
 
 在 `net` 包中提供了一个函数 `net.ListenTCP(network, laddr)`，该函数会创建并返回一个 `net.TCPListener` 结构体对象的指针和一个错误。`net.TCPListener` 结构体定义如下
 
@@ -434,7 +434,7 @@ func main() {
 
 下图显示了数据报 SOCKET 的相关系统调用的使用
 
-![[Pasted image 20241120233738.png]]
+![Pasted image 20241120233738|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784569450-fea4ec772e1f44d0aaecfe61b422a62f.png)
 
 ### 服务端
 

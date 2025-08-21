@@ -232,7 +232,7 @@ while((n = read(diskfilefd, buf, BUZ_SIZE)) > 0) {
 > 
 > 如下图所示
 > 
-> ![[Pasted image 20241128215758.png]]
+> ![Pasted image 20241128215758|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784841808-dd82dc95f0084710aa7821092a030dbc.png)
 > 
 
 如果应用程序在发起传输之前根本 **不对文件内容做任何处理** 的话，那么这种 **两步式的处理就是一种浪费**。系统调用 `sendfile()` 被设计为用来消除这种低效性
@@ -243,7 +243,7 @@ while((n = read(diskfilefd, buf, BUZ_SIZE)) > 0) {
 > 
 > 这种不经过用户空间的技术称为 **零拷贝传输**。如下图所示
 > 
-> ![[Pasted image 20241128220049.png]]
+> ![Pasted image 20241128220049|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784841809-9429c48ec27e450bb407161a44efb630.png)
 >
 
 ```c

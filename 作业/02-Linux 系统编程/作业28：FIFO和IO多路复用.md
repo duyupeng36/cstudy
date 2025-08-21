@@ -7,7 +7,7 @@
 
 通过 FIFO 实现一个本地广播聊天软件。下图展示了这个聊天服务器与客户端的通信过程
 
-![[Pasted image 20241102010342.png]]
+![Pasted image 20241102010342|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788456301-7d0ca4d679d247c3ba91a67ee7a4db40.png)
 
 
 ```c title:chat.h

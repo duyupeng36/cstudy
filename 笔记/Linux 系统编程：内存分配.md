@@ -6,7 +6,7 @@
 
 进程可以通过增加堆的大小来分配内存，所谓堆是一段长度可变的连续虚拟内存，始于进程的未初始化数据段末尾，随着内存的分配和释放而增减。如下图，通常将堆的当前内存边界称为 **program break**
 
-![[Pasted image 20241013130418.png]]
+![Pasted image 20241013130418|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755700888676-0975388a1ad74852b746c12312df74c1.png)
 
 ### 调整 program break
 
@@ -91,15 +91,15 @@ void *sbrk(intptr_t increment);
 
 当 `free()` 将内存块置于空闲列表之上时，是如何知晓内存块大小的？这是通过一个小技巧来实现的。**当 `malloc()` 分配内存块时，会额外分配几个字节来存放记录这块内存大小的整数值**。该整数位于内存块的起始处，而实际返回给调用者的内存地址恰好位于这一长度记录字节之后
 
-![[Pasted image 20241023193720.png]]
+![Pasted image 20241023193720|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707315989-24ae4c93ce16498d92302d03a3b1fadf.png)
 
 当将内存块置于空闲内存列表（双向链表）时，`free()` 会使用内存块本身的空间来存放链表指针，将自身添加到列表中
 
-![[Pasted image 20241023193822.png]]
+![Pasted image 20241023193822|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707315989-9b6a76674c2a475da2d7d169b259d405.png)
 
 随着对内存不断地释放和重新分配，空闲列表中的空闲内存会和已分配的在用内存混杂在一起
 
-![[Pasted image 20241023193909.png]]
+![Pasted image 20241023193909|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707315990-4847d2dbc9514de58037baa71cbd0eef.png)
 
 C 语言允许程序创建指向堆中任意位置的指针，并修改其指向的数据，包括由 `free()` 和 `malloc()` 函数维护的内存块长度、指向前一空闲块和后一空闲块的指针。这将导致很多编程错误
 

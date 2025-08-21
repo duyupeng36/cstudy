@@ -44,7 +44,7 @@ void *incr(void *arg) {
 
 为便于开发多线程应用程序，下表列出的函数在 SUSv3 标准中 **不要求** 是线程安全的
 
-![[Pasted image 20241112232554.png]]
+![Pasted image 20241112232554|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784143110-7e43538c9e434e6ead77eb910110212a.png)
 
 除了上表中的函数外，其他函数均是线程安全的。SUSv3 还有额外的规定
 
@@ -135,7 +135,7 @@ int pthread_once(pthread_once_t *onec_control, void(*init)(void));
 
 **线程特有数据使函数得以为每个调用线程分别维护一份变量副本**。线程特有数据是 **长期存在** 的。在同一线程对相同函数的历次调用间，每个线程的变量会持续存在，函数可以向每个调用线程返回各自的结果缓冲区
 
-![[Pasted image 20241113001713.png]]
+![Pasted image 20241113001713|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784143114-576e8dab0e95487eae78169760e3494d.png)
 
 通过线程特有数据将已有不可重入的函数接口包装起来，从而实现线程安全
 
@@ -184,7 +184,7 @@ int pathread_key_create(pthread_key_t *key, void(*destuctor)(void *));
 
 下图展示了线程特有数据键的实现
 
-![[Pasted image 20241113100904.png]]
+![Pasted image 20241113100904|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784143114-01199cf2033c4a3488e2b2b617cacce1.png)
 
 > [!tip] 典型的实现，包括 NPTL 会包含以下数组
 > 
@@ -226,7 +226,7 @@ void *pthread_getspecific(pthread_key_t key);
 
 下图是展示了用于存储 `value` 的数据结构的常见实现
 
-![[Pasted image 20241113102813.png]]
+![Pasted image 20241113102813|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784143115-8fa475130ae5401f9b49677a00e7912a.png)
 
 假设将 `pthread_keys[1]` 分配给函数 `myfunc()`。Pthreads API 为每个函数维护指向线程特有数据块的一个指针数组。其中每个数组元素都与全局 `pthread_keys` 数组的元素一一对应。函数 `pthread_ setspecific()` 在指针数组中为每个调用线程设置与 `key` 对应的元素
 

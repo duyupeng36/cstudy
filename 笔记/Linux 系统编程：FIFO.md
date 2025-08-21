@@ -17,7 +17,7 @@ FIFO 也叫有名管道，是一种特殊的文件，它的路径名存在于文
 
 下图展示了利用 FIFO 进行进程间通信的逻辑的通信逻辑
 
-![[Pasted image 20241030104048.png]]
+![Pasted image 20241030104048|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958027-4feb97576b194f89b170c3071fa040fa.png)
 
 使用 `open()` 通过 FIFO 文件名打开 FIFO 后，就能在使用在 [[Linux 系统编程：文件 IO]] 中介绍的 `read()` `write()` `close()` 系统调用操作 FIFO。FIFO 的有 **读端** 和 **写端**，先写入 FIFO 的数据会被先读出来。FIFO 的名称由此而来：先入先出(First In First Out，FIFO)
 
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
 
 ### 使用 FIFO 实现全双工通信
 
-![[Pasted image 20241030124434.png]]
+![Pasted image 20241030124434|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958028-297079428a3c469398fad1f9c214f28e.png)
 
 进程 A 以 `O_WRONLY` 打开 `A2B FIFO`，进程 B 以 `O_RDONLY` 打开 `A2B FIFO`。这样进程 A 可以通过 `A2B FIFO` 向进程 B 发生消息
 
@@ -397,11 +397,11 @@ int main(int argc, char *argv[]) {
 
 虽然，这个版本可以做到相互通信。但是，还存在一个问题；如果 `programA` 连续给 `programB` 发送多条消息，`programB` 只能接收第一条消息，就阻塞等待从标准输入中读取数据了。
 
-![[fifo-problem.gif]]
+![fifo-problem|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958028-d6b47aede7b042d4a916efa913629145.gif)
 
 现在，我们分析 `programB` 为什么只读取到 `programA` 发送过来的第一条消息。下图展示了 `programB` 中循环部分左的工作
 
-![[Pasted image 20241030154021.png]]
+![Pasted image 20241030154021|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958030-1058cb4a478e4bac9f14b91c4ed00c71.png)
 
 > [!example] 
 > 
@@ -441,7 +441,7 @@ if(fd == -1) {
 
 下表总结了打开 FIFO 的目的和指定 `O_NONBLOCK` 标记的语义
 
-![[Pasted image 20241030163715.png]]
+![Pasted image 20241030163715|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958031-7478ddd6fbd84a1fbae415896bca4c3e.png)
 
 > [!tip] 打开 FIFO 时使用 `O_NONBLOCK` 标记存在两个目的
 > 
@@ -456,7 +456,7 @@ if(fd == -1) {
 > 
 > 当两个或多个进程中每个进程都因等待对方完成某个动作而阻塞时会产生死锁。如下图
 > 
-> ![[Pasted image 20241030164221.png]]
+> ![Pasted image 20241030164221|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958032-98a10b68381d4e9f9eec7ab26e99bc0d.png)
 > + 进程 X 首先打开了 `FIFO A` 准备读数据，它需要等待进程 Y 打开 `FIFO A` 写入数据
 > + 进程 Y 首先打开了 `FIFO B` 准备读数据，它需要等待进程 X 打开 `FIFO B` 写入数据
 >   
@@ -469,7 +469,7 @@ if(fd == -1) {
 
 下表对 FIFO 上的 `read()` 操作进行了总结，包括 `O_NONBLOC` 标记的作用。从一个包含 $p$ 字节的 FIFO 中读取 $n$ 字节的语义
 
-![[Pasted image 20241030164801.png]]
+![Pasted image 20241030164801|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958032-eb71a43cb13845c9ac887d715ccbe315.png)
 
 > [!tip] 
 > 
@@ -478,7 +478,7 @@ if(fd == -1) {
 
 当 `O_NONBLOCK` 标记与 `PIPE_BUF` 限制共同起作用时 `O_NONBLOCK` 标记 FIFO 写入数据的影响会变得复杂。下表对 `write()` 的行为进行了总结，向 FIFO 写入 $n$ 字节的语义
 
-![[Pasted image 20241030165221.png]]
+![Pasted image 20241030165221|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958032-092d881f369e43ee9f1b0efce095a8ab.png)
 
 当据无法立即被传输时 `O_NONBLOCK` 标记会导致在一个管道或 `FIFO` 上的 `write()` 失败（错误是 `EAGAIN`）。这意味着当写入了 `PIPE_BUF` 字节之后，如果在管道或 `FIFO` 中没有足够的空间了，那么 `write()` 会失败，因为内核无法立即完成这个操作并且无法执行部分写入，否则就会破坏不超过 `PIPE_BUF` 字节的写入操作的原子性的要求数
 
@@ -653,7 +653,7 @@ int main(int argc, char *argv[]) {
 > 
 > 下图展示了该方式在 FIFO 中的消息
 > 
-> ![[Pasted image 20241101095748.png]]
+> ![Pasted image 20241101095748|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958032-9b7c8ba209a9464f9a4ec62a7c61a075.png)
 > 
 
 > [!tip] 
@@ -662,7 +662,7 @@ int main(int argc, char *argv[]) {
 > 
 > 下图展示了该方式在 FIFO 中的数据
 > 
-> ![[Pasted image 20241101100225.png]]
+> ![Pasted image 20241101100225|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958033-62eadf17ebf14f20a0339b8f2007495d.png)
 > 
 
 > [!tip] 
@@ -673,6 +673,6 @@ int main(int argc, char *argv[]) {
 > 
 > 下图展示了该方式在 FIFO 中的消息结构
 > 
-> ![[Pasted image 20241101100616.png]]
+> ![Pasted image 20241101100616|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782958033-d1ae49a7d964446994185bba0acd496f.png)
 > 
 

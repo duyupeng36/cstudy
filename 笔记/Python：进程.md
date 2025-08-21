@@ -346,7 +346,7 @@ if __name__ == '__main__':
 
 下图展示了上述代码执行的结果
 
-![[spinner-process.gif]]
+![spinner-process|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786377952-d6d6d2657db34c7ea2e81b96ae2d12b1.gif)
 
 上述代码介绍 `Process` 类的基本用法。下面我们来看 `Process` 类的更多内容
 

@@ -10,7 +10,7 @@
 | `execve(pathname, argv, envp)` | 加载 `pathname` 指定的新程序 |
 下图展示上述 $4$ 个函数是如何相互协同工作的
 
-![[Pasted image 20241102192522.png]]
+![Pasted image 20241102192522|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707486602-e15a88627f494bb3bd13841abee68b60.png)
 
 现在我们集中在 `fork()` 系统调用之上
 
@@ -39,7 +39,7 @@ pid_t fork(void);
 
 也就是父进程调用 `fork()` 创建子进程的内存拷贝如下图所示
 
-![[Pasted image 20241102210610.png]]
+![Pasted image 20241102210610|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707486603-be544c7083f247b4bf60bff0ca139d74.png)
 
 > [!tip] 返回值
 > 
@@ -160,7 +160,7 @@ parent[PID 2028612] idata = 111 and &idata = 0x5c38fe429010; istack = 222 and &i
 
 如下图展示了执行 `fork()` 期间对文件描述符的复制，以及关闭不再使用的描述符
 
-![[Pasted image 20241102214240.png]]
+![Pasted image 20241102214240|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707486605-87328cf2659a419795c1ab58ff2b0f5b.png)
 
 ### fork() 的内存语义
 
@@ -193,7 +193,7 @@ parent[PID 2028612] idata = 111 and &idata = 0x5c38fe429010; istack = 222 and &i
 
 下图展示对一共享写时复制页进行修改前后的页表
 
-![[Pasted image 20241102215348.png]]
+![Pasted image 20241102215348|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707486607-a40f81f63b5c42fa84a4ae0d6e27e84a.png)
 
 ## vfork()
 

@@ -185,7 +185,7 @@ int main() {
 
 下图解释了 `Vector` 对象的含义
 
-![[Pasted image 20250122192945.png]]
+![Pasted image 20250122192945|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785363074-3bc2f0c305c840b9af8af2b94dd42cff.png)
 
 上述 `Vector` 作为 `double` 类型的容器，完成了基本功能的设计。然而，存在一些问题
 
@@ -572,7 +572,7 @@ void use(Container &c)
 
 为了解决上述问题，`Container` 对象就必须包含一些有助于它在运行时选择正确函数的信息。**编译器常见的解决方式时将 _虚函数的名字_ 转换成 _函数指针表_ 中对应的 _索引值_**，这张表称为 **虚函数表**，简称 `vtbl`。每个虚函数的类都有它自己的 `vtbl` 用于辨识寻函数，其工作机制如下
 
-![[Pasted image 20250123134457.png]]
+![Pasted image 20250123134457|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785363074-a9c50dbce668444a86bb898ff3c7a26e.png)
 
 即使主调函数不清楚对象的大小和数据布局，`vtbl` 中的函数也能确保对象正确使用。主调函数的实现只需要知道 `Container` 中 `vtbl` 的指针的位置以及每个虚函数对应的索引就可以了
 
@@ -584,7 +584,7 @@ void use(Container &c)
 
 **类层次表示具有层次关系的概念**。例如，消防车是卡车的一种，卡车是车辆的一种；笑脸是一个圆，圆是一个形状
 
-![[Pasted image 20250123134855.png]]
+![Pasted image 20250123134855|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785363077-c9cb9301d91a4ce4ba6fc641e2da5a2e.png)
 
 上图中的箭头表示继承关系，由子类指向父类。例如，`Circle` 类派生自 `Shape` 类
 

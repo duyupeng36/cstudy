@@ -9,7 +9,7 @@
 > 换句话说，共享内存允许两个或多个进程共享物理内存的同一块区域（通常被称为段）
 > 
 
-![[Pasted image 20241106232904.png]]
+![Pasted image 20241106232904|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783133848-698053d738ec426ea57d0e7a7329d3f6.png)
 
 由于一个 **共享内存段** 会成为一个 **进程用户空间内存的一部分**，因此这种 IPC 机制 **无需内核介入**
 
@@ -359,7 +359,7 @@ int main(int argc, char *argv[]) {
 
 在 [[Linux 系统编程：进程属性]] 和 [[操作系统：虚拟内存|操作系统：虚拟内存]] 中介绍了一个进程的各个部分在虚拟内存中的布局。如果遵循所推荐的方法，即 **允许内核选择在何处附加共享内存段**，那么（在 x86-32 架构上）内存布局就会像下图中所示的那样，共享内存段被附加在向上增长的堆和向下增长的栈之间未被分配的空间中。为给堆和栈的增长腾出空间，附加共享内存段的虚拟地址从`0x40000000` 开始
 
-![[Pasted image 20241107153620.png]]
+![Pasted image 20241107153620|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783133849-356b8a9c2d344e48b901a30a85c0a4f1.png)
 
 > [!tip] 
 > 
@@ -380,7 +380,7 @@ int main(int argc, char *argv[]) {
 
 假设一个共享内存段的起始地址为 `baseaddr`（即 `baseaddr` 的值为 `shmat()` 的返回值）。再假设需要在 `p` 指向的位置处存储一个指针，该指针指向的位置与 `target` 指向的位置相同。如下图所示
 
-![[Pasted image 20241107154049.png]]
+![Pasted image 20241107154049|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783133850-dbad58eb744843c6921bc304de1451cf.png)
 
 如果在段中构建一个链表或二叉树，那么这种操作就是非常典型的一种操作。在 C 中设置`*p` 的传统做法如下所示
 

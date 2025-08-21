@@ -105,7 +105,7 @@ int releaseSem(int semid, int semNum) {
 
 下图描述了使用共享内存通信的两个进程之间如何使用信号量进行同步的
 
-![[Pasted image 20241108110423.png]]
+![Pasted image 20241108110423|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788497812-40ee24006f2f4360b1658a09a6dde7ea.png)
 
 下面的代码是写者进程的代码
 + 提供了

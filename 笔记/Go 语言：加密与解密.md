@@ -4,11 +4,11 @@
 
 例如，Alice 向 Bob 发送电子邮件的场景。在这个场景中， 发出邮件的 Alice 称为 **发送者（sender）**， 而收到邮件的 Bob 则称为 **接收者（receiver）**
 
-![[Pasted image 20250702222028.png]]
+![Pasted image 20250702222028|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589779-0336053ea33e4ec0bfc4b39c2302ffcf.png)
 
 邮件是通过网络从 Alice 的计算机发送到 Bob 的计算机的。在发送邮件时， 邮件会 **经过许多台计算机和通信设备进行中转**，在这个过程中，就存在被恶意 **窃听者**（eavesdropper） **偷看** 或者 **串改** 的可能性
 
-![[Pasted image 20250702222111.png]]
+![Pasted image 20250702222111|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589779-6b246b5b54bd4a808839a743ad7f892e.png)
 
 > [!hint] 
 > 
@@ -53,7 +53,7 @@ Bob 收到了来自 Alice 的加密邮件后，但作为接收者的 Bob 也是�
 | 伪装(伪装信息发送者) | 威胁信息的可信性要求  | 签名(消息认证码和数字签名)   |
 | 否认(发送者否则信息) | 威胁信息的不可否认要求 | 签名(消息认证码和数字签名)   |
 
-![[Pasted image 20240721154807.png]]
+![Pasted image 20240721154807|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589779-042e7ef36663428c89355cdb95cf0a80.png)
 
 
 当我们在解决信息安全面临的威胁时，我们应该知道如下几点
@@ -66,7 +66,7 @@ Bob 收到了来自 Alice 的加密邮件后，但作为接收者的 Bob 也是�
 
 加密步骤和解密步骤使用相同的密钥的密码算法称为密码算法，也称单密钥密码算法。如下图所示
 
-![[Pasted image 20250702225049.png]]
+![Pasted image 20250702225049|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589779-3d5ed65d64ef4d94a1a96a7f8f4dce53.png)
 
 
 对称密码算法分为两种类型：**分组密码**（Block Cipher）和 **流密码**（Stream Cipher）。
@@ -183,11 +183,11 @@ Rijndael 是由比利时密码学家 Joan Daemen 和 Vincent Rijmen 设汁的 *
 
 明文消息被分成固定大小的分组，并且 **每个分组被单独加密**。下图描述了 ECB 模式下的加密过程
 
-![[Pasted image 20240721192137.png]]
+![Pasted image 20240721192137|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589779-53231ebee5c44e4590dcbaefa3b8869a.png)
 
 下图描述了 ECB 模式下的解密过程
 
-![[Pasted image 20240721192221.png]]
+![Pasted image 20240721192221|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589779-9dae16d8031f402da4dae4865b300885.png)
 
 > [!hint] ECB 模式的优缺点
 > 
@@ -201,11 +201,11 @@ Rijndael 是由比利时密码学家 Joan Daemen 和 Vincent Rijmen 设汁的 *
 
 **CBC** (Cipher Block Chaining, 密码块链)模式：每一个分组要先和前一个分组的密文进行 **XOR 异或** 操作，然后再进行加密。  这样每个密文块依赖该块之前的所有明文块。下图是 CBC 模式的加密过程
 
-![[Pasted image 20240721192510.png]]
+![Pasted image 20240721192510|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-658acb08a88e479381ae161f5b0e36a2.png)
 
 下图描述了 CBC 模式的解密过程
 
-![[Pasted image 20240721192537.png]]
+![Pasted image 20240721192537|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-cefa9f5f8c454da08ab67a9fd43713a6.png)
 
 
 > [!important] 第一个分组需要初始化向量
@@ -224,11 +224,11 @@ CFB 模式的全称是 Cipher FeedBack 模式（密文反馈模式）。在 CFB 
 
 CFB 模式的解密和 CBC 模式的加密在流程上其实是非常相似的。下图描述了 CFB 模式的加密过程
 
-![[Pasted image 20240721192828.png]]
+![Pasted image 20240721192828|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-c10c13c95a1a4e4190722769edb9f027.png)
 
 下图描述了 CFB 模式的解密过程
 
-![[Pasted image 20240721192937.png]]
+![Pasted image 20240721192937|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-ae9cd3ff1d3141818aaba31c7a15f937.png)
 
 > [!tip] 
 > 明文不需要填充
@@ -241,11 +241,11 @@ OFB模式并不是通过密码算法对明文直接进行加密的，而是通�
 
 下图描述了 OFB 模式的加密过程
 
-![[Pasted image 20240721193250.png]]
+![Pasted image 20240721193250|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-a6ca140bd2dc4813bfe6f41b71bcfdf5.png)
 
 下图描述了 OFB 模式的解密过程
 
-![[Pasted image 20240721193355.png]]
+![Pasted image 20240721193355|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-c67b03fac2f9442d9c90b6416824ad9d.png)
 
 > [!tip] 
 > 无需对明文进行填充
@@ -258,11 +258,11 @@ CTR模式中，每个分组对应一个逐次累加的计数器，并通过对�
 
 下图描述了 CTR 模式的加密过程
 
-![[Pasted image 20240721193605.png]]
+![Pasted image 20240721193605|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-2fc3fd6f8cbd4b168a776e49d822e7ed.png)
 
 下图描述了 CTR 模式的解密过程
 
-![[Pasted image 20240721193631.png]]
+![Pasted image 20240721193631|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-37ac6b976fe04859b52fc4f80805ceba.png)
 
 > [!tip] 
 > 不需要对明文进行填充
@@ -460,7 +460,7 @@ func main() {
 
 下面的表格总结了五种分组模式
 
-![[Pasted image 20240721193810.png|900]]
+![Pasted image 20240721193810|900|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589780-e56ce318e62a4c579b4d5ce6a8b7ec4c.png)
 
 > [!tip] 
 > 
@@ -478,7 +478,7 @@ func main() {
 
 为了解决对称加密的风险，从而导致非对称加密被提出。加密和解密密钥不同且其中一个密钥不能通过另一个密钥推算出来。这种算法需要 $2$ 个密钥，公开密钥和私有密钥。如果公钥对数据加密，就只能使用私钥才能解密；如果使用私钥对数据加密，也只能使用公钥解密。这就是非对称加密方式。
 
-![[Pasted image 20250702233833.png]]
+![Pasted image 20250702233833|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787589781-a03991685545415fa8c809f63db818e9.png)
 
 ### RSA 密码算法
 

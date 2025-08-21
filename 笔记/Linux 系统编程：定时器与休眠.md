@@ -56,7 +56,7 @@ struct timeval {
 
 间隔定时器的工作流程如下图
 
-![[Pasted image 20241110210122.png]]
+![Pasted image 20241110210122|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783979138-927a221e0f344fe9aefb080fdb6620a4.png)
 
 + 当调用 `setitimer()` 时，定时器会根据 `it_value` 的值开始倒计时
 + 如果倒计时结束，会根据定时器的类型向进程发送一个信号（如 `SIGALRM`）

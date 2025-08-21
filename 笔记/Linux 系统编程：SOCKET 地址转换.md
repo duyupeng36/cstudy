@@ -16,7 +16,7 @@
 
 下图展示了 $2$ 字节和 $4$ 字节整数的大端和小端字节序
 
-![[Pasted image 20241121174150.png]]
+![Pasted image 20241121174150|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784617413-60c4c28a3dec4e43adb9548b358cbac9.png)
 
 > [!important] 
 > 
@@ -463,7 +463,7 @@ DNS 中的域名都是用句点来分隔的，比如 `www.server.com `，这里�
 + 顶级域 DNS 服务器（.com）
 + 权威 DNS 服务器（server.com）
 
-![[Pasted image 20241123195028.png]]
+![Pasted image 20241123195028|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784617414-8d7a93802bfb417cbffa447e63db9c67.png)
 
 > [!tip]
 > 
@@ -476,7 +476,7 @@ DNS 中的域名都是用句点来分隔的，比如 `www.server.com `，这里�
 
 下图展示 DNS 域名解析的过程
 
-![[Pasted image 20241122102938.png]]
+![Pasted image 20241122102938|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784617417-61ea7a0b143b40ff87fa5d403034a45e.png)
 
 
 ## 服务名
@@ -600,7 +600,7 @@ struct addrinfo
 
 下图展示了 `getaddrinfo()` 通过参数 `result` 返回的 `addrinfo` 结构链表
 
-![[Pasted image 20241122140628.png]]
+![Pasted image 20241122140628|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784617418-a3d33c306b504156b3e04c7d28e46e0c.png)
 
 ```c title:sockets/t_getaddrinfo.c
 #include <sys/socket.h>
@@ -703,7 +703,7 @@ int getnameinfo(const struct sockaddr *addr, socklen_t addrlen, char *host, size
 
 `getaddrinfo()` 和 `getnameinfo()` 在发生错误时会返回下表中的一个非零错误码
 
-![[Pasted image 20241122163045.png]]
+![Pasted image 20241122163045|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784617419-e98cafd34ac7489284295358f3761723.png)
 
 `gai_strerror()` 函数会返回一个描述该错误的字符串
 

@@ -7,7 +7,7 @@
 
 这里存在的问题是两个进程在没有采用任何同步技术的情况下可能会同时执行上面的步骤，从而导致出现下图中给出的结果（这里假设序号的初始值为 $1000$）
 
-![[Pasted image 20241108141825.png]]
+![Pasted image 20241108141825|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783368874-0076d9faaa0c4fff8b13638754e6ada4.png)
 
 在执行完上述步骤之后，文件中包含的值为 $1001$，但其所包含的值应该是 $1002$。（这是一种竞争条件。）为防止出现这种情况就需要采用某种形式的进程间同步。 
 
@@ -46,7 +46,7 @@ int flock(int fd, int operation);
 > 
 > 参数指定了下表中描述的 `LOCK_SH`、`LOCK_EX` 以及 `LOCK_UN` 值中的一个
 > 
-> ![[Pasted image 20241108142930.png]]
+> ![Pasted image 20241108142930|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783368876-bfd004dc9d5d4447812b12e3012be105.png)
 > 
 
 > [!attention] 
@@ -58,7 +58,7 @@ int flock(int fd, int operation);
 
 任意数量的进程可同时持有一个文件上的共享锁，但在同一个时刻只有一个进程能够持有一个文件上的互斥锁。下表对 `flock()` **加锁的兼容规则** 进行了总结。这里 **假设进程 A 首先放置了锁**，表中给出了 **进程 B** 是否能够放置一把锁
 
-![[Pasted image 20241108142952.png]]
+![Pasted image 20241108142952|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783368877-cb5cb49c8562463386d44d99192a8895.png)
 
 > [!tip] 
 > 
@@ -104,7 +104,7 @@ int flock(int fd, int operation);
 
 下图显示了如何使用记录锁来同步两个进程对一个文件中的同一块区域的访问。（在这幅图中假设所有的锁请求都会阻塞，这样它们在锁被另一个进程持有时就会等待。
 
-![[Pasted image 20241108143328.png]]
+![Pasted image 20241108143328|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783368877-709db1adf3604e3dbeb6468abbd638a3.png)
 
 用来创建或删除一个文件锁的 `fcntl()` 调用的常规形式如下
 
@@ -126,7 +126,7 @@ fcntl(fd, cmd, &flock_struct);
 > 
 > 在使用 `F_SETLKW` 时需要弄清楚下图中阐述的场景类别。在这种场景中，每个进程的第二个锁请求会被另一个进程持有的锁阻塞。这种场景被称为 **死锁**
 > 
-> ![[Pasted image 20241108145901.png]]
+> ![Pasted image 20241108145901|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783368881-f0ac22a770dd49feaa977ed2040b5f5d.png)
 > 
 
 > [!tip] 参数 `flock_struct`：文件锁结构，是一个 `flock` 结构的指针

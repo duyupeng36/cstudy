@@ -95,7 +95,7 @@ glob = 13328
 当循环次数增加到 $10000$ 时，每次执行的得到的结果均不相同，并且结果还是不正确的。执行到最后，`glob` 的值本应为 $2$ 万。问题的原因是由于线程的执行序列如下图导致的
 
 
-![[Pasted image 20241111203752.png]]
+![Pasted image 20241111203752|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784098054-a0c1d072db0e4ff8bb12441701a1d71e.png)
 
 假设全局变量 `blog` 的当前值为 $2000$。线程 $1$ 和线程 $2$ 按如下顺序执行
 
@@ -137,7 +137,7 @@ glob = 13328
 
 如果多个线程试图执行这一代码块（一个临界区），事实上只有一个线程能够持有该互斥量（其他线程将遭到阻塞），即同时只有一个线程能够进入这段代码区域。如下图所示
 
-![[Pasted image 20241111212505.png]]
+![Pasted image 20241111212505|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784098055-8a41b2f38fca4d0592ba2d2f635b5978.png)
 
 ## 初始化和销毁互斥量
 
@@ -345,7 +345,7 @@ int pthread_mutex_timedlock(pthread_mutex_t * mutex,  const struct timespec * ab
 
 下图展示了两个线程分别锁定两个互斥量所导致的死锁的例子
 
-![[Pasted image 20241111232243.png]]
+![Pasted image 20241111232243|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784098056-2981e45021934c13a27fe0bf0a87af84.png)
 
 线程 $A$ 持有互斥量 $\text{mutex1}$，线程 $B$ 持有互斥量 $\text{mutex2}$。此时，线程 $A$ 请求互斥量 $\text{mutex2}$，由于互斥量 $\text{mutex2}$ 被线程 $B$ 持有并且等待线程 $A$ 释放互斥量 $\text{mutex1}$。线程 $B$ 请求互斥量 $\text{mutex1}$，由于互斥量 $\text{mutex1}$ 被线程 $A$ 持有并且等待线程 $B$ 释放互斥量 $\text{mutex2}$。这样就形成了 **循环等待**，从而导致两个线程间无限期等待下去，也就是 **死锁**
 

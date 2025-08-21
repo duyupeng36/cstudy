@@ -28,7 +28,7 @@ Linux 内核中采取了两种类型的调度策略，分别是 **实时调度�
 
 由于用户进程在创建时，其优先级默认是 $80$，而普通调度策略使用的优先级范围为 $60 \sim 99$，所以 `nice` 值的范围是 $-20 \sim 19$。下图展示了进程 `nice` 值的范围和解释
 
-![[Pasted image 20241104111726.png]]
+![Pasted image 20241104111726|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707610190-ee4ba5bb314e4ad0968d3f9e7ddd544f.png)
 
 > [!important] 
 > 
@@ -197,7 +197,7 @@ struct sched_param {
 > 
 > 取值如下表
 > 
-> ![[Pasted image 20241104124748.png]]
+> ![Pasted image 20241104124748|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707610191-81df55e1763e4cc986cd9bf69eb03324.png)
 > 
 
 > [!important] 

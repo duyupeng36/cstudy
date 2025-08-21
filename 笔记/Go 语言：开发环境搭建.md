@@ -71,33 +71,33 @@ Visual Studio Code 是微软公司开源的一款 **免费** 现代化轻量级�
 
 访问 Visual Studio Code 下载地址：[https://code.visualstudio.com/Download](https://code.visualstudio.com/Download)，下载适合操作系统的安装包。双击下载好的安装文件，双击安装即可
 
-![[Pasted image 20250323184814.png]]
+![Pasted image 20250323184814|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786701449-97a8a8ec63b34f92ab647f1dfbd298fd.png)
 
 ### 配置 Go 开发环境
 
 首先，需要安装 Go 扩展，让 Visual Studio Code 支持 Go 语言开发
 
-![[Pasted image 20250323184942.png]]
+![Pasted image 20250323184942|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786701449-fbb9ab75b9104676a3c49e9ec18d2edf.png)
 
 然后，还需下载或更新 Go 语言开发工具包。Windows平台按下`Ctrl+Shift+P`，Mac平台按`Command+Shift+P`，这个时候VS Code界面会弹出一个输入框，如下图：
 
-![[Pasted image 20250323185108.png]]
+![Pasted image 20250323185108|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786701450-a6de5656ec0742eb9cc0f88c4de9379e.png)
 
 我们在这个输入框中输入`>go:install`，下面会自动搜索相关命令，我们选择`Go:Install/Update Tools`这个命令，按下图选中并会回车执行该命令（或者使用鼠标点击该命令）
 
-![[Pasted image 20250323185122.png]]
+![Pasted image 20250323185122|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786701450-a3334cb2b1804db0bff0cd35f47a938f.png)
 
 在弹出的窗口选中所有，并点击“确定”按钮，进行安装
 
-![[Pasted image 20250323185138.png]]
+![Pasted image 20250323185138|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786701450-764cf35e340f468eb7eb0b749187dba5.png)
 
 然后会弹出如下窗口，开始安装工具：
 
-![[Pasted image 20250323185153.png]]
+![Pasted image 20250323185153|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786701450-e629ca9090184c18a950357d7f454a6e.png)
 
 等待所有工具都安装成功，如下图所示:
 
-![[Pasted image 20250323185207.png]]
+![Pasted image 20250323185207|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786701451-58639c4196a04d7cbfa003e2da40965a.png)
 
 ## hello world
 

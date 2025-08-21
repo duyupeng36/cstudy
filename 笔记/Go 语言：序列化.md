@@ -508,7 +508,7 @@ Json 序列化的占用的空间较多的。例如，序列化一个整数 `97`�
 
 下图对比了 Json 和 MessagePack 序列化后占用的内存空间
 
-![[Pasted image 20250408214700.png]]
+![Pasted image 20250408214700|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786113510-f8ea965424024221b2cc25be77cab3f8.png)
 
 ### 压缩原理
 
@@ -642,7 +642,7 @@ TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNp
 
 编码 `"Man"` 的结果为`"TWFu"`，详细原理如下
 
-![[Pasted image 20240527193046.png]]
+![Pasted image 20240527193046|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786113510-afe5a3909c0b4887a8025355d0509acd.png)
 
 > [!tip] 
 > 
@@ -653,7 +653,7 @@ TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNp
 
 在编码后的 Base64 文本后加上一个或两个`=`号，代表补足的字节数。也就是说，当最后剩余两个八位(待补足)字节（`2`个 `bytes`）时，最后一个 6 位的 Base64 字节块有四位是 0 值，最后附加上两个等号；如果最后剩余一个八位(待补足)字节（`1` 个 `byte`）时，最后一个 `6` 位的 `base` 字节块有两位是 `0` 值，最后附加一个等号。 参考下表：
 
-![[Pasted image 20240527193447.png]]
+![Pasted image 20240527193447|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786113510-9d3b163600d74f99a23a6edc2a87f275.png)
 
 ### 编码实现
 

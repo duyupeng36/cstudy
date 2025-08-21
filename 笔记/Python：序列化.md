@@ -112,7 +112,7 @@ with open(filename, "rb") as f:
 
 上述脚本执行后，我们查看生成的文件的内容如下
 
-![[Pasted image 20250406233553.png]]
+![Pasted image 20250406233553|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786113510-e8bc1089c1634a2682376d1b07ede745.png)
 
 Python 的对象经过 `pickle` 序列化之后就变成了一个字节序列，这些字节序列采用某种 PICKLE 协议进行解析
 
@@ -550,7 +550,7 @@ MessagePack 是一种 **高效的二进制序列化协议**。它允许你在多
 
 它可以像 JSON 那样，在许多种语言之间交换结构对象。但是它比 JSON 更快速也更轻巧。如下图，这是 MessagePack 官网上与 JSON 格式的对比
 
-![[Pasted image 20250408214700.png]]
+![Pasted image 20250408214700|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786113510-f8ea965424024221b2cc25be77cab3f8.png)
 
 ### 压缩原理
 
@@ -656,13 +656,13 @@ TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNp
 
 编码 `"Man"` 的结果为`"TWFu"`，详细原理如下
 
-![[Pasted image 20240527193046.png]]
+![Pasted image 20240527193046|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786113510-afe5a3909c0b4887a8025355d0509acd.png)
 
 在此例中，**Base64 算法将 3 个字节编码为 4 个字符**
 
 **如果要编码的字节数不能被 3 整除，最后会多出 1 个或 2 个字节，那么可以使用下面的方法进行处理：先使用 0 字节值在末尾补足，使其能够被 3 整除，然后再进行 Base64 的编码**。在编码后的 Base64 文本后加上一个或两个`=`号，代表补足的字节数。也就是说，当最后剩余两个八位(待补足)字节（`2`个 `bytes`）时，最后一个 6 位的 Base64 字节块有四位是 0 值，最后附加上两个等号；如果最后剩余一个八位(待补足)字节（`1` 个 `byte`）时，最后一个 `6` 位的 `base` 字节块有两位是 `0` 值，最后附加一个等号。 参考下表：
 
-![[Pasted image 20240527193447.png]]
+![Pasted image 20240527193447|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786113510-9d3b163600d74f99a23a6edc2a87f275.png)
 
 ### Base64 编码实现
 

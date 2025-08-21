@@ -444,7 +444,7 @@ void f(Ptr<Person> p)
 
 下图展示了函数 `f()` 栈帧的内存图
 
-![[Pasted image 20250208091530.png]]
+![Pasted image 20250208091530|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785589653-aefff23d1cf14fec917fcd7143de4893.png)
 
 通过 `Ptr` 类的对象访问 `Person` 类的对象的成员，需要让 `Ptr` 类的对象通过某种方法返回 `Person` 类对象的指针。
 

@@ -370,7 +370,7 @@ psql -U postgres -W
 
 下图是示例数据库的 **E-R 图**
 
-![[Pasted image 20241224102843.png]]
+![Pasted image 20241224102843|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785010232-ff281404ef114edbb0c989c1fbc89c8f.png)
 
 数据库下载完成之后，使用 `mysql` 客户端登录到 MySQL 服务器
 
@@ -395,11 +395,11 @@ CREATE DATABASE classicmodels;
 
 然后使用 Navicat 的 数据传输工具，从 MySQL 服务端传输到 PostgreSQL 服务端中
 
-![[Pasted image 20241224231745.png]]
+![Pasted image 20241224231745|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785010232-e1b1aa49cba9439e882d8e18d547a69a.png)
 
-![[Pasted image 20241224231807.png]]
+![Pasted image 20241224231807|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785010233-61171c8c6a1d4370b8b42965acdb00d4.png)
 
-![[Pasted image 20241224231855.png]]
+![Pasted image 20241224231855|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785010234-a704e2ae8d674d719a0f772c3150a27d.png)
 
 现在，我们就在 MySQL 和 PostgreSQL 中准备好了示例数据库
 

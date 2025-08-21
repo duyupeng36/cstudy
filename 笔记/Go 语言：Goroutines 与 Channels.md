@@ -65,7 +65,7 @@ func main() {
 
 执行上述代码后，会首先显示动画，之后就会输出结果，然后 `main()` 函数返回
 
-![[spinner-go.gif]]
+![spinner-go|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885278-c6012ee577db41669f8ba5aafe837e2b.gif)
 
 当 `main()` 函数返回时，所有的 Goroutines 都会被直接打断，程序退出。除了从主函数退出或者直接终止程序之外，没有其它的编程方法能够让一个 Goroutine 来打断另一个的执行，但是之后可以看到一种方式来实现这个目的，通过 Goroutine 之间的通信来让一个 Goroutine 请求其它的 Goroutine，并让被请求的 Goroutine 自行结束执行。
 
@@ -138,7 +138,7 @@ func main() {
 下图展示了两个客户端连接 `clock` 服务器时的行为。由于 `handleConnectione()` 执行一个无限循环，只要在写入客户端连接失败时才会返回，也就是说该服务器只能同时处理一个客户端的连接。
 
 
-![[clock-go.gif]]
+![clock-go|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885279-97570e0a232043ddb5b9f335fe7c6044.gif)
 
 我们这里对服务端程序做一点小改动，使其支持并发：在 `handleConnectione()` 函数调用的地方增加 `go` 关键字，让每一次 `handleConnectione()` 的调用都进入一个独立的 Goroutine。
 
@@ -195,7 +195,7 @@ func main() {
 
 现在多个客户端可以同时接收到时间了
 
-![[clock-go-concurrency.gif]]
+![clock-go-concurrency|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885281-a3be7622e893400ca5b3a0c2aff70114.gif)
 
 ### 示例：并发的 Echo 服务
 
@@ -446,7 +446,7 @@ func main() {
 
 Channel 底层是一个 **环形队列**，使用固定大小环形数组实现。关于环形队列，参考 [[数据结构：栈和队列#顺序队列(环形队列)]]。
 
-![[Pasted image 20240808002408.png]]
+![Pasted image 20240808002408|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885282-b63a86bac231418f8af3a53bc8639a5e.png)
 
 Channel 的底层数据结构声明在 `$GOROOT/src/runtime/chan.go` 中的 `hchan` 结构体
 
@@ -585,7 +585,7 @@ func mustCopy(dst io.Writer, src io.Reader, done chan struct{}) {
 
 Channels 也可以用于将多个 Goroutine 连接在一起，一个 Channel 的输出作为下一个 Channel 的输入。这种串联的 Channels 就是所谓的 **管道**。下面的程序用两个 Channels 将三个 Goroutine 串联起来
 
-![[Pasted image 20250714214152.png]]
+![Pasted image 20250714214152|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885283-4c7efdc20d47464a932f2fc11cbe3285.png)
 
 第一个 Goroutine 是一个计数器，用于生成整数序列，然后通过 Channel 将该整数序列发送给第二个Goroutine；第二个 Goroutine 是一个求平方的程序，对收到的每个整数求平方，然后将平方后的结果通过第二个 Channel 发送给第三个 Goroutine；第三个 Goroutine 是一个打印程序，打印收到的每个整数。
 
@@ -754,7 +754,7 @@ ch = make(chan string, 3)
 
 下图展示了 `ch` 变量对应的 Channel 的图形表示形式
 
-![[Pasted image 20250714222313.png]]
+![Pasted image 20250714222313|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885283-4d36d09cef4d496fa1561bae4f6a593c.png)
 
 > [!tip] 
 > 
@@ -773,11 +773,11 @@ ch <- "C"
 
 此刻，Channel 的内部缓冲队列将是满的，如果有第四个发送操作将发生阻塞。
 
-![[Pasted image 20250714222545.png]]
+![Pasted image 20250714222545|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885283-e2c0e59058fe4b438e32925dcc9b6ffd.png)
 
 如果我们接收一个值，那么 Channel 的缓冲队列将不是满的也不是空的，因此对该 Channel 执行的发送或接收操作都不会发生阻塞。通过这种方式，Channel 的缓冲队列解耦了接收和发送的 Goroutine。
 
-![[Pasted image 20250714222744.png]]
+![Pasted image 20250714222744|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787885283-1105ff7dcaf34b47a27a2f027f9c7f54.png)
 
 有时候，我们可能需要知道 Channel 的容量是多少，此时，我们可以使用 `cap()` 内置函数获取
 

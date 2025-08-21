@@ -260,7 +260,7 @@ int main(int argc, char *argv[]) {
 
 虽然将变量 `status` 定义为整型（`int`），但实际上 **仅使用了其最低的 $2$ 个字节**。对这 $2$ 个字节的填充方式取决于子进程所发生的具体事件
 
-![[Pasted image 20241103160400.png]]
+![Pasted image 20241103160400|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707543673-d0cac8ba9e1144a58748f4f3d1aac120.png)
 
 
 头文件 `<sys/wait.h>` 定义了用于解析等待状态值的一组标准宏。下表列出来这些宏
@@ -509,7 +509,7 @@ F S UID          PID    PPID  C PRI  NI ADDR SZ WCHAN  STIME TTY          TIME C
 
 初始化进程会创建一个终端进程，用于提供给用户登录。当用户被成功验证登录后，终端进程会创建出 `shell` 进程。下图展示了内核进程创建过程
 
-![[Pasted image 20241103181910.png]]
+![Pasted image 20241103181910|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707543674-5253694f35e84ff09667d0fab8f1b332.png)
 
 后续用户启动的进程都是通过 `shell` 启动。因此，**$1$ 号进程是所有用户进程的祖先**。**孤儿进程由 $1$ 号进程收养**
 

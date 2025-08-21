@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
 
 这是 [[作业28：FIFO和IO多路复用]] 中聊天室的 SOCKET 版本
 
-![[Pasted image 20241123212427.png]]
+![Pasted image 20241123212427|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788557954-d7f2823ac47b4e6bbbc1ed389c252cfb.png)
 
 下面的代码给出了服务端的实现。为了处理多个客户端连接和接收多个客户端的消息。首先，就需要 **保存与客户端通信的套接字文件描述符**，这里我们使用一个 **链表存储**，链表中的每个 **结点定义如下**
 

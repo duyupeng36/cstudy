@@ -148,7 +148,7 @@ import (
 
 下图展示了导入包的顺序与 `init()` 函数执行的关系
 
-![[Pasted image 20250625212847.png]]
+![Pasted image 20250625212847|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787309473-4fc2e546fc014c1b8c7fef5a1fade666.png)
 
 > [!attention] 
 > 
@@ -516,7 +516,7 @@ require module/path v1.2.3
 
 引入某些没有发布过 `tag` 版本标识的依赖包时，`go.mod` 中记录的依赖版本信息就会出现类似`v0.0.0-20210218074646-139b0bcd549d`的格式，由版本号、`commit` 时间和 `commit` 的 hash 值组成。如下图
 
-![[Pasted image 20250626001233.png]]
+![Pasted image 20250626001233|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787309473-24fbe828b39a43f085dcac8ba3557f52.png)
 
 #### go.sum 文件
 
@@ -610,7 +610,7 @@ To github.com:duyupeng36/bitset.git
 
 经过上面的操作我们就发布了一个版本号为 `v1.0.0`的版本。Go modules 中建议使用语义化版本控制，其建议的版本号格式如下：
 
-![[Pasted image 20250626003637.png]]
+![Pasted image 20250626003637|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787309473-bdb7568f5aaf418a9496f9680ebee3d8.png)
 
 - 主版本号：发布了不兼容的版本迭代时递增（breaking changes）。
 - 次版本号：发布了功能性更新时递增。

@@ -136,7 +136,7 @@ type FileMode uint32  // io/fs 包中
 
 `prem` 的从最高位开始的连续 $12$ 为代表了文件模式，最低 $9$ 位分为 $3$ 组，代表文件属主 属组 其他用户的权限。结构如下图所示
 
-![[Pasted image 20250629011048.png]]
+![Pasted image 20250629011048|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787358957-99d6c851bc2544108c5a6aff0eb53ffa.png)
 
 > [!important] 文件模式和权限设置
 > + 对于普通文件，文件模式位不能被设置

@@ -337,7 +337,7 @@ while True:
 
 如下图，定义了一个 `Dog` 类，有两个保护成员 `_name` 和 `_age`。当我们通过实例访问这两个属性时，Pycharm 等 IDE 工具就会提示我们访问了保护变量
 
-![[Pasted image 20250410233229.png]]
+![Pasted image 20250410233229|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786160366-3283da895bb0406bbed6476928e6d7ce.png)
 
 > [!tip] 
 > 
@@ -347,7 +347,7 @@ while True:
 
 如下图，定义了一个 `Dog` 类，有两个私有属性 `__name` 和 `__age`。我们查看实例的 `__dict__`，发现实例的属性变为了 `_Dog__name` 和 `_Dog__age`
 
-![[Pasted image 20250410234030.png]]
+![Pasted image 20250410234030|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786160367-38bf9953f0a946429aba94ce4ad0d6c7.png)
 
 > [!summary] 
 > 

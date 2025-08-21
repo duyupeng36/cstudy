@@ -24,7 +24,7 @@ UTF-8 编码为
 
 在内存中按照下图方式进行存储的
 
-![[Pasted image 20250608000806.png]]
+![Pasted image 20250608000806|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786843321-503cde8bdb4e40f382cfcb3e2cb8ba1f.png)
 
 
 其中，`ptr` 指向及字节数组的起始地址；`len` 是字节数组的长度（存放字符串需要的字节数）

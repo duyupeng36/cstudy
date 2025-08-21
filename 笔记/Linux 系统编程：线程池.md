@@ -8,7 +8,7 @@
 
 下面是线程池的基本设计方案：
 
-![[Pasted image 20241214232418.png]]
+![Pasted image 20241214232418|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784998861-9ba62e8343b9445787f386fb90834200.png)
 
 > [!tip] 主线程
 > 

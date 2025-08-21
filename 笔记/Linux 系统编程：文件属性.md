@@ -79,7 +79,7 @@ struct stat {
 
 `st_mode` 字段内含有位掩码，起标识 **文件类型** 和指定 **文件权限** 的双重作用。下图为该字段所含各位的布局情况
 
-![[Pasted image 20241019223642.png]]
+![Pasted image 20241019223642|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705702433-b3dbd90588ba4c1094715c65aeaa6f15.png)
 
 #### 文件类型
 
@@ -263,7 +263,7 @@ int fchown(int fd, uid_t owner, gid_t group);  // 通过文件描述符修改
 
 `stat` 结构中 `st_mod` 字段的低 $12$ 位定义了文件权限
 
-![[Pasted image 20241019223642.png]]
+![Pasted image 20241019223642|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705702433-b3dbd90588ba4c1094715c65aeaa6f15.png)
 
 > [!tip] 前 $3$ 位为专用位：分别是 `set-user-ID` `set-group-ID` 和 `sticky` 
 > 

@@ -583,7 +583,7 @@ def basicConfig(**kwargs):
 
 在 Python 的官方文档中，关于日志流转的流程图如下
 
-![[Pasted image 20250511211627.png]]
+![Pasted image 20250511211627|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786314505-d6081b703fea4af7a4f7d1c4494351e5.png)
 
 应用程序调用日志函数，例如，调用 `logger.info(...)`。首先，检查 `Logger's level <= Message's Level`；只要满足这个条件，就创建 `LogRecord`，否则结束。
 

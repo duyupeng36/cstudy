@@ -39,7 +39,7 @@ typedef struct
 + $0$ 表示不存在
 + $1$ 表示存在
 
-![[Pasted image 20241108230300.png]]
+![Pasted image 20241108230300|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783897427-df1bfdf2d1c841718fd8d274de4a9714.png)
 
 SUSv3 规定了一系列函数来操纵信号集
 

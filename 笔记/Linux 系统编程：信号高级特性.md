@@ -29,7 +29,7 @@
 > 
 > 根据 Linux 特有的 `/proc/sys/kernel/core_pattern` 文件所包含的格式化字符串来控制对系统上生成的所有核心转储文件的命名。默认情况下，该文件所含字符串为 `core`。
 > 
-> ![[Pasted image 20241109234253.png]]
+> ![Pasted image 20241109234253|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783938458-7bd10579d3a34728bf6fc07376f3247b.png)
 > 
 
 ## 信号传递-处置-处理的特殊情况
@@ -205,7 +205,7 @@ SUSv3 规定，在硬件异常的情况下，如果进程从此类信号的处�
 
 当多个解除了阻塞的信号正在等待传递时，如果在信号处理器函数执行期间发生了内核态和用户态之间的切换，那么将中断此处理器函数的执行，转而去调用第二个信号处理器函数（如此递进）
 
-![[Pasted image 20241110085029.png]]
+![Pasted image 20241110085029|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783938459-9681f2446ca04f44ada1c25cbadfeb14.png)
 
 ## 实时信号
 

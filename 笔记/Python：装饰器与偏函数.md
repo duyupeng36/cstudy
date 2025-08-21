@@ -192,7 +192,7 @@ add = logger(add) # 2. 调用 logger 时，它的形式参数 func 又引用了 
 add(4, 5)
 ```
 
-![[Pasted image 20240616214317.png]]
+![Pasted image 20240616214317|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786033715-76ccbfeeedda45b49ec1ba137043479e.png)
 
 ### `@` 语法糖
 
@@ -319,7 +319,7 @@ def copy_properties(src):
     return _copy
 ```
 
-![[Pasted image 20240616233606.png]]
+![Pasted image 20240616233606|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786033716-346a3d6e1e6144e0a1f6c017828e4622.png)
 
 ### 带参数的装饰器
 

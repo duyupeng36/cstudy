@@ -54,28 +54,28 @@
 > 
 > 注意，这是错误的。引用计数在具体的对象中，引用计数是独立的。如下图
 > 
->![[Pasted image 20250209170522.png]]
+>![Pasted image 20250209170522|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785623230-92a84011992e434795578948988bd616.png)
 > 
 
 > [!error] 错误存储方式：静态数据成员
 > 
 > 由于静态数据成员被所有对象共享，然而有时候需要多个引用计数。
 > 
-> ![[Pasted image 20250209170943.png]]
+> ![Pasted image 20250209170943|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785623231-32601f66430045d1a65aca0c4be18312.png)
 > 
 
 > [!tip] 正确的方式：存储在堆空间中
 > 
 > 将引用计数存放在堆空间中，每个对象都持有引用计数的指针，从而可以让多个对象共享，也可以让不同的对象持有不同的引用计数
 > 
-> ![[Pasted image 20250209171203.png]]
+> ![Pasted image 20250209171203|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785623231-51197460dd8943bfa443703e7d0c2bb1.png)
 > 
 > 在 [[C++：特殊运算符#自增运算符 `++` 和自减运算符 `--` 重载]] 中我们实现 `Ptr` 类时使用了该方案
 > 
 
 引用计数正确的存储方式就是将其存储在堆空间中，然而这样会涉及两次 `new`。因为，涉及堆空间的申请一定会有系统调用的存在，每次系统调用都会有性能损失。我们可以将其优化为一次 `new`。
 
-![[Pasted image 20250209172741.png]]
+![Pasted image 20250209172741|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785623231-f1b320d3a6f14af8b75bfb197d20d731.png)
 
 了解写时复制的原理之后，下面我们以写时复制的方式实现 `string` 类
 
@@ -543,7 +543,7 @@ cow::string::CharPoxy& cow::string::CharPoxy::operator=(char ch) {
 
 当字符串的字符数小于等于 $15$ 时， `buffer` 直接存放整个字符串；当字符串的字符数大于 $15$ 时， `buffer` 存放的就是一个指针，指向堆空间的区域。这样做的好处是，当字符串较小时，直接拷贝字符串，放在 `string` 内部，不用获取堆空间，开销小。
 
-![[Pasted image 20250210151422.png]]
+![Pasted image 20250210151422|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785623231-4c2076d686e045a89eee2da8be190b1c.png)
 
 ```cpp
 class string {

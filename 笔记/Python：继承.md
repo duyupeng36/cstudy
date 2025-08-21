@@ -14,7 +14,7 @@
 
 下图展示了继承关系
 
-![[Pasted image 20240622145609.png|600]]
+![Pasted image 20240622145609|600|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786177753-9f0977c0b6dc45f595d6bf00b74a3720.png)
 
 
 兔子和羊属于食草动物类，狮子和豹属于食肉动物类。食草动物和食肉动物又是属于动物类。所以继承需要符合的关系是：`is-a`，**父类更通用**，**子类更具体**。
@@ -29,7 +29,7 @@
 > 
 > 继承用于描述概念之间的层次关系。
 > 
-> ![[Pasted image 20250412151429.png]]
+> ![Pasted image 20250412151429|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786177754-0a1a07b92dab4674961a5ca82aa39800.png)
 > 
 > + 第一步，由下到上进行分析, 首先由对象总结抽象出类, 在由类总结抽象出父类
 > + 第二步，由分析出的继承关心定义类完成继承

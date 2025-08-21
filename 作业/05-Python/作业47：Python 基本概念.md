@@ -16,7 +16,7 @@ print("交换后的新郎：" + bridegroom_name)  # "潘金莲"
 print("交换后的新娘：" + bride_name)  # "武大郎"
 ```
 
-![[Pasted image 20250108233747.png]]
+![Pasted image 20250108233747|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788696527-6d6d531105644f52bd4a81b53c9e848b.png)
 
 ## 预测孩子的身高
 

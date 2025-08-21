@@ -260,7 +260,7 @@ ValueError: 4 is not in list
 
 列表对象在创建时会预先分配好一部分内存空间，`append()` 方法会将元素 `value` 添加到列表元素的尾部。如下图
 
-![[Pasted image 20250323214353.png]]
+![Pasted image 20250323214353|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907069-fe904a2a2a094f89bdcd2ffa44bacff3.png)
 
 ```python
 >>> numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -271,7 +271,7 @@ ValueError: 4 is not in list
 
 `insert(index, value)` 方法会将元素 `value` 插入到列表中索引位 `index` 的位置。也就说，在插入 `value` 之前，需要将 `index` 及其之后的元素整体向后移动一位，将索引为 `index` 的位置空出来之后才能完成插入。如下图所示
 
-![[Pasted image 20250323215403.png]]
+![Pasted image 20250323215403|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907069-b5c84e5794184ab4b40183cd85987ac4.png)
 
 ```python
 >>> numbers.insert(10, 20) # 在索引位置为 10 处插入元素 20
@@ -580,7 +580,7 @@ True
 
 显然，上述例子中列表的第 $4$ 号元素指向同一个对象，如下图所示
 
-![[Pasted image 20250325222427.png]]
+![Pasted image 20250325222427|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907069-82b54e83ac024d74942fb561b2f7d62b.png)
 
 
 > [!tip]
@@ -611,7 +611,7 @@ True
 
 显然，上述例子中列表的第 $4$ 号元素指向不同的对象，如下图所示
 
-![[Pasted image 20250325224230.png]]
+![Pasted image 20250325224230|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907070-35fe75d09d70481ab1a4360ba3f2d28f.png)
 
 #### 运算符 + 和 *
 
@@ -674,7 +674,7 @@ Python 为列表重定义了运算符 `+` 和 `*` 的含义，下面我们介绍
 
 下图展示 `[[1]] * 3` 表达式执行的内存结构
 
-![[Pasted image 20250324205610.png]]
+![Pasted image 20250324205610|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907070-1cd6c0d48162448f83b9c90047b6816c.png)
 
 > [!attention] 
 > 
@@ -689,7 +689,7 @@ Python 为列表重定义了运算符 `+` 和 `*` 的含义，下面我们介绍
 > 
 > 和列表一样，元组的元素也是一个个对象的引用，Python 禁止我们修改元组的元素。下图说明了元组的不可变并不是值不可变
 > 
-> ![[Pasted image 20250326194118.png]]
+> ![Pasted image 20250326194118|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907070-b133ba35375f49fe8acd655c35b71af4.png)
 > 
 > Python 将这些不能修改的对象称为 **不可变对象**
 > 
@@ -1688,7 +1688,7 @@ b'\xff\xea'
 
 有两种常用的方法将散列值映射到 $0 \sim \text{TableSize}-1$ 范围内的数：**取模法** 和 **位与**
 
-![[Pasted image 20250329161618.png]]
+![Pasted image 20250329161618|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907072-45d48c7ac79f46149d10906d6063bcf7.png)
 
 
 > [!attention] 
@@ -1700,7 +1700,7 @@ b'\xff\xea'
 
 所谓的开放地址法是指当出现散列冲突时，就从冲突位置向后选择没有被存储数据的地址；而链接表法则是在出现散列冲突后，就在后面链接一个表即可。如下图所示：假设 `k1` 和 `k2` 的散列值都选择了编号为 $2$ 的位置，由于 `k1` 先占用了位置 $2$。开放地址法就在 `k1` 的后面寻找可插入位置；而链接表法就直接在 `k1` 的后面连一张表即可
 
-![[Pasted image 20250329184710.png]]
+![Pasted image 20250329184710|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785907073-9338423424054cc3b3e7ce661b1c8496.png)
 
 Python 中散列表的实现有两类：**集合(`set`)** 和 **字典(`dict`)**。下面我们介绍这两种数据结构
 

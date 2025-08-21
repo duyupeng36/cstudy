@@ -25,11 +25,11 @@ int add(int loperand, int roperand) {
 
 `main.c`  和 `add.c` 两个源文件都能通过编译，但是在链接阶段会因为找不到符号的定义而失败
 
-![[Pasted image 20241007182354.png]]
+![Pasted image 20241007182354|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243864-f20d61ccf5884e4ab9ebde0331156387.png)
 
 但是，将这 `add.o` 和 `main.o` 一起链接就能通过链接，从而形成可执行文件
 
-![[Pasted image 20241007182511.png]]
+![Pasted image 20241007182511|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243864-55ecd417f9d044bc8ec458bfbbb321fe.png)
 
 ## 目标库
 
@@ -138,7 +138,7 @@ gcc -g -o main_nolib main.o calc.o show.o  # 将三个目标文件链接在一�
 
 执行 `main_nolib` 就可检查这些程序是否能正确运行
 
-![[Pasted image 20241007185009.png]]
+![Pasted image 20241007185009|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243864-1cb7dada041d4b29a64264235c512586.png)
 
 **链接** 实际上是由一个单独的 **链接器程序 `ld`** 来完成的。当使用 GCC 链接一个程序时，GCC 会在幕后调用 `ld`
 
@@ -212,7 +212,7 @@ ar [选项] [库名] 目标文件列表
 ar -r libcalc.a calc.o show.o  # 将上述 calc 库的目标文件归档为一个静态库
 ```
 
-![[Pasted image 20241007213305.png]]
+![Pasted image 20241007213305|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243864-da2429412f2345dda201ae7f1eeffb4f.png)
 
 ### 使用静态库
 
@@ -275,7 +275,7 @@ gcc -g -o main_static_lib main.c
 
 创建静态库的过程如下图
 
-![[Pasted image 20241007225845.png]]
+![Pasted image 20241007225845|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243865-560f54292f484a37808b5fbce157471e.png)
 
 使用静态库有两种方法：第一种就是将静态库放在 GCC 执行的目录下，使用 GCC 链接时直接指定静态库的全名。第二种就是将静态库放置在链接器的任意一个搜索目录中，并通过 GCC 选项 `-l{name}` 指定静态库名
 
@@ -339,7 +339,7 @@ gcc -g -o main_static_lib main.c
 
 下图展示创建共享库的过程
 
-![[Pasted image 20241007230950.png]]
+![Pasted image 20241007230950|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243865-cfc6c201f29e43cf97146ccbdc22804d.png)
 
 创建目标共享库，使用如下两条命令
 
@@ -476,7 +476,7 @@ $ ldd main_shared      2024年10月07日 星期一 23时58分11秒
 > 当这样使用 `objdump` 时它就类似于 `readelf`，`readelf` 能显示类似的信息，但显示格式不同
 > 
 
-![[Pasted image 20241008001052.png]]
+![Pasted image 20241008001052|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243866-795a28fc741247d4be544e7db36530bd.png)
 
 #### nm 命令
 
@@ -544,11 +544,11 @@ $ LD_LIBRARY_PATH=./shared_library ./main_shared
 
 下图给出了在使用一个内嵌的 `soname`，将程序与共享库链接起来，以及创建运行程序所需要的 `soname` 符号链接涉及到的编译链接事项
 
-![[Pasted image 20241008110247.png]]
+![Pasted image 20241008110247|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243866-deb0459fcce84e9b91851e61424fb91b.png)
 
 下图给出了创建的程序被加载进内存以备执行时发生的事情
 
-![[Pasted image 20241008111554.png]]
+![Pasted image 20241008111554|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243868-5a2efde89feb409f9446b838c14fca3a.png)
 
 ### 版本和命名规则
 
@@ -615,7 +615,7 @@ libdemo.so.2.0.1
 
 下图展示共享库三种名称之间的关系
 
-![[Pasted image 20241008115758.png]]
+![Pasted image 20241008115758|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705243869-a7b80a1583894315afa88361d4f10043.png)
 
 #### 使用标准规范
 

@@ -121,19 +121,19 @@
 
 #### 2.3.4 内存管理
 
-| 内容          | 描述             | 系统调用/库函数                                                              |
-| :---------- | -------------- | --------------------------------------------------------------------- |
-| 理论：硬件       |                |                                                                       |
-| [[计算机组成：存储器层次结构]] | 组织存储器，避免 IO 低效 |                                                                       |
-|             |                |                                                                       |
-| 理论：内存管理     |                |                                                                       |
-| [[操作系统：内存管理]]    | 分段和分页          |                                                                       |
-| [[操作系统：虚拟内存]]    | 虚拟内存管理/地址转换    |                                                                       |
-|             |                |                                                                       |
-| Linux 系统调用  |                |                                                                       |
-| [[Linux 系统编程：内存分配]]    | 虚拟内存分配         | 堆上分配空间：`brk` `sbrk` <br>栈上分配空间：`alloca`                               |
-| [[Linux 系统编程：内存映射]]    | 将文件映射到虚拟内存     | 建立映射：`mmap` <br>解除映射：`munmap`                                         |
-| [[Linux 系统编程：虚拟内存操作]]  | 虚拟地址空间上执行系统调用  | 修改保护位：`mprotect`<br>锁定内存：`mlock` `mlockall`<br>建议：`mincore` `madvise` |
+| 内容                    | 描述             | 系统调用/库函数                                                              |
+| :-------------------- | -------------- | --------------------------------------------------------------------- |
+| 理论：硬件                 |                |                                                                       |
+| [[计算机组成：存储器层次结构]]     | 组织存储器，避免 IO 低效 |                                                                       |
+|                       |                |                                                                       |
+| 理论：内存管理               |                |                                                                       |
+| [[操作系统：内存管理]]         | 分段和分页          |                                                                       |
+| [[操作系统：虚拟内存]]         | 虚拟内存管理/地址转换    |                                                                       |
+|                       |                |                                                                       |
+| Linux 系统调用            |                |                                                                       |
+| [[Linux 系统编程：内存分配]]   | 虚拟内存分配         | 堆上分配空间：`brk` `sbrk` <br>栈上分配空间：`alloca`                               |
+| [[Linux 系统编程：内存映射]]   | 将文件映射到虚拟内存     | 建立映射：`mmap` <br>解除映射：`munmap`                                         |
+| [[Linux 系统编程：虚拟内存操作]] | 虚拟地址空间上执行系统调用  | 修改保护位：`mprotect`<br>锁定内存：`mlock` `mlockall`<br>建议：`mincore` `madvise` |
 
 #### 2.3.5 进程管理
 
@@ -177,11 +177,11 @@
 | [[Linux 系统编程：文件锁]]                            | 文件加锁/解锁: `flock`<br>区域加锁/解锁: `fcntl`                                                                                                                                                          |
 |                                               |                                                                                                                                                                                               |
 | 通信工具：信号                                       |                                                                                                                                                                                               |
-| [[Linux 系统编程：信号基本概念]]                                    | 注册处理函数: `signal`<br>发送信号: `kill` `raise`  `killpg`<br>信号描述: `strsignal`                                                                                                                       |
-| [[Linux 系统编程：信号集]]                                       | 初始化信号集: `sigemptyset` `sigfillset`<br>添加或移除信号: `sigaddset` `sigdelset`<br>测试信号集: `sigismember`<br>添加/获取信号掩码: `sigprocmask`<br>获取等待信号集: `sigpending`<br>改变信号处置: `sigaction`<br>暂停等待信号: `pause` |
-| [[Linux 系统编程：信号处理器函数]]                                   | 保存跳转环境: `sigsetjmp`<br>执行非局部跳转: `siglongjmp`                                                                                                                                                  |
-| [[Linux 系统编程：信号高级特性]]                                    | 发送实时信号: `sigqueue`<br>等待信号: `sigsuspend` `sigwaitinfo`                                                                                                                                        |
-| [[Linux 系统编程：定时器与休眠]]                                    | 创建定时器: `setitimer` `alam` <br>获取定时器状态: `getitimer`<br>暂停运行: `sleep` `nanosleep`                                                                                                               |
+| [[Linux 系统编程：信号基本概念]]                         | 注册处理函数: `signal`<br>发送信号: `kill` `raise`  `killpg`<br>信号描述: `strsignal`                                                                                                                       |
+| [[Linux 系统编程：信号集]]                            | 初始化信号集: `sigemptyset` `sigfillset`<br>添加或移除信号: `sigaddset` `sigdelset`<br>测试信号集: `sigismember`<br>添加/获取信号掩码: `sigprocmask`<br>获取等待信号集: `sigpending`<br>改变信号处置: `sigaction`<br>暂停等待信号: `pause` |
+| [[Linux 系统编程：信号处理器函数]]                        | 保存跳转环境: `sigsetjmp`<br>执行非局部跳转: `siglongjmp`                                                                                                                                                  |
+| [[Linux 系统编程：信号高级特性]]                         | 发送实时信号: `sigqueue`<br>等待信号: `sigsuspend` `sigwaitinfo`                                                                                                                                        |
+| [[Linux 系统编程：定时器与休眠]]                         | 创建定时器: `setitimer` `alam` <br>获取定时器状态: `getitimer`<br>暂停运行: `sleep` `nanosleep`                                                                                                               |
 
 #### 2.3.7 多线程
 
@@ -241,10 +241,10 @@
 | [[数据库：查询数据]]                  | 查询：`SELECT ... FROM`<br>别名：`AS`<br>排序：`ORDER BY ...[ASC DESC]`<br>自定义列表：`FILED(value, value1,...)`<br>含NULL值：`NULLS FIRST`  `NULLS LAST`<br>去重：`DISTINCT` `DISTINCT ON`                                                                                                |
 | [[数据库：过滤数据]]                  | 条件: `WHERE`<br>运算符：`AND` `OR` `NOT` <br>运算符：`LIKE` `IN` `BETWEEN` `IS NULL`<br>运算符： `LIMIT ... OFFSET..` <br>运算符：`OFFSET ... FETCH ...`                                                                                                                                |
 | [[数据库：连接表]]                   | 内连接：`INNER JOIN`<br>外连接：`LEFT OUTER JOIN` `RIGHT OUTER JOIN`<br>自连接：SELF-JOIN，自选连接语法<br>全连接：`FULL OUTER JOIN`<br>笛卡尔连接：`CROSS JOIN`<br>自然连接：`NATURAL JOIN`                                                                                                             |
-| [[数据库：分组与聚合]]                     | 分组：`GROUP BY`<br>过滤：`HAVING`<br>聚合函数：`SUM` `AVG` `COUNT` `MAX` `MIN`<br>分组集：`GROUPING SETS` `CUBE` `ROLLUP`                                                                                                                                                            |
-| [[数据库：集合运算符]]                     | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                                                                                                                |
-| [[数据库：子查询]]                       | 不相关子查询<br>相关子查询                                                                                                                                                                                                                                                        |
-| [[数据库：CTE]]                       | 公用表表达式                                                                                                                                                                                                                                                                 |
+| [[数据库：分组与聚合]]                 | 分组：`GROUP BY`<br>过滤：`HAVING`<br>聚合函数：`SUM` `AVG` `COUNT` `MAX` `MIN`<br>分组集：`GROUPING SETS` `CUBE` `ROLLUP`                                                                                                                                                            |
+| [[数据库：集合运算符]]                 | 并集：`UNION` `UNION ALL`<br>交集：`INTERSECT`<br>差集：`EXCEPT`                                                                                                                                                                                                                |
+| [[数据库：子查询]]                   | 不相关子查询<br>相关子查询                                                                                                                                                                                                                                                        |
+| [[数据库：CTE]]                   | 公用表表达式                                                                                                                                                                                                                                                                 |
 |                               |                                                                                                                                                                                                                                                                        |
 | **查询练习**                      |                                                                                                                                                                                                                                                                        |
 | [[作业43：SQL 练习 Part1]]         | 基本的查询和过滤                                                                                                                                                                                                                                                               |
@@ -253,12 +253,12 @@
 | [[作业46：SQL 练习 Part4]]         | 子查询                                                                                                                                                                                                                                                                    |
 |                               |                                                                                                                                                                                                                                                                        |
 | **数据定义语言 DDL**：库和表            |                                                                                                                                                                                                                                                                        |
-| [[数据库：管理数据库]]                     | 显示数据库：`SHOW DATABASES`<br>创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                                                                                                                             |
-| [[数据库：管理表]]                       | 创建表：`CREATE TABLE` `CREATE TABLE AS`<br>生成列约束：`GENERATE ALWAYS AS (expr)`<br>修改表：`ALTER TABLE`<br>删除表：`DROP TABLE`                                                                                                                                                     |
-| [[数据库：约束]]                        | 主键约束：`PRIMARY KEY`<br>外键约束：`FOREIGN KEY`<br>CHECK 约束：`CHECK(expr)`<br>UNIQUE 约束：`UNIQUE KEY`<br>NOT NULL 约束：`NOT NULL`<br>DEFAULT 约束：`DEFAULT value/expr`                                                                                                              |
+| [[数据库：管理数据库]]                 | 显示数据库：`SHOW DATABASES`<br>创建数据库：`CREATE DATABASE`<br>删除数据库：`DROP DATABASE`                                                                                                                                                                                             |
+| [[数据库：管理表]]                   | 创建表：`CREATE TABLE` `CREATE TABLE AS`<br>生成列约束：`GENERATE ALWAYS AS (expr)`<br>修改表：`ALTER TABLE`<br>删除表：`DROP TABLE`                                                                                                                                                     |
+| [[数据库：约束]]                    | 主键约束：`PRIMARY KEY`<br>外键约束：`FOREIGN KEY`<br>CHECK 约束：`CHECK(expr)`<br>UNIQUE 约束：`UNIQUE KEY`<br>NOT NULL 约束：`NOT NULL`<br>DEFAULT 约束：`DEFAULT value/expr`                                                                                                              |
 |                               |                                                                                                                                                                                                                                                                        |
 | **数据操作语言 DML**：修改数据           |                                                                                                                                                                                                                                                                        |
-| [[数据库：修改数据]]                      | 插入数据：`INSERT INTO tb_name VALUES (...) ...`<br>修改数据：`UPDATE tb_name SET column=value WHERE condition`<br>删除数据：`DELETE FROM tb_name WHERE condition`                                                                                                                    |
+| [[数据库：修改数据]]                  | 插入数据：`INSERT INTO tb_name VALUES (...) ...`<br>修改数据：`UPDATE tb_name SET column=value WHERE condition`<br>删除数据：`DELETE FROM tb_name WHERE condition`                                                                                                                    |
 |                               |                                                                                                                                                                                                                                                                        |
 | **MySQL/PostgreSQL C API**    |                                                                                                                                                                                                                                                                        |
 | [[MySQL C API]]               | 初始化库: `mysql_library_init()`<br>初始化 MYSQL: `mysql_init()`<br>建立连接: `mysql_real_connect()`<br>关闭连接: `mysql_close()`<br>执行 SQL: `mysql_query()`<br>获取一行： `mysql_fetch_row()`<br>获取列元数据: `mysql_fetch_fields()`<br>获取行数: `mysql_num_rows()`<br>获取列数: `mysql_num_fields()` |
@@ -367,8 +367,6 @@
 | [[Go 语言：反射]]                    | 反射类型信息 反射值信息 反射修改值 反射创建变量      |
 | [[Go 语言：加密与解密]]                 | 对称加密 非对称加密                     |
 | [[Go 语言：单元测试]]                  | 单元测试 基准测试                      |
-| **数据结构**                        |                                |
-| [[Go 语言：数据结构]]                  | 理解并掌握线性表的链式实现，了解其他数据结构         |
 | **并发与网络**                       |                                |
 | [[Go 语言：并发]]                    | 进程 线程 协程                       |
 | [[Go 语言：网络通信]]                  | TCP粘包问题                        |

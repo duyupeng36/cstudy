@@ -115,7 +115,7 @@
 
 从 Python3.4 开始，Python 提供了 `pathlib` 模块，该模块提供 **表示文件系统路径的类**，其语义适用于不同的操作系统。**路径类** 被分为提供纯计算操作而没有 `I/O` 的 **纯路径**，以及从纯路径继承而来但提供` I/O` 操作的 **具体路径**
 
-![[Pasted image 20250404202743.png]]
+![Pasted image 20250404202743|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786080226-98b34f96e62047e9b9bf1ebe60b6cf81.png)
 
 我们主要使用 `Path` 类，该类会根据 Python 程序运行的平台自动选择实例化 `PosixPath` 还是 `WindowsPath`
 

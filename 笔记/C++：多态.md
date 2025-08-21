@@ -143,17 +143,17 @@ sizeof(Derived): 24
 
 对于包含虚函数的类，其类对象会在开始位置存储一个指针指向该类的虚函数表，这个指针称为虚函数指针。如下图所示
 
-![[Pasted image 20250222201021.png]]
+![Pasted image 20250222201021|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718712-204b9a4c0a774874baa2d9a9fafd37c0.png)
 
 当 `Base` 类的 `display` 函数加上了 `virtual` 关键字，变成了一个虚函数，`Base` 对象的存储布局就改变了。在存储的开始位置会多加一个虚函数指针，**该虚函数指针指向一张虚函数表**（简称虚表），其中存放的是虚函数的入口地址
 
 `Derived` 继承了 `Base` 类，那么创建一个 `Derived` 对象，依然会创建出一个 `Base` 类的基类子对象
 
-![[Pasted image 20250222201214.png]]
+![Pasted image 20250222201214|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718712-30cede2970ee45b5910c13088a0a62b7.png)
 
 在 `Derived` 类中又定义了 `display` 函数，发生了 **覆盖** 的机制(`override`)，**覆盖的是虚函数表中虚函数的入口地址**
 
-![[Pasted image 20250222201312.png]]
+![Pasted image 20250222201312|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718712-32dd2dd697c74b968b1277d1e704139c.png)
 
 使用 `Base* p` 去指向 `Derived` 对象，**依然只能访问到基类的部分**。用指针 `p` 去调用 `display` 函数，发现是一个虚函数，那么会 **通过 `vfptr` 找到虚函数表**，此时虚函数表中存放的是 `Derived::display` 的入口地址，所以调用到 `Derived` 的 `display` 函数。
 
@@ -287,11 +287,11 @@ int main()
 > 
 > 可以有一张虚函数表，该类至少声明了一个虚函数
 > 
-> ![[Pasted image 20250222222214.png]]
+> ![Pasted image 20250222222214|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718713-872e409dd1064b848e15cbf4e0bc805a.png)
 > 
 >可以有多张虚函数表，该类继承了多个有虚函数的基类
 >
-> ![[Pasted image 20250222222319.png]]
+> ![Pasted image 20250222222319|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718713-4dca6abb9d164ba3a7fa869dce97a587.png)
 >
 > 也就是说，一个类至少有 $0$ 张虚函数表
 >
@@ -702,7 +702,7 @@ Derived(int, int)
 > 
 > 当需要使用基类的指针去释放派生类对象时，如果析构函数不是虚析构函数的情况下，只能调用基类的析构函数。此时，如果派生类持有资源就会造成资源泄漏的问题
 > 
-> ![[Pasted image 20250223202425.png]]
+> ![Pasted image 20250223202425|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718713-34ac9c742e2d4187a05b17dde260d3a9.png)
 > 
 
 下面我们将基类的析构函数声明为虚析构函数
@@ -765,7 +765,7 @@ Derived(int, int)
 > 
 > 由于析构函数是虚函数，**基类指针指向了派生类的对象**。通过基类指针销毁对象时，**调用了虚析构函数**。因此，**触发动态多态的机制**，从而间接调用到派生类的析构函数。
 > 
-> ![[Pasted image 20250223202528.png]]
+> ![Pasted image 20250223202528|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718713-74e27d60922b4d8692cdac8f95d5bbd8.png)
 > 
 > 在派生类的析构函数体执行完成之后，会自动调用成员和基类的析构函数
 > 
@@ -863,7 +863,7 @@ int main()
 
 通过上述代码，我们验证了 **虚函数表中存放虚函数的顺序，是按照虚函数的声明顺序去存放的**。
 
-![[Pasted image 20250223215012.png]]
+![Pasted image 20250223215012|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718714-464f274ca7434ffbbaf5d4299ad0a27b.png)
 
 ## 带虚函数的多继承
 
@@ -971,11 +971,11 @@ pBase3 = 0x7fff886b7af0
 
 三种不同的基类类型指针指向派生类对象时，**实际指向的位置是基类子对象的位置**
 
-![[Pasted image 20250223220907.png]]
+![Pasted image 20250223220907|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718714-bd12df9c7cd14b42adaf691c90a3b1fd.png)
 
 下图展示了 MSVC 编译器中的内存布局与虚函数表存放的内容
 
-![[Pasted image 20250223221100.png]]
+![Pasted image 20250223221100|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718714-9527c7eefd774af38bdbe9bbe97a9243.png)
 ### 对象内存布局
 
 > [!tip] 每个基类子对象都有自己的虚函数表
@@ -1031,7 +1031,7 @@ public:
 
 上述代码各个类的对象的内存布局如下图所示
 
-![[Pasted image 20250223225606.png]]
+![Pasted image 20250223225606|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785718714-9d48d810b7a6415196322f053304ed1f.png)
 
 **请分析以下各种调用情况的结果**
 

@@ -184,7 +184,7 @@ $ find / 2>/dev/null | wc -l &  # 在后台进程组中创建 2 个进程
 $ sort < longlist | uniq -c  # 在前台进程组中创建 2 个进程
 ```
 
-![[Pasted image 20241104140920.png]]
+![Pasted image 20241104140920|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707630173-9db65e5d203e4f7c9fd628dd799766fe.png)
 
 
 > [!important] 
@@ -209,7 +209,7 @@ $ sort < longlist | uniq -c  # 在前台进程组中创建 2 个进程
 
 下图展示了前台进程和后台进程之间的切换和使用的命令
 
-![[Pasted image 20241104174131.png]]
+![Pasted image 20241104174131|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707630173-69fd08292f6246c6870664b90317ffa2.png)
 
 ## 作业控制
 

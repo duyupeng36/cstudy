@@ -742,7 +742,7 @@ void f()
 
 上面两个属性共有 $4$ 中组合形式，有 $3$ 中形式在 C++ 语法规则精确描述，其中 既没有身份又不能移动的对象不重要，也不需要描述它。下图描述了左值和右值的概念
 
-![[Pasted image 20250119164624.png]]
+![Pasted image 20250119164624|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785330806-c4a79904a4384663a5898054da5a95e1.png)
 
 其中 `i` 表示有身份；`m` 表示可移动。一个经典的 **左值是 有身份但不能移动**，一个经典的**右值 是允许执行移出操作的对象**
 
@@ -819,7 +819,7 @@ void g()
 > [!attention] 
 > 需要谨记：指针是一个对象，而引用不是对象
 > 
-> ![[Pasted image 20250119180122.png]]
+> ![Pasted image 20250119180122|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785330807-73c961f94d154f6e9bd05659ef5807f1.png)
 > 
 
 `T&` 引用的初始化只能使用 `T` 类型的左值。与之不同的是，`const T&` 引用的初始值不一定非得是左值，甚至可以不是 `T` 类型的

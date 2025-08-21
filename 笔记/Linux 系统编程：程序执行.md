@@ -144,7 +144,7 @@ int execl(const char *pathname, char * const arg, ...
 
 上述 `exec()` 函数族的名字的最后一个字母区分了这些函数。下表总结了这些函数的差异
 
-![[Pasted image 20241103233055.png]]
+![Pasted image 20241103233055|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707580927-a56dc11c7b0e4ecf934739f08e7b872c.png)
 
 > [!summary] 
 > 
@@ -334,7 +334,7 @@ UNIX 内核运行解释器脚本的方式与二进制程序无异，前提是脚
 
 因为脚本并不包含二进制机器码，所以当调用 `execve()` 来运行脚本时，显然发生了一些不同寻常的事件。`execve()` 如果检测到传入的文件以两字节序列 `"#!"` 开始，就会析取该行的剩余部分（路径名以及参数），然后按如下图的方式来执行解释器程序
 
-![[Pasted image 20241105150947.png]]
+![Pasted image 20241105150947|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707580928-80e4efdbd6144e24bf47c994a181afb3.png)
 
 ## 文件描述符与 exec()
 

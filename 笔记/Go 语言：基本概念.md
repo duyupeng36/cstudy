@@ -692,7 +692,7 @@ $$
 
 我们期望只使用 `Sign`、`Fraction` 和 `Exponent` 三个数字表示任意一个数字，那么这些数字如何存放呢？IEEE 754 标准规定两种存储格式：**单精度浮点数** 和**双精度浮点数**，如下图所示
 
-![[Pasted image 20250602160316.png]]
+![Pasted image 20250602160316|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786739933-b29b0bee78c941ae93e81204ec9e1416.png)
 
 > [!tip] 
 > 
@@ -1025,9 +1025,7 @@ func main() {
 
 ## 格式化输出
 
-我们在前面使用了 Go  `fmt` 标准包中的 `fmt.Print` 系列的函数。其中 `fmt.Printf` 用于格式化输出。继承自 C 语言的格式化输出。其中，第一个参数 `format` 的格式如下图
-
-![[Pasted image 20240922005552.png]]
+我们在前面使用了 Go  `fmt` 标准包中的 `fmt.Print` 系列的函数。其中 `fmt.Printf` 用于格式化输出。继承自 C 语言的格式化输出。
 
 ### 标志
 

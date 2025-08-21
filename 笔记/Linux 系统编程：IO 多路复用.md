@@ -51,7 +51,7 @@
 > 当一个阻塞 IO 操作（如读取文件或从网络接收数据）被发起时，调用线程会暂停，直到数据读取或写入操作完成。操作完成后，线程才会继续执行后续代码
 > 
 
-![[Pasted image 20241030205651.png]]
+![Pasted image 20241030205651|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866133-e5726f0526844780a40d21c1d2df3faa.png)
 
 
 > [!tip] 阻塞 IO 特点
@@ -82,7 +82,7 @@
 
 下图描述了 **非阻塞 IO** 的轮询过程
 
-![[Pasted image 20241030205845.png]]
+![Pasted image 20241030205845|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866133-0a12bb29a9634c7e89bdd84cb1b63eba.png)
 
 > [!attention] 非阻塞 IO 的局限性
 > 
@@ -128,7 +128,7 @@
 > 
 > 下图展示文件描述符处于 **读就绪状态** 的缓冲区中的字节数
 > 
-> ![[Pasted image 20241205222456.png]]
+> ![Pasted image 20241205222456|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866133-cefaa1691f5b4d1caf6870b9c4832c28.png)
 > 
 > + 只要缓冲区中的字节数 **在虚线上方**，就会通知 **文件描述符就绪**
 > 
@@ -141,7 +141,7 @@
 > 
 > 下图展示文件描述符处于 **读就绪状态** 的缓冲区中的字节数
 > 
-> ![[Pasted image 20241205223355.png]]
+> ![Pasted image 20241205223355|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866134-5e7fde10a1d6411f8b44d4ca43089d44.png)
 > 
 > + 只有当缓冲区中的 **字节数增加**，就会通知 **文件描述符就绪**
 > 
@@ -173,7 +173,7 @@
 
 这两个系统调用都允许进程 **要么一直等待文件描述符成为就绪态**，要么在调用中 **指定一个超时时间**。
 
-![[Pasted image 20241030230515.png]]
+![Pasted image 20241030230515|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866134-2af51619834a4d0e8700b71e50d658c8.png)
 
 > [!tip] 
 > 
@@ -431,7 +431,7 @@ typedef struct
 
 `select()` 使用 `fd_set` 的第 $i$ 位表示 `fd i` 是否在 `fd_set` 中。如下图，展示 `fd_set` 的概念
 
-![[Pasted image 20241101125046.png]]
+![Pasted image 20241101125046|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866135-73406ec5a6fd471d8367032ef8e9fe31.png)
 
 根据 **位图** 中的位 **是否置位** 判断文件描述符 $i$ 是否在 `fd_set` 中
 
@@ -695,12 +695,12 @@ int main(int argc, char *argv[]) {
 
 下表总结了`select()` 和 `poll()` 在管道或 FIFO 读端上的通知。
 
-![[Pasted image 20241128232422.png]]
+![Pasted image 20241128232422|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866136-65f8f89bc2204409ae48c67db93bdb63.png)
 
 下表总结了 `select()` 和 `poll()` 在管道或 FIFO 写端上的通知。
 
-![[Pasted image 20241128232531.png]]
+![Pasted image 20241128232531|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866136-65f1416464aa4d11b812d276510a5a2f.png)
 
 ### 套接字
 
-![[Pasted image 20241128232548.png]]
+![Pasted image 20241128232548|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784866137-26648e92a27d4355bd31eb7711668b97.png)

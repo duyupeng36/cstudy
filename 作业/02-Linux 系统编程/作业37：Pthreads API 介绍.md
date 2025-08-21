@@ -51,7 +51,7 @@ int main() {
 
 编译运行上述代码的结果为
 
-![[Pasted image 20241111190607.png]]
+![Pasted image 20241111190607|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788522028-9b50f91dd97249d58e27c25d3feb3f34.png)
 
 > [!success] 
 > 

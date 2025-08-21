@@ -386,7 +386,7 @@ int main(int argc, char *argv[]){
 
 下面的 shell 会话是 `svmsg_create.c` `svmsg_send.c` `svmsg_recv.c` 三个程序的使用示例
 
-![[Pasted image 20241108141258.png]]
+![Pasted image 20241108141258|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783200012-b6ae1a2c6fec4eeb9d82cb62c2f81ae8.png)
 
 ## 消息队列控制操作
 

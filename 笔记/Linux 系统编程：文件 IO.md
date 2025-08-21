@@ -138,7 +138,7 @@ int open(const char *pathname, int flags, /* mode_t mode */ ...);
 > 这些常量标志在 `flags` 参数中占据的位置如下图
 > 
 >
-> ![[Pasted image 20241025225936.png]]
+> ![Pasted image 20241025225936|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705580424-70744dbcdaa947b68b3d7756a2841fd1.png)
 > 
 > 被连接的两个位共同提供了 `O_SYNC` 标志
 > 
@@ -310,7 +310,7 @@ off_t lseek(int fd, off_t offset, int whence);
 
 下图解释了参数 `whence` 的含义
 
-![[Pasted image 20241011180619.png]]
+![Pasted image 20241011180619|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705580425-1213a5eff946470ab10ef7021bfe2a5b.png)
 
 > [!tip] 返回值
 > 

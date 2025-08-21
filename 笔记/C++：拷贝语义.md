@@ -99,7 +99,7 @@ void f() {
 
 下图展示了构造函数 `Person(const Person &p)` 的语义。`_name` 指向的内存也被复制了一份
 
-![[Pasted image 20250202145201.png]]
+![Pasted image 20250202145201|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785444943-e0c057067f384b728a37540c421084fa.png)
 
 关于拷贝构造函数，还需要深入理解下面几个问题
 
@@ -273,7 +273,7 @@ void f()
 
 一次浅拷贝会令两个对象(本例中的 `x` 和 `y`)进入 **共享状态**，这会带来潜在的混乱和错误。如果违反了独立性要求，我们称对象 `x` 和 `y` **纠缠** 在一起。孤立地分析一个对象是否纠缠是不可能的。例如，从源码中很难分析出 `*x.p` 的两次赋值的效果有什么显著不同。下图展示了纠缠对象示例
 
-![[Pasted image 20250202182153.png]]
+![Pasted image 20250202182153|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785444943-7edcdd3ea300482ebb89a5d3886be25c.png)
 
 > [!tip] 
 > 

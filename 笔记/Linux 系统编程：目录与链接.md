@@ -17,7 +17,7 @@
 
 下图展示了文件 `/etc/passwd` 锁维护的文件系统 $\text{i-node}$ 表已经相关目录文件的部分内容，展示了目录与 $\text{i-node}$ 的关系
 
-![[Pasted image 20241021192526.png]]
+![Pasted image 20241021192526|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705726850-36cef6c67e7a410399f0f3d207fcd5da.png)
 
 > [!attention] 
 > 
@@ -95,7 +95,7 @@ $ ls -li | grep test.txt
 
 符号链接，有时也称为 **软链接**，是一种特殊的文件类型，**其数据是另一文件的名称**。下图展示软连接与硬链接的区别：两个硬链接 `/home/erena/this` 和 `/home/allyn/that` 指向同一个文件，而符号链接 `/home/kiran/other`，则指代文件名 `/home/erena/this`
 
-![[Pasted image 20241021210752.png]]
+![Pasted image 20241021210752|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705726851-fcd2b8c2c13342a088fe5256c28b78a1.png)
 
 shell 命令 `ln` 指定 `-s` 选项即可创建符号链接。`ls` 指定 `-F` 选项的输出结果会在符号链接尾部附加 `@`
 

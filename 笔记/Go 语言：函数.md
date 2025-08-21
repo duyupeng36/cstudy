@@ -427,7 +427,7 @@ func fib(n int) int {
 
 这个实现存在性能问题，**每次计算的 `fib(n)` 结果在函数返回后就被丢弃了**，当第二次计算 `fib(n)` 时，又会再次执行递归
 
-![[Pasted image 20240926104051.png]]
+![Pasted image 20250402220045|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786002442-6b51f078893d476bad08bfe0a9786461.png)
 
 如上图，**左分支的计算包含了右分支的值**，我只需要记录左分支的结果即可加速这个算法
 
@@ -488,7 +488,7 @@ func main() {
 
 计算过程如下图
 
-![[Pasted image 20241004004337.png]]
+![Pasted image 20250402220453|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786002442-5920fded44bb41c7b30b1420e6f27ab9.png)
 
 #### 矩阵幂运算计算斐波那契数列
 
@@ -616,7 +616,7 @@ func pow(a, n int) int {
 
 汉诺塔是一个经典的递归问题，如下图所示
 
-![[Pasted image 20240926135946.png]]
+![Pasted image 20240926135946|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755701810528-5b74fe69444a47d2ab22db1829b9d849.png)
 
 将 A 柱上的 $n$ 个盘片移动到 C 柱上，在移动过程中需要遵循以下规则：
 
@@ -971,7 +971,7 @@ func main() {
 
 在 Go 的函数中 `return` 语句在底层并不是原子操作，它分为给 **返回值赋值** 和 执行 `RET` 指令两步。而 `defer` 语句执行的时机就在返回值赋值操作后，`RET` 指令执行前。具体如下图所示
 
-![[Pasted image 20240410223231.png]]
+![Pasted image 20240410223231|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864554-11679bb424854f53a5ae9cef517c95c8.png)
 
 下面的程序演示了 `defer` 语句的执行时机：**通过注释进行解释**
 
@@ -1057,7 +1057,7 @@ func main() {
 
 运行时，栈上面是高地址，向下增长。分配给函数的栈空间被称为 **函数栈帧**。栈底通常称为 **栈基(base pointer, bp)**；栈顶又被称为 **栈指针(stack pointer, sp)**。在 Go 语言中，函数栈帧布局如下图
 
-![[Pasted image 20250618193938.png]]
+![Pasted image 20250618193938|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864555-0e6d3155f18e467ebe90581be34fd378.png)
 
 > [!tip] 
 > 函数栈帧从上到下分别是 
@@ -1069,7 +1069,7 @@ func main() {
 
 在 [[X86-64汇编：过程#转移控制]] 中，我们介绍了 `call` 指令。它只做两件事情：**将下一条指令地址入栈**，这个入栈的地址称为 **函数的返回地址**；然后，**跳转到被调用函数的入口开始执行**。在返回地址后面，就是被调用函数的栈帧了；所有的函数栈帧都采用相同的栈帧布局，因此被调用函数可以通过栈指针加上偏移的方式定位参数和返回值
 
-![[Pasted image 20250618194506.png]]
+![Pasted image 20250618194506|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864555-e23352747f2d4b45abfff84b384201c1.png)
 
 ### 分配栈帧
 
@@ -1084,23 +1084,23 @@ CPU 在执行指令时，需要使用特定的寄存器存储运行时 **栈基*
 
 在  Go 语言中，分配栈栈帧时，会直接将栈指针移动到所需最大栈空间的位置，然后通过 **栈指针+偏移量** 这种相对寻址的方式使用函数栈帧，如下图所示
 
-![[Pasted image 20250618200755.png]]
+![Pasted image 20250618200755|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864557-a9aec63caa9d44938ec0cba7588aee6d.png)
 
 ### 无参数无返回值函数的调用
 #### call 指令
 
 下面我们来看 `call` 指令时如何实现函数跳转的。如下图，展示了执行 `call` 指令之前的栈帧布局和寄存器状态
 
-![[Pasted image 20250618202112.png]]
+![Pasted image 20250618202112|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864558-5fa4c3eb37944c709c49748dc2ae8c93.png)
 
 
 此时指令指针寄存器 `%rip` 指向了 `call b1` 指令，这就是下一条要执行的指针。`call` 指令需要执行两个动作：**将下一条指令地址(a2)入栈**；然后，将指令指针寄存器 `%rip` 设置为函数的入口地址 `b1`。当 `call` 指令执行完成之后，栈帧和寄存器的状态如下
 
-![[Pasted image 20250618202755.png]]
+![Pasted image 20250618202755|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864558-3ee845b49be64721b6da68f584db20ea.png)
 
 下面，函数 `b()` 开始执行。首先，会为自己分配足够大的栈帧，假设分配 $24$ 字节，对应上图，就是将 `%rsp` 移动到 `s7` 处；然后，会把调用者栈基保存在自己的栈帧中，即把 `%rbp` 的值保存在 `%rsp + 16` 的位置；最后，使用 `%rsp + 16` 的更新 `%rbp` 寄存器。最终，栈帧和寄存器的状态如下图
 
-![[Pasted image 20250618203907.png]]
+![Pasted image 20250618203907|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864559-304a0c26db0548e9933e7eb071f56e57.png)
 
 接下来就是执行函数 `b()` 的剩余指令，直到遇到 `ret` 指令。
 
@@ -1108,11 +1108,11 @@ CPU 在执行指令时，需要使用特定的寄存器存储运行时 **栈基*
 
 在执行 `ret` 指令之前，编译器还会插入额外的两条指令。第一条指令是 **恢复调用者栈基**，在上图描述中，调用栈基地址保存在 `%rsp + 16` 地址处；第二条指令是 **释放自己的栈帧空间**，分配时向下移动多少字节，释放时也要相应的向上移动多少字节。这两条指令执行完毕后栈帧和寄存器状态如下图
 
-![[Pasted image 20250618210229.png]]
+![Pasted image 20250618210229|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864561-1cec14875357427584510f42ed5ca19f.png)
 
 然后，就需要执行 `ret` 指令，也要做两件事情：首先，弹出 `call` 压栈的返回地址；然后，将 `%rip` 设置为这个返回地址。`ret` 指令执行完后的栈帧和寄存器状态如下
 
-![[Pasted image 20250618210646.png]]
+![Pasted image 20250618210646|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864563-62fffac7b79c40828fe4fc827cb9f9b8.png)
 
 现在，函数 `a()` 就可以从 `a2` 这条指令继续执行了
 
@@ -1139,7 +1139,7 @@ func main() {
 
 我们在执行上述代码时，发现数据交换失败了。下面我们通过函数的调用栈来看看发生了什么事。`swap()` 函数获得参数时的栈帧布局如下
 
-![[Pasted image 20250618215709.png]]
+![Pasted image 20250618215709|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864565-25ce17184d3143ef8ae1d9f0c3a17192.png)
 
 > [!warning] 
 > 
@@ -1148,7 +1148,7 @@ func main() {
 
 执行交换变量的指令交换的仅仅是参数的值，而不是调用者的局部变量。也就是说，当执行完 `swap()` 函数中第 `6` 行时，函数的栈帧状态如下
 
-![[Pasted image 20250618215947.png]]
+![Pasted image 20250618215947|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864565-99c9ed0527a645aa90abbc161fd00f21.png)
 
 上图展示的内容显示，我们发现 `swap()` 交换的是其参数值，而非调用者的局部变量。
 
@@ -1173,7 +1173,7 @@ func main() {
 
 执行上述代码，发现这次交换时成功的。下面我们来看该示例的函数栈帧
 
-![[Pasted image 20250618223824.png]]
+![Pasted image 20250618223824|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864566-b389437db9a24727a25235dbc2d8ebab.png)
 
 显然，`swap()`  通过指针交换的是 `main()` 函数局部空间中的变量
 
@@ -1211,15 +1211,15 @@ func main() {
 
 在上述例子中，`main()` 函数调用 `incr()`，然后将 `incr()` 的返回值赋值给局部变量。在 `main()` 函数中执行到 `incr()` 函数的调用时，此时的函数栈帧如下图
 
-![[Pasted image 20250618225041.png]]
+![Pasted image 20250618225041|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864566-e91853534f8d464db4abb42e722fef6f.png)
 
 函数 `incr()` 继续执行到第 $11$ 行 `a++` 时，将参数 `a` 的值自增 $1$，此时的函数栈帧如下
 
-![[Pasted image 20250618225245.png]]
+![Pasted image 20250618225245|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864567-b65cf6997e2a40b6a449789b27fa11bf.png)
 
 函数 `incr()` 继续执行第 $12$ 行 `b = a` 时，将参数 `a` 的值赋值给 `incr()` 的局部变量 `b`，此时函数的栈帧如下图
 
-![[Pasted image 20250618225424.png]]
+![Pasted image 20250618225424|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864567-96b630f42b65429bbf96e268397f8df5.png)
 
 函数 `incr()` 继续执行到 $13$ 行 `return b` 时，我们需要明白一个关键问题。我们说过，函数最后由编译器插入的指令负责恢复调用者栈基和释放栈帧。不过，在此之前，需要给返回值赋值并且执行 `defer` 函数
 
@@ -1230,15 +1230,15 @@ func main() {
 
 所以，在执行 `return b` 这条语句时，先将 `incr()` 的局部变量 `b` 的值拷贝到返回值空间，此时的函数栈帧如下图
 
-![[Pasted image 20250618230014.png]]
+![Pasted image 20250618230014|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864567-3495efe333d543ce8c9f2572cc0a213d.png)
 
 现在，继续执行 `defer` 函数，第 $8$ 行 `a++` 会导致 `incr()` 的参数自增 $1$，第 $9$ 行 `b++` 会导致 `incr()` 的局部变量 `b` 自增 $1$。此时，函数的栈帧如下图
 
-![[Pasted image 20250618230249.png]]
+![Pasted image 20250618230249|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864568-8146f540856b48e68bf9da330cd39d2f.png)
 
 到此，`incr()` 函数的代码执行完毕，此时返回值为 $11$，赋值给 `main()` 函数中的局部变量 `b`。此时，函数栈帧如下图
 
-![[Pasted image 20250618230410.png]]
+![Pasted image 20250618230410|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864568-fc4dd1a4222c4035b10ff10d5611eca0.png)
 
 #### 命名返回值
 
@@ -1268,19 +1268,19 @@ func main() {
 
 此时，输出的结果就与匿名返回值的情况不同了。下面我们通过函数栈帧状态变化分析其中原因。在开始执行 `incr()` 函数的栈帧如下图，`main()` 函数的栈帧完全一样，区别在于 `incr()` 函数没有了局部变量
 
-![[Pasted image 20250618230824.png]]
+![Pasted image 20250618230824|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864569-58632e75e1a441acbd81480655cac9ab.png)
 
 函数 `incr()` 执行到第 $10$ 行 `a++` 时，将参数 `a` 自增 $1$，此时函数的栈帧如下
 
-![[Pasted image 20250618231002.png]]
+![Pasted image 20250618231002|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864570-62dd99693c4142f186bea22224d7a4f6.png)
 
 函数 `incr()` 执行第 $11$ 行 `return a`，首先将 `incr()` 的参数 `a` 的值赋值给返回值，此时函数的栈帧如下图
 
-![[Pasted image 20250618231110.png]]
+![Pasted image 20250618231110|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864570-ffc6de531a5447c7bd8972b0e122f2a3.png)
 
 然后，继续 `defer` 函数，第 $7$ 行 `a++` 继续将 `incr()` 的参数 `a` 自增 $1$，第 $8$ 行 `b++` 将 `incr()` 的返回值自增 $1$。此时，函数栈帧的状态如下
 
-![[Pasted image 20250618231250.png]]
+![Pasted image 20250618231250|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864571-9a9b0e89591c418d9f754a252d2616e6.png)
 
 ## 闭包的实现
 
@@ -1304,11 +1304,11 @@ type funcval struct {
 
 下图展示了 Function Value 的结构
 
-![[Pasted image 20250619223705.png]]
+![Pasted image 20250619223705|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864572-d2cc3c572d9a4354a5a1eb08acae2d6c.png)
 
 下图展示了一个完整示例
 
-![[Pasted image 20250619223901.png]]
+![Pasted image 20250619223901|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864573-bc20392f143a4c8b973056594d0e8aa8.png)
 
 函数 `A` 被赋值给了 `f1` 和 `f2` 两个变量，这种情况编译器会进行优化，让 `f1` 和 `f2` 共用一个 `funcval` 结构体。如上图，`funcval` 类型的变量被分配在了只读数据段。`f1` 和 `f2` 保存了在只读数据段中的 `funcval` 类型变量的地址。通过 `f1` 和 `f2` 调用函数时，就会通过 `f1` 和 `f2` 存储的地址找到 `funcval` 类型的变量，然后通过 `funcval` 类型的变量找到函数的入口地址，从而调用函数
 
@@ -1352,11 +1352,11 @@ func main() {
 
 函数 `main()` 执行第 $9$ 行 `f1:=create()` 时，`create()` 函数会在堆空间上分配一个 `funcval` 结构体，其中 `fn` 存储了闭包函数的入口地址，随后跟随着闭包的捕获变量。当 `main()` 函数的第 $9$ 行执行完毕时，栈帧状态如下图 
 
-![[Pasted image 20250619232021.png]]
+![Pasted image 20250619232021|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864573-adb0917de1074463b1b0592dea60f337.png)
 
 下面继续执行 `main()` 函数的第 $10$  行 `f2:=create()` 时，`create()` 函数重新在堆上分配另一个 `funcval` 结构体并返回该结构体的地址。当 `main()` 函数的第 $10$ 行执行完毕时，栈帧状态如下图
 
-![[Pasted image 20250619232518.png]]
+![Pasted image 20250619232518|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864574-a978f09573b24ca6af6053fec5f722fe.png)
 
 后续就可以通过 Function Value `f1` 和 `f2` 调用闭包函数时，会找到各自的 `funcval` 结构体，拿到同一个函数入口。但是，它们会使用各自的捕获列表
 
@@ -1404,7 +1404,7 @@ func main() {
 
 该示例中，闭包的捕获变量是局部变量，除了初始化赋值外，还有修改。下面我们通过栈帧的变化来看看这种情况是如何处理的
 
-![[Pasted image 20250619235913.png]]
+![Pasted image 20250619235913|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786864575-fa704c8e0b184f149bdd6f29871ccd3a.png)
 
 > [!tip] 
 > 

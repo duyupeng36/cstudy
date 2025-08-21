@@ -94,7 +94,7 @@
 
 下表列出了 POSIX.1-1990 SUSv2 和 SUSv3 标准要求实现为异步信号安全的函数
 
-![[Pasted image 20241109173246.png]]
+![Pasted image 20241109173246|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783920830-f27a893991314c23bdbc36390eeeb11b.png)
 
 > [!tip] 
 > 

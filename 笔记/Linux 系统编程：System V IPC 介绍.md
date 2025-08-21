@@ -251,7 +251,7 @@ IPC 对象的权限与文件权限类似，只不过执行权限对于 IPC 对�
 
 下图为内核内部使用的一些表示 System V IPC 对象的相关数据结构，以信号量为例
 
-![[Pasted image 20241106221650.png]]
+![Pasted image 20241106221650|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783115014-9b1d71b8dcf744b6950616700d6957f2.png)
 
 对于每种 IPC 机制，内核都会维护一个 `<ipc>_ids` 结构，它记录着该 IPC 机制的所有实例的各种 **全局信息**，包括一个大小会动态变化的指针数组 `entries`，数组中的每个元素指向一个对象实例的 **关联数据结构**（在信号量中是 `semid_ds` 结构）。`entries` 数组的当前大小记录在 `size` 字段中，`max_id` 字段记录着当前使用中的元素的最大下标
 

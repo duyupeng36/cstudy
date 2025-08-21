@@ -25,7 +25,7 @@ FROM cte_name;
 
 我们将使用示例数据库中的 `customers` 表进行演示
 
-![[Pasted image 20241229210106.png]]
+![Pasted image 20241229210106|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785231548-af17e14c8d824f0a9c1c4c258062fcd9.png)
 
 以下示例说明如何使用 CTE 从示例数据库的 `customers` 表中查询数据
 

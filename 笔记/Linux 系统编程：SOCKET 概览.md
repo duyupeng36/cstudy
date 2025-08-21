@@ -36,7 +36,7 @@ fd = socket(domain, type, protocol);
 > 
 > 下表总结了这些 domain 的通信范围和地址格式
 > 
-> ![[Pasted image 20241120185018.png]]
+> ![Pasted image 20241120185018|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784569446-4629a9f548064d31b338ec96289cd67e.png)
 > 
 
 > [!tip] 参数 `type`：指定 SOCKET 类型
@@ -52,7 +52,7 @@ fd = socket(domain, type, protocol);
 > 	+ 数据报 SOCKET 是无连接 SOCKET 的一个示例
 > 	+ 一个数据报 SOCKET 在使用时无需与另一个 SOCKET 建立连接
 > 
-> ![[Pasted image 20241120191433.png]]
+> ![Pasted image 20241120191433|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784569447-80714f68585043828d8e1e8f0ba5d8ee.png)
 > 
 
 ## SOCKET API
@@ -192,7 +192,7 @@ int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 
 下图显示了流式 SOCKET 通信双方需要编程模型和使用到的系统调用
 
-![[Pasted image 20241120225128.png]]
+![Pasted image 20241120225128|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784569447-e7122f12ae3944b9a9fae078daa1eb51.png)
 
 ### 监听接入连接
 
@@ -310,7 +310,7 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 
 一对连接的流式 SOCKET 在两个端点之间提供了一个双向通信信道，下图给出了 UNIX domain 的情形
 
-![[Pasted image 20241120232734.png]]
+![Pasted image 20241120232734|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784569449-f615428df63b4ce0ae2992f36254adfc.png)
 
 连接流式 SOCKET 上 I/O 的语义与管道上 I/O 的语义类似
 
@@ -359,7 +359,7 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 
 下图显示了数据报 SOCKET 的相关系统调用的使用
 
-![[Pasted image 20241120233738.png]]
+![Pasted image 20241120233738|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784569450-fea4ec772e1f44d0aaecfe61b422a62f.png)
 
 ### 数据报 SOCKET IO
 

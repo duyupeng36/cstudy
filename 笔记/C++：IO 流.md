@@ -28,7 +28,7 @@ C++ 将 IO 操作封装为各种流。下表列出了各种流的类名
 
 下图给出了这些类的继承关系
 
-![[Pasted image 20250205184328.png]]
+![Pasted image 20250205184328|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785547156-84e2f4b6fa794e6587ca40ef274cf57a.png)
 
 ## 流的状态
 
@@ -367,7 +367,7 @@ int main(){
 > 
 > 下图展示了 `ifstream` 的继承关系
 > 
-> ![[Pasted image 20250206104549.png]]
+> ![Pasted image 20250206104549|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785547157-d95b4e0ab98249cdae6d73df87aed029.png)
 > 
 > 由于 `basic_ios` 重载了 `operator bool()` 和 `operator!()`
 > + `operator!()`：若关联流上 **已出现错误** 则返回 **true**
@@ -468,7 +468,7 @@ int main(){
 
 如果想要在任意位置开始读取文件内容，可以使用成员函数 `seekg(pos)` 或者 `seek(offset, seekdir)` 指定可以从 `seekdir` 位置偏移 `offset` 个字符开始读取
 
-![[Pasted image 20250206154656.png]]
+![Pasted image 20250206154656|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785547157-a1838ed7904c408a89ddbb59c315e50d.png)
 
 如果想要一次读取文件的全部内容，首先第一步就是获取文件大小。通过 `seekg()` 和 `tellg()` 获取当流的大小，然后再将文件偏移设置为 `0` ，完成上述两步之后就可以开始读完整个文件了
 
@@ -502,7 +502,7 @@ int main(){
 
 `ofstream` 类封装了用于将数据写入文件的操作。该类从 `ostream` 派生而来
 
-![[Pasted image 20250206160943.png]]
+![Pasted image 20250206160943|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785547157-f088cdcd672b42e4922c3ca2ddd33643.png)
 
 > [!tip] 
 > 

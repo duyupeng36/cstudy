@@ -173,7 +173,7 @@ struct acct_v3
 > 
 > 剩余字节则存放了位掩码，用于控制 `clone()` 的操作。下表给出了这些位掩码的取值
 > 
-> ![[Pasted image 20241105225827.png]]
+> ![Pasted image 20241105225827|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707692470-01883826d6fd46f5a1afc0984a831b88.png)
 > 
 > 
 > 

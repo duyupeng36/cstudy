@@ -86,13 +86,13 @@
 如下图，展示了 IO 密集型任务执行行为
 
 
-![[Pasted image 20250423010524.png]]
+![Pasted image 20250423010524|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786338226-2b9dd9675c4947549d21d0d4edc5e6f9.png)
 
 蓝色方框表示程序执行工作的时刻，红色方框表示等待 I/O 操作完成的耗时。此图不按比例绘制，因为互联网上的请求可能比 CPU 指令长几个数量级，所以程序可能会花大部分时间在等待。这就是你的网络浏览器大部分时间所做的事情。
 
 另一方面，有一些程序在没有与网络通信或访问文件的情况下进行大量计算。这些是CPU密集型程序，因为限制你程序速度的资源是 CPU，而不是网络或文件系统。如下图，展示了 CPU 密集行任务的执行行为
 
-![[Pasted image 20250423010734.png]]
+![Pasted image 20250423010734|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786338227-03c9b199a72a45909532f004ab52d752.png)
 
 下表对 IO 密集型任务 和 CPU 密集型任务做出了总结
 
@@ -224,7 +224,7 @@ Downloaded 160 sites in 4.700141600013012 seconds
 
 这里是其执行时序图如下：线程发起请求后被阻塞，就会调度另一个线程执行，从而让所有线程稳步推进
 
-![[Pasted image 20250423202814.png]]
+![Pasted image 20250423202814|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786338227-b25414b8cdb14931b22be01e4d030a81.png)
 
 请注意：线程之间的切换也是有性能消耗的。当一个进程由许多线程时，线程的切换带来的性能消耗可能导致程序性能会更差
 
@@ -333,7 +333,7 @@ Downloaded 160 sites in 2.6161483000032604 seconds
 
 相比于多线程版本，异步 IO 的耗时更短。执行时序图看起来和多线程示例中发生的情况非常相似。只是 I/O 请求都是由同一个线程完成的：
 
-![[Pasted image 20250423214745.png]]
+![Pasted image 20250423214745|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786338228-12bac14fe3164fd2a465ed81b877bf11.png)
 
 > [!summary] 
 > 
@@ -437,7 +437,7 @@ Downloaded 160 sites in 3.0692823999852408 seconds
 
 在配备四个CPU核心的计算机上，它的运行速度大约是同步版本的 $4$ 倍。然而，它比多线程版本略慢，比异步版本慢得多。这段代码的执行时序图看起来是这样的
 
-![[Pasted image 20250424002657.png]]
+![Pasted image 20250424002657|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786338228-6d360a2431b2477586e915940238d8c0.png)
 
 ## 加速 CPU 密集型任务
 
@@ -601,7 +601,7 @@ Computed in 2.657741920000035 seconds
 
 这是比您看到的其他选项要好得多，因此无疑是此类任务的最佳选择。这里显示的是执行时序图：
 
-![[Pasted image 20250424005333.png]]
+![Pasted image 20250424005333|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786338230-3587c7a66b164cb589645769608be021.png)
 
 多进程使用中存在一些缺点，这些缺点在像这样的简单示例中并不明显。例如，**将问题划分为若干部分以便每个处理器可以独立操作有时可能很困难**。
 

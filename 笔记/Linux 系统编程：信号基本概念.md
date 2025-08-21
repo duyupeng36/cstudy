@@ -52,7 +52,7 @@
 > 
 > 在信号产生时和传递给某个进程时，这两个时间点之间，信号处于 **等待状态**
 > 
-> ![[Pasted image 20241108165915.png]]
+> ![Pasted image 20241108165915|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783443432-de4f6eda716940daa8afb4ac7bf100a8.png)
 > 
 > 信号通过在下面两个时刻送达进程
 > + **内核决定调度该进程执行时**，等待状态的信号立即送达
@@ -213,7 +213,7 @@ if(signal(SIGINT, old_handler) == SIG_ERR)
 
 **信号处理器程序**，也称为**信号捕捉器**，是 **当指定信号传递给进程时将会调用的函数**。下图展示了信号处理器的基本原理
 
-![[Pasted image 20241108185318.png]]
+![Pasted image 20241108185318|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783443432-3deb1cff420f4f4fa8ee97cd0074eaf5.png)
 
 调用信号处理器程序，可能会 **随时打断主程序流程**；内核代表进程来 **调用处理器程序**，当处理器返回时，主程序会在处理器打断的位置恢复执行
 
@@ -296,7 +296,7 @@ int kill(pid_t pid, int sig);
 > 
 > 如果 **发送者的实际或有效用户 ID** 匹配于 **接受者的实际用户 ID 或者保存设置用户 ID(saved set-user-id)**，那么非特权进程也可以向另一进程发送信号
 > 
-> ![[Pasted image 20241108195358.png]]
+> ![Pasted image 20241108195358|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783443435-05ecb021e1a04f9197f18b8181957216.png)
 > 
 > `SIGCONT` 信号需要特殊处理。无论对用户 ID 的检查结果如何，**非特权进程可以向同一会话中的任何其他进程发送这一信号**
 > 

@@ -286,7 +286,7 @@ int main(int argc, const char *argv[]) {
 
 下面的 shell 会话展示上述例程的使用方法，还显示了从文件空洞中读取字节的情况
 
-![[Pasted image 20241024230614.png]]
+![Pasted image 20241024230614|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788294923-549336e5cde74fa9a0f94e033337f082.png)
 
 ### tee 命令
 

@@ -35,7 +35,7 @@ ls | wc -l
 
 下图展示了这两个进程是如何使用管道的
 
-![[Pasted image 20241029232742.png]]
+![Pasted image 20241029232742|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782895856-743a1f8ee65845bfa2094c11e33a3df8.png)
 
 > [!tip] 
 > 
@@ -181,7 +181,7 @@ int pipe(int filedes[2]);
 
 下图描述了使用 `pipe()` 创建完管道之后的情况，其中调用进程通过文件描述符引用了管道的两端
 
-![[Pasted image 20241104181048.png]]
+![Pasted image 20241104181048|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782895856-9803967b7c4e4ab5925f685328aa0faf.png)
 
 在单个进程中管道的用途不多。一般来讲都是 **使用管道让两个进程进行通信**。为了让两个进程通过管道进行连接，在调用完 `pipe()` 之后可以调用 `fork()`。在 `fork()` 期间，**子进程会继承父进程的文件描述符的副本**
 
@@ -194,7 +194,7 @@ int pipe(int filedes[2]);
 
 如下图展示了使用管道来将数据从父进程传输到子进程
 
-![[Pasted image 20241104181703.png]]
+![Pasted image 20241104181703|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782895856-0086909be8814863aa78ae68753ef0ac.png)
 
 > [!error] 父子进程从同一个管道中读取数据会造成数据竞争
 > 
@@ -536,7 +536,7 @@ int pclose(FILE *stream);
 
 参数 `mode` 确定调用进程是从管道中读取数据(`mode` 是 `r`) 还是将数据写入到管道中(`mode` 是 `w`)。`mode` 的取值确定了所执行的 **命令的标准输出** 是连接到管道的 **写入端** 还是将其标准输入连接到管道的 **读取端**
 
-![[Pasted image 20241106142605.png]]
+![Pasted image 20241106142605|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755782895857-a24d8294bca7479c8e4af2312a493636.png)
 
 > [!tip] 参数 `mode`：指定调用进程对管道的操作
 > + `"w"`：调用进程持有管道的写端，子进程持有管道的读端

@@ -28,7 +28,7 @@ System V 信号量是 **进程同步** 技术。所谓进程同步就是**控制
 
 调用进程被阻塞时就会保持直到其他一些进程将信号量的值修改为一个允许这些操作继续向前的值，在那个时刻内核会唤醒被阻塞的进程。下图显示了使用一个信号量来同步两个交替将信号量的值在 $0$ 和 $1$ 之间切换的进程的动作
 
-![[Pasted image 20241107173735.png]]
+![Pasted image 20241107173735|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783163594-d7a9fdf691f547cda79c89177d82f97b.png)
 
 > [!important] 
 > 
@@ -231,7 +231,7 @@ if(semop(semid, sops, 1) == -1) {
 
 如果两个进程同时执行，如果第一个进程的时间片在代码中标记为 `/* XXXX */`  处期满(时间片到)，那么就会切换到第二个进程开始执行。执行顺序可能如下图
 
-![[Pasted image 20241107211605.png]]
+![Pasted image 20241107211605|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755783163595-063bcdf3f6d54264b5145f65eb1a246f.png)
 
 > [!question] 这个执行顺序的问题如下
 > 

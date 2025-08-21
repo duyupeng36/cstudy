@@ -83,7 +83,7 @@ daemon 是用来执行特殊任务的
 
 syslog 工具有两个主要组件：`syslogd daemon` 和 `syslog` 库函数。如下图提供了 `syslog` 工具的概览
 
-![[Pasted image 20241105121024.png]]
+![Pasted image 20241105121024|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707653008-6b3dd0c97fda46e9a6e39ea249844e76.png)
 
 上图中的 `syslogd` 从两个不同的源接收日志消息：一个是 UNIX domain socket  和 Internet domain socket
 
@@ -138,7 +138,7 @@ void openlog(const char *ident, int log_options, int facility);
 > 
 > 下表给出了 `openlog()` 的 `facility` 值和 `syslog()` 的 `priority` 参数
 > 
-> ![[Pasted image 20241105144415.png]]
+> ![Pasted image 20241105144415|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707653009-95c8b472c0fd4311b70dfb1bf5be3a73.png)
 > 
 > + `LOG_KERN` facility 值用于内核消息。用户空间的程序是无法用这个工具记录日志消息的。`LOG_KERN` 常量的值为 $0$。如果在 `syslog()` 中使用，代表了使用 **默认级别**
 > 
@@ -159,7 +159,7 @@ void syslog(int priority, const char *format, ...);
 > 
 > `level` 表示消息的严重程度取值入下表
 > 
-> ![[Pasted image 20241105145420.png]]
+> ![Pasted image 20241105145420|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755707653009-b52edf02e3324e45b6950a0019c48221.png)
 > 
 
 当完成日志记录之后可以调用 `closelog()` 来释放分配给 `/dev/log socket` 的文件描述符

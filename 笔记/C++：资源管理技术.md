@@ -191,11 +191,11 @@ child()
 
 我们发现当 `f()` 返回后 `Parent` 和 `Child` 的析构函数并没有被调用。下图说明了原因
 
-![[Pasted image 20250320222642.png]]
+![Pasted image 20250320222642|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785810414-75db6ea904a54d26aaca0c505ead4048.png)
 
 当函数 `f` 返回后，其栈帧被销毁，然而此时堆上的对象相互通过  `shared_ptr` 持有对方的指针，从而导致对象永远不会被销毁(`shared_ptr` 的引用计数永远不会为 $0$)
 
-![[Pasted image 20250320222744.png]]
+![Pasted image 20250320222744|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785810414-bb9bb6e3220d42e6821fe1e1a4eda6ef.png)
 
 ### weak_ptr
 

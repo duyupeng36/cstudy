@@ -1306,7 +1306,7 @@ func main() {
 
 ## 总结
 
-![[Pasted image 20250701225836.png]]
+![Pasted image 20250701225836|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755787575447-12a70900d7a4490d829e5c6ae66cc81b.png)
 
 反射可以从接口值当中通过 `TypeOf()` 获取 `Typ` 对象，通过 `ValueOf()` 获取 `Value` 对象
 - `Type` 对象只有类型信息，如果想获得值、修改值，可以通过 `New()` 获得 `Value` 对象，这个 `Value` 对象是指向该类型的零值的指针

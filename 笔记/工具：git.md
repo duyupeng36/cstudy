@@ -2,7 +2,7 @@
 
 [Git](https://git-scm.com/) 是一个免费的开源 **分布式版本控制系统**，旨在快速高效地处理从小到大的项目。下图给出了分布式 GIT 和 SVN 的差异
 
-![[Pasted image 20250105182546.png]]
+![Pasted image 20250105182546|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788025731-9906d0534fdc4056af540cf990571f95.png)
 
 ## 安装
 
@@ -84,7 +84,7 @@ user.email=test@runoob.com
 | 版本库 | 工作目录中的隐藏目录 `.git`               |
 下面这个图展示了工作区、版本库中的暂存区和版本库之间的关系
 
-![[Pasted image 20250105195227.png]]
+![Pasted image 20250105195227|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788025731-29d3281d00de40ce98747c803094b382.png)
 
 ## Git 基本操作
 
@@ -98,7 +98,7 @@ Git 的工作就是创建和保存你项目的快照及与之后的快照进行�
 
 下图展示了这些命令操作关系
 
-![[Pasted image 20250105201555.png]]
+![Pasted image 20250105201555|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788025732-47b6b151d3a74bfc8bef7b8307f7a686.png)
 
 ### 创建仓库
 
@@ -175,7 +175,7 @@ Git 分支管理是 Git 强大功能之一，能够让多个开发人员并行�
 > 使用分支意味着你可以从开发主线上分离开来，然后在不影响主线的同时继续工作
 > 
 
-![[Pasted image 20250105213538.png|600]]
+![Pasted image 20250105213538|600|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788025732-ac8b047439e54498adb22ce7e4ee678d.png)
 
 > [!important] 
 > 
@@ -229,7 +229,7 @@ git push origin --delete <branchname>  # 删除远程分支
 
 ## Git 工作流
 
-![[Pasted image 20250105190755.png]]
+![Pasted image 20250105190755|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755788025732-5fd79c7390df468faf8caf044392909d.png)
 
 ### 克隆仓库
 

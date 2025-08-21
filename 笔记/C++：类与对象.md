@@ -30,7 +30,7 @@
 
 在面向过程模式下，**对象和过程是完全分开的实体**。对象是一个能接收过程的独立实体
 
-![[Pasted image 20250123184217.png]]
+![Pasted image 20250123184217|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785388881-e35be6760d3545be847fd0f170b79e50.png)
 
 
 与面向过程模式不同，面向对象模式处理 **活动对象**，而不被动对象。活动对象能执行的动作都包含在该对象中：对象只需要接收合适的外部刺激来执行其中一个动作
@@ -42,7 +42,7 @@
 
 继续考虑文件打印程序。在面向对象模式中，文件能把所有的被文件执行的过程打包在一起。在这种模式中，程序仅仅像对象发送一个相应的请求即可
 
-![[Pasted image 20250123184417.png]]
+![Pasted image 20250123184417|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785388881-d005e58484eb4f33bf9c2c97a459b2fe.png)
 
 ## 类定义
 
@@ -670,7 +670,7 @@ class Person {
 
 由于 `Person` 类最大对齐位置是 $8$，因此 `Person` 对象会放在地址为 $8$ 的倍数的位置。下图展示了 `Person` 对象的内存布局
 
-![[Pasted image 20250127004946.png]]
+![Pasted image 20250127004946|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785388881-2512541643f14130952578c0e7fb5bd2.png)
 
 因此 `Person` 类的对象占用 $40$ 字节。下面的代码验证了该结果是否正确
 
@@ -916,7 +916,7 @@ Person p2 = p1;
 
 上述代码中 `p1` 和 `p2` 的关系如下
 
-![[Pasted image 20250130000424.png]]
+![Pasted image 20250130000424|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755785388881-11617f57a2f64107a8c1caa15398178d.png)
 
 显然，这种默认复制并不是我们期望的行为。我们会在后续介绍如何提供更恰当的行为。参考 [[C++：拷贝语义]]
 

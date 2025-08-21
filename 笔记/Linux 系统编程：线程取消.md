@@ -99,7 +99,7 @@ int pthread_setcanceltype(int type, int *oldtype);
 
 下表列出的这些函数是 SUSv3 规定取消点
 
-![[Pasted image 20241113140021.png]]
+![Pasted image 20241113140021|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755784187350-53fc8cd63b804e54954edc4369137d93.png)
 
 > [!attention] 
 > 

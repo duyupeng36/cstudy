@@ -19,7 +19,7 @@
 
 当线程获得 CPU 时间片之后，CPU 中的栈指针寄存器(`%rsp`)、栈基寄存器(`%rbp`) 和 程序计数器(`%rip`) 等都要切换到对应的线程
 
-![[Pasted image 20250707230534.png]]
+![Pasted image 20250707230534|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598395-0634fb16191a4955a8871ed07dab0316.png)
 
 ### 协程的概念
 
@@ -32,15 +32,15 @@
 
 线程可以选择一个执行体来执行，此时 CPU 中的程序计数器(`%rip`) 就会指向这个执行体的执行入口，栈指针寄存器(`%rsp`)和栈基寄存器(`%rbp`) 也会指向线程给它分配的执行栈。
 
-![[Pasted image 20250707232030.png]]
+![Pasted image 20250707232030|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598397-b6da07b127de4d019bc3736fd2571528.png)
 
 要切换执行体时，需要先保存当前执行体的执行上下文，然后才切换到另一个执行体
 
-![[Pasted image 20250707232310.png]]
+![Pasted image 20250707232310|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598399-cf65de9bbc6949769cbfa1404542b4fa.png)
 
 通过同样的方式，可以恢复到之前的执行体，从而可以在上次中断的地方继续执行。如下图所示
 
-![[Pasted image 20250707232633.png]]
+![Pasted image 20250707232633|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598402-c1d1cc1623da4f61bfcae7708c4869e8.png)
 
 > [!tip] 
 > 
@@ -56,7 +56,7 @@
 
 因此，可以让用户程序按需创建协程；协程在合适的位置主动让出控制流，此时，会保存执行上下文；然后，将控制流切换到其他协程。协程恢复执行时，会根据之前保存的执行上下文恢复到让出控制流时的状态。这样就实现了即 **轻量** 又 **灵活** 的由 **用户态进行调度** 的多任务模型
 
-![[Pasted image 20250707235106.png]]
+![Pasted image 20250707235106|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598404-c140c80f1c5d46a1811ee7745bac8790.png)
 
 尽管协程具有轻量灵活的优点，但是因为只要一个协程阻塞，整个线程都阻塞的缺点，导致了协程没有及时得到应用。然而，随着高并发成为主流趋势，瞬间抵达的海量请求会导致多进程模型下内存资源不足，多线程模型下内核态用户态之间快速切换。因此，协程这种灵活且轻量的用户态调度模型又重新回到了我们的视野中，并且此时 **IO 多路复用** 也变得非常成熟了。目前，协程结合 IO 多路复用是一个炙手可热的高并发解决方案
 
@@ -75,11 +75,11 @@
 
 操作系统在创建 TCP SOCKET 时，会在内核空间中同步创建一个 **读缓冲区** 和 一个 **写缓冲区**。应用程序接收数据时就需要从 TCP 读缓冲区拷贝数据用户态缓冲区中；下图展示了应用程序接收数据的过程
 
-![[Pasted image 20250708223734.png]]
+![Pasted image 20250708223734|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598405-91db4b51edcb4f149fc5470c6d0fdac6.png)
 
 发送数据时需将用户态缓冲区中的数据拷贝到 TCP 写缓冲区中。等待操作系统通过 TCP SOCKET 发送出去
 
-![[Pasted image 20250708224149.png]]
+![Pasted image 20250708224149|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598406-7c6729cc505e4318b7e90bf8345e1567.png)
 
 现在，问题出现了：当应用程序需要读取数据时，读缓冲区中可能就没有数据可读；当应用程序需要发送数据时，写缓冲区中可能没有空间用于写入。应该如何解决这个问题呢？
 
@@ -218,7 +218,7 @@ if __name__ == "__main__":
 
 如下图所示，在文件描述符就绪时需要恢复文件描述符的状态，并且在需要等待时保存文件描述符的状态。这显然和协程调度的逻辑非常相似，因此非常适合使用协程。
 
-![[Pasted image 20250709081227.png]]
+![Pasted image 20250709081227|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598408-723f9cb54e2b4993a42291d32d6fdb44.png)
 
 在上述示例代码中的第 $22$ 至第 $25$ 行的事件循环依旧存在，但是我们不直接处理围绕在文件描述符上的业务逻辑，而是面向协程调度
 
@@ -344,7 +344,7 @@ while True:
 
 我们知道计算机执行指令是顺序执行的。下图展示了 $3$ 个函数的调用，如果 `func2()` 需要消耗 $3$ 小时，那么 `func3()` 只有在 `func2()` 返回后才能被调用。
 
-![[Pasted image 20250716195347.png]]
+![Pasted image 20250716195347|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598409-0622be0756464d69b554b189037a864b.png)
 
 
 > [!attention] 
@@ -370,7 +370,7 @@ if __name__ == "__main__":
     main()
 ```
 
-![[all-function-blocking.gif]]
+![all-function-blocking|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598409-fc59bff0b08c4313ad3e00c03dd39b59.gif)
 
 执行上述代码时，需要等待很长一段时间才会输出 `"hello, world!"`。程序实际上是在等待函数 `fib(43)` 的返回。在这个例子中，我们在进行斐波拉契数列的计算，这是一个 CPU 密集型任务。同样的，即使我们在执行从远端服务器获取结果的任务也会等待。
 
@@ -942,7 +942,7 @@ if __name__ == "__main__":
 
 下图展示了上述代码的执行流程。在 `busy_loop()` 协程中的 `await` 并没有通知事件循环将控制流切换到 `normal()` 协程
 
-![[await-issue.gif]]
+![await-issue|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755786598409-5679586fe2ee478497645ef79245c038.gif)
 
 为了解决这种占用控制流的问题，我们可以使用 `asyncio.sleep(0)`，当我们使用 `await` 等待 `asyncio.sleep()` 时会发生控制流的切换。同时，通知事件循环等待 $0$ 秒，因此在形式上不会阻塞
 

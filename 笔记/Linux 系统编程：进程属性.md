@@ -111,7 +111,7 @@ pid_t getppid(void);
 
 每个进程所分配的内存由很多部分组成，通常称之为 **段** 或者 **区域** ^[[[操作系统：虚拟内存]]] 。如下所示
 
-![[Pasted image 20241013130418.png]]
+![Pasted image 20241013130418|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755700888676-0975388a1ad74852b746c12312df74c1.png)
 
 > [!tip] 文本段：包含了进程执行的 **机器指令**
 > 
@@ -202,7 +202,7 @@ int main(int arc, char *argv[]) /* 8. 在 main 的栈帧中分配 */
 
 该程序运行时栈的增长方向为
 
-![[Pasted image 20241023180632.png]]
+![Pasted image 20241023180632|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705888134-83341b8f9a3740719e49b23a7c1079b5.png)
 
 有时，会用 **用户栈** 来表示此处所讨论的栈，以便与内核栈区分开来。内核栈是每个进程保留在内核内存中的内存区域，在执行系统调用的过程中供（内核）内部函数调用使用
 
@@ -231,7 +231,7 @@ int main(int arc, char *argv[]) /* 8. 在 main 的栈帧中分配 */
 
 在 C 语言程序中，可以使用 **全局变量** `char **environ` 访问环境列表。`environ` 与 `argv` 参数类似，指向一个以 `NULL` 结尾的指针列表，每个指针又指向一个以空字节终止的字符串
 
-![[Pasted image 20241023181738.png]]
+![Pasted image 20241023181738|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705888134-71b4bbad71ca4ed49d9b15d3edccf6d0.png)
 
 示例：显示进程环境
 
@@ -415,7 +415,7 @@ int main(int argc, char *argv[]){
 
 下图展示了关闭优化和开启优化的执行结果
 
-![[Pasted image 20241023183541.png]]
+![Pasted image 20241023183541|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755705888135-08a5d88f1b20428cbd388651895db084.png)
 
 > [!tip] 
 > 
@@ -434,4 +434,3 @@ int main(int argc, char *argv[]){
 | `crontab` | 控制 **定时任务** 后台进程    |
 | `bg`      | 将暂停的进程放到后台          |
 | `fg`      | 将后台运行和后台暂停的进程放在前台   |
-
