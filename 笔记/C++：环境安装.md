@@ -54,10 +54,3 @@ $ pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-clang-
 ```
 
 到此，我们的 GCC 编译器就安装完成了。
-
-## hello world 程序
-
-
-
-
-
