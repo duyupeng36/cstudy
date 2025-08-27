@@ -8,8 +8,3 @@ int main() {
 
     return 0;
 }
-
-
-/*
-ghp_om****JSRV8LFAwKgF4rI7cCQ0XNdX6AQ34DlyWG
-*/
