@@ -6,6 +6,7 @@
       {
         "id": "4509724f8bf84da7",
         "type": "tabs",
+        "dimension": 53.400309119010814,
         "children": [
           {
             "id": "e7a7b303c61786dc",
@@ -21,6 +22,42 @@
               "pinned": true,
               "icon": "lucide-file",
               "title": "README"
+            }
+          },
+          {
+            "id": "270297abc96ad69b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/C++：与 C 的差异.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "C++：与 C 的差异"
+            }
+          }
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "bb183d85de3e58bf",
+        "type": "tabs",
+        "dimension": 46.599690880989186,
+        "children": [
+          {
+            "id": "6327ae7c3a519c86",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/C 语言：基本概念.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "C 语言：基本概念"
             }
           }
         ]
@@ -80,7 +117,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 237.5
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "838b57fc57b96045",
@@ -142,13 +180,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
+                "file": "笔记/C++：基本概念.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "README 的大纲"
+              "title": "C++：基本概念 的大纲"
             }
           }
         ],
@@ -156,6 +194,8 @@
       }
     ],
     "direction": "horizontal",
+    "width": 321.5,
+    "collapsed": true
     "width": 321.5,
     "collapsed": true
   },
@@ -170,24 +210,33 @@
       "command-palette:打开命令面板": false,
       "workspaces:管理工作区布局": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false,
-      "oz-clear-unused-images:Clear Unused Images": false
+      "oz-clear-unused-images:Clear Unused Images": false,
+      "sheet-plus:创建 Excel 文件": false
     }
   },
-  "active": "44208ec421f6f33b",
+  "active": "270297abc96ad69b",
   "lastOpenFiles": [
-    "code/c/firstc/a.out",
     "笔记/C 语言：基本概念.md",
-    "code/c/firstc/hello.c",
-    "code/c/firstc",
-    "code/c",
-    "README.md",
     "笔记/C++：与 C 的差异.md",
-    "code/cpp/firstcpp/hello.cpp",
-    "code/cpp/firstcpp",
-    "code/cpp",
-    "code",
-    "笔记/C 语言：环境安装.md",
+    "assets/Excalidraw/Drawing 2025-08-27 19.01.54.excalidraw.md",
+    "assets/Excalidraw/Drawing 2025-08-27 18.59.08.excalidraw.md",
+    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116-cvtres.read.1.tlog",
+    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116-rc.write.1.tlog",
+    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116-rc.read.1.tlog",
+    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116.read.3.tlog",
+    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116.read.2.tlog",
+    "code/cpp/variable/variable/x64/Debug/variable.tlog/unsuccessfulbuild",
+    "code/cpp/variable/variable/x64/Debug/variable.obj",
+    "code/cpp/color_type_conversion/color_ty.f603e8af/x64/Debug/color_ty.f603e8af.tlog/link.read.2.tlog",
+    "code/cpp/color_type_conversion/color_ty.f603e8af/x64/Debug/color_type_conversion.obj",
+    "code/cpp/color_type_conversion/color_ty.f603e8af/x64/Debug/color_ty.f603e8af.tlog/unsuccessfulbuild",
+    "笔记/C 语言：函数.md",
+    "README.md",
+    "笔记/C 语言：程序的结构.md",
+    "assets/Excalidraw/Drawing 2025-08-24 19.58.53.excalidraw.md",
+    "笔记/Python：基本概念.md",
     "笔记/C++：环境安装.md",
+    "笔记/C 语言：环境安装.md",
     "笔记/计算机组成：数据存储.md",
     "笔记/计算机组成：数字系统.md",
     "笔记/计算机组成：计算机模型.md",

@@ -54,3 +54,31 @@ $ pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain mingw-w64-clang-
 ```
 
 到此，我们的 GCC 编译器就安装完成了。
+
+## 创建项目
+
+第一次启动 visual studio 2022 时，会要求我们登录账号。我们可以点击跳过
+
+![image.png|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755965124741-dd20408552fc4ee091da0c7e30b623d8.png)
+
+点击跳过之后，我们可以看到如下界面。保持默认，点击 启动 Visual Studio 即可
+
+![image.png|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755965162595-6c1428ac78324f5c8b4fb7bed9bd379c.png)
+
+等待显示如下界面，此时我们的的 Visual Studio 就启动成功了
+
+![image.png|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755965226958-ae60349c1b0946d0b235309535b949d9.png)
+
+此时，我们点击 **创建新项目**，然后在下面的选项中选择 **控制台应用**，点击 **下一步**
+
+![image.png|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755965304594-2ac2cfeef9e84c9f84d5d19060c49813.png)
+
+填写 **项目名称**，选择 **项目的存储路径**，最后勾选将将解决方案和项目放在同一目录中后，点击 **创建**
+
+![image.png|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755965571487-9ab75affdb5742fa93c26e36bec1e5c8.png)
+
+当出现如下界面，项目就已经创建成功了。
+
+![image.png|600](http://cdn.jsdelivr.net/gh/duyupeng36/images@master/obsidian/1755966088982-c5d0b402760f4595b9694fe66e781a34.png)
+
+到处，我们就完成使用 Virsual Studio 创建一个 C++ 项目。

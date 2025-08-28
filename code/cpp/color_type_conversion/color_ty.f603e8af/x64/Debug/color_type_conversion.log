@@ -1,0 +1,8 @@
+﻿  color_type_conversion.cpp
+C:\Users\duyup\github.com\duyupeng36\cstudy\code\cpp\color_type_conversion\color_type_conversion.cpp(26,8): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\duyup\github.com\duyupeng36\cstudy\code\cpp\color_type_conversion\color_type_conversion.cpp(30,30): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\duyup\github.com\duyupeng36\cstudy\code\cpp\color_type_conversion\color_type_conversion.cpp(34,8): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\duyup\github.com\duyupeng36\cstudy\code\cpp\color_type_conversion\color_type_conversion.cpp(44,28): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\duyup\github.com\duyupeng36\cstudy\code\cpp\color_type_conversion\color_type_conversion.cpp(45,45): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\duyup\github.com\duyupeng36\cstudy\code\cpp\color_type_conversion\color_type_conversion.cpp(46,44): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+  color_type_conversion.vcxproj -> C:\Users\duyup\github.com\duyupeng36\cstudy\code\cpp\color_type_conversion\x64\Debug\color_type_conversion.exe

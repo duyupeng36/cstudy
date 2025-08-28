@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\duyup\\github.com\\duyupeng36\\cstudy\\code\\cpp\\variable\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{48F10FCA-CF0B-4875-AFB2-7CBBF8AFFF78}|variable.vcxproj|C:\\Users\\duyup\\github.com\\duyupeng36\\cstudy\\code\\cpp\\variable\\variable.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{48F10FCA-CF0B-4875-AFB2-7CBBF8AFFF78}|variable.vcxproj|solutionrelative:variable.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "variable.cpp",
+              "DocumentMoniker": "C:\\Users\\duyup\\github.com\\duyupeng36\\cstudy\\code\\cpp\\variable\\variable.cpp",
+              "RelativeDocumentMoniker": "variable.cpp",
+              "ToolTip": "C:\\Users\\duyup\\github.com\\duyupeng36\\cstudy\\code\\cpp\\variable\\variable.cpp",
+              "RelativeToolTip": "variable.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-25T16:28:28.667Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
