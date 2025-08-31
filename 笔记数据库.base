@@ -1,0 +1,24 @@
+views:
+  - type: cards
+    name: 卡片
+    filters:
+      and:
+        - file.inFolder("笔记")
+    order:
+      - file.name
+      - file.ctime
+      - file.mtime
+      - file.size
+      - file.tags
+    sort:
+      - property: file.path
+        direction: ASC
+      - property: formula.
+        direction: ASC
+    columnSize:
+      file.ctime: 170
+      file.mtime: 172
+      file.size: 161
+    imageFit: ""
+    cardSize: 270
+    imageAspectRatio: 1

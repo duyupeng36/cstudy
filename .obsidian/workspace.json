@@ -1,22 +1,21 @@
 {
   "main": {
-    "id": "5324373015726ba8",
+    "id": "1db9926438dbd7b8",
     "type": "split",
     "children": [
       {
-        "id": "4509724f8bf84da7",
+        "id": "6cd6403055e4569c",
         "type": "tabs",
-        "dimension": 53.400309119010814,
         "children": [
           {
-            "id": "e7a7b303c61786dc",
+            "id": "e7a2e1a8259f0ac2",
             "type": "leaf",
             "pinned": true,
             "state": {
               "type": "markdown",
               "state": {
                 "file": "README.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "pinned": true,
@@ -25,7 +24,7 @@
             }
           },
           {
-            "id": "270297abc96ad69b",
+            "id": "928db14bda07e46f",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -37,44 +36,37 @@
               "icon": "lucide-file",
               "title": "C++：与 C 的差异"
             }
-          }
-        ],
-        "currentTab": 1
-      },
-      {
-        "id": "bb183d85de3e58bf",
-        "type": "tabs",
-        "dimension": 46.599690880989186,
-        "children": [
+          },
           {
-            "id": "6327ae7c3a519c86",
+            "id": "2b982b006bb43e00",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/C 语言：基本概念.md",
+                "file": "笔记/C 语言：指针.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "C 语言：基本概念"
+              "title": "C 语言：指针"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
   },
   "left": {
-    "id": "f5acfb0347e10158",
+    "id": "22abd7c0d1a1f48f",
     "type": "split",
     "children": [
       {
-        "id": "2981465ebbd81882",
+        "id": "2f6837284be7b0b2",
         "type": "tabs",
         "children": [
           {
-            "id": "44208ec421f6f33b",
+            "id": "7b88af612ff21790",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -87,7 +79,7 @@
             }
           },
           {
-            "id": "297eddfd59965420",
+            "id": "6525410ee5ed2b63",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -104,7 +96,7 @@
             }
           },
           {
-            "id": "18aaf6c4fe7f7177",
+            "id": "b77ab63d064ec848",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -117,25 +109,24 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 300
   },
   "right": {
-    "id": "838b57fc57b96045",
+    "id": "01229f71c739cca9",
     "type": "split",
     "children": [
       {
-        "id": "54658bcffe7f13d7",
+        "id": "734dd58f355507da",
         "type": "tabs",
         "children": [
           {
-            "id": "c066301afa982653",
+            "id": "b073148008c851de",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "笔记/C++：环境安装.md",
-                "collapseAll": true,
+                "file": "笔记/C++：与 C 的差异.md",
+                "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -144,49 +135,51 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "C++：环境安装 的反向链接列表"
+              "title": "C++：与 C 的差异 的反向链接列表"
             }
           },
           {
-            "id": "047af36d2d76e5a8",
+            "id": "3991f64bbda773a2",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "笔记/C++：环境安装.md",
+                "file": "笔记/C++：与 C 的差异.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "C++：环境安装 的出链列表"
+              "title": "C++：与 C 的差异 的出链列表"
             }
           },
           {
-            "id": "7b60362ad9d7a689",
+            "id": "0f099bd672798949",
             "type": "leaf",
             "state": {
               "type": "tag",
               "state": {
                 "sortOrder": "frequency",
-                "useHierarchy": true
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-tags",
               "title": "标签"
             }
           },
           {
-            "id": "b9144cb8649cbbdb",
+            "id": "9ab123d63d7ef1d9",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/C++：基本概念.md",
+                "file": "笔记/C++：与 C 的差异.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "C++：基本概念 的大纲"
+              "title": "C++：与 C 的差异 的大纲"
             }
           }
         ],
@@ -194,14 +187,10 @@
       }
     ],
     "direction": "horizontal",
-    "width": 321.5,
-    "collapsed": true
-    "width": 321.5,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
-      "bases:创建新数据库": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -209,69 +198,35 @@
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "workspaces:管理工作区布局": false,
+      "bases:创建新数据库": false,
       "obsidian-excalidraw-plugin:新建绘图文件": false,
       "oz-clear-unused-images:Clear Unused Images": false,
       "sheet-plus:创建 Excel 文件": false
     }
   },
-  "active": "270297abc96ad69b",
+  "active": "928db14bda07e46f",
   "lastOpenFiles": [
-    "笔记/C 语言：基本概念.md",
-    "笔记/C++：与 C 的差异.md",
-    "assets/Excalidraw/Drawing 2025-08-27 19.01.54.excalidraw.md",
-    "assets/Excalidraw/Drawing 2025-08-27 18.59.08.excalidraw.md",
-    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116-cvtres.read.1.tlog",
-    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116-rc.write.1.tlog",
-    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116-rc.read.1.tlog",
-    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116.read.3.tlog",
-    "code/cpp/variable/variable/x64/Debug/variable.tlog/link.25116.read.2.tlog",
-    "code/cpp/variable/variable/x64/Debug/variable.tlog/unsuccessfulbuild",
-    "code/cpp/variable/variable/x64/Debug/variable.obj",
-    "code/cpp/color_type_conversion/color_ty.f603e8af/x64/Debug/color_ty.f603e8af.tlog/link.read.2.tlog",
-    "code/cpp/color_type_conversion/color_ty.f603e8af/x64/Debug/color_type_conversion.obj",
-    "code/cpp/color_type_conversion/color_ty.f603e8af/x64/Debug/color_ty.f603e8af.tlog/unsuccessfulbuild",
-    "笔记/C 语言：函数.md",
+    "笔记/C 语言：指针.md",
     "README.md",
-    "笔记/C 语言：程序的结构.md",
-    "assets/Excalidraw/Drawing 2025-08-24 19.58.53.excalidraw.md",
-    "笔记/Python：基本概念.md",
-    "笔记/C++：环境安装.md",
-    "笔记/C 语言：环境安装.md",
+    "笔记数据库.base",
+    "笔记/C++：与 C 的差异.md",
+    "笔记/C 语言：字符串.md",
+    "code/cpp/string/a.out",
+    "code/cpp/string/string.cpp",
+    "code/cpp/string",
+    "笔记/C 语言：结构体.md",
+    "笔记/C 语言：基本概念.md",
     "笔记/计算机组成：数据存储.md",
-    "笔记/计算机组成：数字系统.md",
-    "笔记/计算机组成：计算机模型.md",
-    "笔记/C 语言：声明.md",
-    "assets/attachments/Pasted image 20240930161027.png",
-    "笔记/Linux：命令和 vim.md",
-    "assets/attachments/Pasted image 20241003220239.png",
-    "assets/attachments/Pasted image 20241004004546.png",
-    "笔记/系统编程概念.md",
-    "assets/attachments/Pasted image 20241010120517.png",
-    "作业/05-Python/作业47：Python 基本概念.md",
-    "assets/attachments/Pasted image 20250108233747.png",
-    "作业/05-Python/作业48：内建数据结构.md",
-    "assets/attachments/Pasted image 20250114092419.png",
-    "作业/05-Python/作业51：装饰器与偏函数.md",
-    "assets/attachments/Pasted image 20250120180029.png",
-    "作业/04-C++/作业53：多态.md",
-    "assets/attachments/Pasted image 20250309175214.png",
-    "作业/05-Go/作业47：Go 基本概念.md",
-    "assets/attachments/Pasted image 20250603222940.png",
-    "作业/04-C++/作业47：与 C 的差异.md",
-    "作业/02-Linux 系统编程/作业42：Linux epoll.md",
-    "作业/02-Linux 系统编程/作业41：SOCKET 概览 和 SOCKET 地址转换.md",
-    "作业/02-Linux 系统编程/作业40：传输层协议.md",
-    "作业/02-Linux 系统编程/作业39：线程取消.md",
-    "作业/02-Linux 系统编程/作业38：线程同步.md",
-    "作业/02-Linux 系统编程/作业37：Pthreads API 介绍.md",
-    "作业/02-Linux 系统编程/作业36：信号处理器函数.md",
-    "作业/02-Linux 系统编程/作业35：信号基本概念和信号集.md",
-    "assets/attachments/MySQL9.1-en.a4.pdf",
-    "assets/attachments/Pasted image 20241004004058.png",
-    "cstudy.py",
-    "作业/05-Go",
-    "assets/canvas/任务.canvas",
-    "//Untitled.canvas",
-    "Untitled.canvas"
+    "code/cpp/type_cast/a.out",
+    "code/cpp/type_cast/const_cast.cpp",
+    "code/cpp/type_cast",
+    "笔记/Go 语言：函数.md",
+    "笔记/Pasted image 20250130000424.png.md",
+    "笔记/C++：拷贝语义.md",
+    "笔记/计算机组成：数据运算.md",
+    "笔记/Untitled.md",
+    "笔记/未命名.base",
+    "笔记/Go 语言：开发环境搭建.md",
+    "笔记/C++：环境安装.md"
   ]
 }
