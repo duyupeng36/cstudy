@@ -24,31 +24,45 @@
             }
           },
           {
-            "id": "928db14bda07e46f",
+            "id": "29e38e5471cbf401",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/C++：与 C 的差异.md",
+                "file": "笔记/计算机组成：信息存储.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "C++：与 C 的差异"
+              "title": "计算机组成：信息存储"
             }
           },
           {
-            "id": "2b982b006bb43e00",
+            "id": "45f927d23a75eb49",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "笔记/C 语言：指针.md",
+                "file": "笔记/计算机组成：整数的表示与运算.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "C 语言：指针"
+              "title": "计算机组成：整数的表示与运算"
+            }
+          },
+          {
+            "id": "7b16dcc131ee57ac",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/C 语言：基本概念.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "C 语言：基本概念"
             }
           }
         ],
@@ -173,13 +187,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "笔记/C++：与 C 的差异.md",
+                "file": "笔记/计算机组成：信息存储.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "C++：与 C 的差异 的大纲"
+              "title": "计算机组成：信息存储 的大纲"
             }
           }
         ],
@@ -204,29 +218,39 @@
       "sheet-plus:创建 Excel 文件": false
     }
   },
-  "active": "928db14bda07e46f",
+  "active": "29e38e5471cbf401",
   "lastOpenFiles": [
-    "笔记/C 语言：指针.md",
     "README.md",
-    "笔记数据库.base",
+    "笔记/计算机组成：整数的表示与运算.md",
+    "笔记/C 语言：基本概念.md",
+    "笔记/计算机组成：数据存储.md",
+    "笔记/计算机组成：数字系统.md",
+    "笔记/计算机组成：计算机模型.md",
+    "笔记/C 语言：程序的结构.md",
+    "笔记/C 语言：环境安装.md",
     "笔记/C++：与 C 的差异.md",
+    "笔记/计算机组成：数据运算.md",
+    "笔记/C 语言：函数.md",
+    "笔记/C++：环境安装.md",
+    "笔记/Python：日志处理.md",
+    "笔记/Linux 系统编程：时间.md",
+    "code/cpp/logcpp/a.out",
+    "code/cpp/logcpp/main.cpp",
+    "code/cpp/logcpp",
+    "code/cpp/log",
+    "笔记/C 语言：指针.md",
+    "笔记数据库.base",
     "笔记/C 语言：字符串.md",
     "code/cpp/string/a.out",
     "code/cpp/string/string.cpp",
     "code/cpp/string",
     "笔记/C 语言：结构体.md",
-    "笔记/C 语言：基本概念.md",
-    "笔记/计算机组成：数据存储.md",
     "code/cpp/type_cast/a.out",
     "code/cpp/type_cast/const_cast.cpp",
-    "code/cpp/type_cast",
     "笔记/Go 语言：函数.md",
     "笔记/Pasted image 20250130000424.png.md",
     "笔记/C++：拷贝语义.md",
-    "笔记/计算机组成：数据运算.md",
     "笔记/Untitled.md",
-    "笔记/未命名.base",
-    "笔记/Go 语言：开发环境搭建.md",
-    "笔记/C++：环境安装.md"
+    "笔记/Go 语言：开发环境搭建.md"
   ]
 }

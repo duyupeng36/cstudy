@@ -51,6 +51,13 @@
         "xmemory": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "sstream": "cpp",
+        "algorithm": "cpp",
+        "optional": "cpp",
+        "string": "cpp",
+        "chrono": "cpp",
+        "forward_list": "cpp",
+        "vector": "cpp"
     }
 }
